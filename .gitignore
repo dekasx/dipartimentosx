@@ -29,3 +29,6 @@ SHOWREELcolored_*.jpg
 .Spotlight-V100
 .Trashes
 Thumbs.db
+
+# file pronti per il caricamento su R2: non vanno nel repo
+upload/

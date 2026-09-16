@@ -41,13 +41,13 @@ const PROJECTS = [
     // la scheda del catalogo e l'anteprima a tutto schermo della home.
     // `clip` sono i 10 secondi leggeri che girano nel carosello della home.
     media: [
-      { type: "video", src: "assets/projects/botteghe/ep1.mov", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
-      { type: "video", src: "assets/projects/botteghe/ep2.mov", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
-      { type: "video", src: "assets/projects/botteghe/ep3.mov", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
-      { type: "video", src: "assets/projects/botteghe/ep4.mov", clip: "assets/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
-      { type: "video", src: "assets/projects/botteghe/ep5.mov", clip: "assets/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
-      { type: "video", src: "assets/projects/botteghe/ep6.mov", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
-      { type: "video", src: "assets/projects/botteghe/ep7.mov", clip: "assets/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
+      { type: "video", src: "assets/projects/botteghe/ep1.mp4", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
+      { type: "video", src: "assets/projects/botteghe/ep2.mp4", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
+      { type: "video", src: "assets/projects/botteghe/ep3.mp4", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
+      { type: "video", src: "assets/projects/botteghe/ep4.mp4", clip: "assets/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
+      { type: "video", src: "assets/projects/botteghe/ep5.mp4", clip: "assets/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
+      { type: "video", src: "assets/projects/botteghe/ep6.mp4", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
+      { type: "video", src: "assets/projects/botteghe/ep7.mp4", clip: "assets/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
     ],
     date: "2026 [PLACEHOLDER]",
     scope: "Serie documentaria [PLACEHOLDER]",
@@ -79,9 +79,9 @@ const PROJECTS = [
     slug: "mercato-arabo",
     title: "Mercato Arabo",
     media: [
-      { type: "video", src: "assets/projects/mercato-arabo-1.mov", poster: "assets/projects/mercato-arabo-1-poster.jpg", label: "Mamma ho fatto la spesa" },
-      { type: "video", src: "assets/projects/mercato-arabo-2.mov", poster: "assets/projects/mercato-arabo-2-poster.jpg", label: "Teletrasporto" },
-      { type: "video", src: "assets/projects/mercato-arabo-3.mov", poster: "assets/projects/mercato-arabo-3-poster.jpg", label: "Walk &amp; Talk" }
+      { type: "video", src: "assets/projects/mercato-arabo-1.mp4", poster: "assets/projects/mercato-arabo-1-poster.jpg", label: "Mamma ho fatto la spesa" },
+      { type: "video", src: "assets/projects/mercato-arabo-2.mp4", poster: "assets/projects/mercato-arabo-2-poster.jpg", label: "Teletrasporto" },
+      { type: "video", src: "assets/projects/mercato-arabo-3.mp4", poster: "assets/projects/mercato-arabo-3-poster.jpg", label: "Walk &amp; Talk" }
     ],
     date: "2023 [PLACEHOLDER]",
     scope: "Reportage fotografico [PLACEHOLDER]",

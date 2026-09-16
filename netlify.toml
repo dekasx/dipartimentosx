@@ -1,0 +1,29 @@
+# Sito statico puro: nessuna compilazione, si pubblica la cartella così com'è.
+[build]
+  publish = "."
+  command = ""
+
+# I file hanno già la versione nell'indirizzo (?v=...), scritta da
+# .claude/stamp-assets.py: possono restare in cache per sempre.
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Le pagine no: devono poter cambiare subito.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -15,7 +15,7 @@ const PROJECTS = [
     title: "Lodigiani \u00d7 Umbro",
     reel: true,
     portrait: true,   // girato 9:16: nel carosello non viene ritagliato
-    media: { type: "video", src: "assets/projects/lodigiani.mp4", poster: "assets/projects/lodigiani-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/lodigiani.mp4", poster: "assets/projects/lodigiani-poster.jpg" },
     date: "2026 [PLACEHOLDER]",
     scope: "Fasce da capitano — contenuto brand [PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -25,7 +25,7 @@ const PROJECTS = [
   {
     slug: "documentario",
     title: "Documentario",
-    media: { type: "video", src: "assets/projects/documentario.mp4", poster: "assets/projects/documentario-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/documentario.mp4", poster: "assets/projects/documentario-poster.jpg" },
     date: "2025 [PLACEHOLDER]",
     scope: "Documentario [PLACEHOLDER]",
     gear: "Camera + audio di presa diretta [PLACEHOLDER]",
@@ -41,13 +41,13 @@ const PROJECTS = [
     // la scheda del catalogo e l'anteprima a tutto schermo della home.
     // `clip` sono i 10 secondi leggeri che girano nel carosello della home.
     media: [
-      { type: "video", src: "assets/projects/botteghe/ep1.mp4", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
-      { type: "video", src: "assets/projects/botteghe/ep2.mp4", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
-      { type: "video", src: "assets/projects/botteghe/ep3.mp4", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
-      { type: "video", src: "assets/projects/botteghe/ep4.mp4", clip: "assets/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
-      { type: "video", src: "assets/projects/botteghe/ep5.mp4", clip: "assets/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
-      { type: "video", src: "assets/projects/botteghe/ep6.mp4", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
-      { type: "video", src: "assets/projects/botteghe/ep7.mp4", clip: "assets/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep1.mp4", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep2.mp4", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep3.mp4", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep4.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep5.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep6.mp4", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep7.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
     ],
     date: "2026 [PLACEHOLDER]",
     scope: "Serie documentaria [PLACEHOLDER]",
@@ -58,7 +58,7 @@ const PROJECTS = [
   {
     slug: "roland",
     title: "Roland",
-        media: { type: "video", src: "assets/projects/roland.mp4", poster: "assets/projects/roland-poster.jpg" },
+        media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/roland.mp4", poster: "assets/projects/roland-poster.jpg" },
     date: "2024 [PLACEHOLDER]",
     scope: "Contenuto brand [PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -68,7 +68,7 @@ const PROJECTS = [
   {
     slug: "elektron",
     title: "Elektron",
-    media: { type: "video", src: "assets/projects/elektron.mp4", poster: "assets/projects/elektron-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/elektron.mp4", poster: "assets/projects/elektron-poster.jpg" },
     date: "2024 [PLACEHOLDER]",
     scope: "Contenuto brand [PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -79,9 +79,9 @@ const PROJECTS = [
     slug: "mercato-arabo",
     title: "Mercato Arabo",
     media: [
-      { type: "video", src: "assets/projects/mercato-arabo-1.mp4", poster: "assets/projects/mercato-arabo-1-poster.jpg", label: "Mamma ho fatto la spesa" },
-      { type: "video", src: "assets/projects/mercato-arabo-2.mp4", poster: "assets/projects/mercato-arabo-2-poster.jpg", label: "Teletrasporto" },
-      { type: "video", src: "assets/projects/mercato-arabo-3.mp4", poster: "assets/projects/mercato-arabo-3-poster.jpg", label: "Walk &amp; Talk" }
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/mercato-arabo-1.mp4", poster: "assets/projects/mercato-arabo-1-poster.jpg", label: "Mamma ho fatto la spesa" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/mercato-arabo-2.mp4", poster: "assets/projects/mercato-arabo-2-poster.jpg", label: "Teletrasporto" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/mercato-arabo-3.mp4", poster: "assets/projects/mercato-arabo-3-poster.jpg", label: "Walk &amp; Talk" }
     ],
     date: "2023 [PLACEHOLDER]",
     scope: "Reportage fotografico [PLACEHOLDER]",
@@ -92,7 +92,7 @@ const PROJECTS = [
   {
     slug: "artmosaic",
     title: "Artmosaic",
-    media: { type: "video", src: "assets/projects/artmosaic.mp4", poster: "assets/projects/artmosaic-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/artmosaic.mp4", poster: "assets/projects/artmosaic-poster.jpg" },
     date: "2023 [PLACEHOLDER]",
     scope: "[PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -102,7 +102,7 @@ const PROJECTS = [
   {
     slug: "zoom",
     title: "Zoom",
-    media: { type: "video", src: "assets/projects/zoom-spot.mp4", poster: "assets/projects/zoom-spot-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/zoom-spot.mp4", poster: "assets/projects/zoom-spot-poster.jpg" },
     date: "2023 [PLACEHOLDER]",
     scope: "[PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -113,7 +113,7 @@ const PROJECTS = [
     slug: "beat-skatepark",
     title: "Beat Skatepark",
     reel: true,
-    media: { type: "video", src: "assets/projects/beat-skatepark.mp4", poster: "assets/projects/beat-skatepark-poster.jpg" },
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/beat-skatepark.mp4", poster: "assets/projects/beat-skatepark-poster.jpg" },
     date: "2023 [PLACEHOLDER]",
     scope: "Aftermovie / video evento [PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -139,7 +139,7 @@ const PROJECTS = [
   {
     slug: "redbull",
     title: "RedBull",
-        media: { type: "video", src: "assets/projects/redbull.mp4", poster: "assets/projects/redbull-poster.jpg" },
+        media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/redbull.mp4", poster: "assets/projects/redbull-poster.jpg" },
     date: "2022 [PLACEHOLDER]",
     scope: "[PLACEHOLDER]",
     gear: "[PLACEHOLDER]",
@@ -150,9 +150,9 @@ const PROJECTS = [
     slug: "umbro",
     title: "Umbro",
     media: [
-      { type: "video", src: "assets/projects/umbro-1.mp4", poster: "assets/projects/umbro-1-poster.jpg", label: "Kit Reveal — Lodigiani" },
-      { type: "video", src: "assets/projects/umbro-2.mp4", poster: "assets/projects/umbro-2-poster.jpg", label: "Fasce da capitano — reveal kit" },
-      { type: "video", src: "assets/projects/umbro-3.mp4", poster: "assets/projects/umbro-3-poster.jpg", label: "Presentation video — Stefano Gallo" }
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-1.mp4", poster: "assets/projects/umbro-1-poster.jpg", label: "Kit Reveal — Lodigiani" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-2.mp4", poster: "assets/projects/umbro-2-poster.jpg", label: "Fasce da capitano — reveal kit" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-3.mp4", poster: "assets/projects/umbro-3-poster.jpg", label: "Presentation video — Stefano Gallo" }
     ],
     date: "2022 [PLACEHOLDER]",
     scope: "[PLACEHOLDER]",

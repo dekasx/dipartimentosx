@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------
+# I video NON stanno nel repo: GitHub rifiuta ogni file oltre i 100 MB
+# e comunque non è un server video. I master restano solo sul disco,
+# le versioni web vanno su uno spazio con CDN.
+# ---------------------------------------------------------------
+*.mov
+*.mp4
+*.m4v
+*.avi
+*.mkv
+*.wav
+*.aif
+*.aiff
+
+# materiale di partenza e mockup: non servono al sito
+assets/nuove pic/
+assets/projects/mercato arabo/
+assets/projects/umbro/
+assets/projects/zoom/
+assets/projects/cacao crudo/
+assets/projects/botteghe/
+Desktop/
+Mobile/
+SHOWREELcolored_*.jpg
+
+# roba di sistema
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db

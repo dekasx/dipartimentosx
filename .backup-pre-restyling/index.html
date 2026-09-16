@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- ===================== SEO ===================== -->
+  <title>Dipartimento SX — Studio Creativo | Video, Sound Design &amp; Direzione Creativa a Roma</title>
+  <meta name="description" content="Dipartimento SX è uno studio creativo con base a Roma: videomaking, sound design e direzione creativa. Guarda il nostro showreel e i lavori per brand e progetti indipendenti.">
+  <meta name="keywords" content="dipartimento sx, studio creativo roma, videomaker roma, sound design, direzione creativa, produzione video, showreel">
+  <link rel="canonical" href="https://www.dipartimentosx.com/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#b8f04a">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dipartimento SX">
+  <meta property="og:title" content="Dipartimento SX — Studio Creativo">
+  <meta property="og:description" content="Videomaking, sound design e direzione creativa. Studio creativo con base a Roma.">
+  <meta property="og:url" content="https://www.dipartimentosx.com/">
+  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+  <meta property="og:locale" content="it_IT">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dipartimento SX — Studio Creativo">
+  <meta name="twitter:description" content="Videomaking, sound design e direzione creativa. Studio creativo con base a Roma.">
+  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Dipartimento SX",
+    "url": "https://www.dipartimentosx.com/",
+    "logo": "https://www.dipartimentosx.com/assets/img/logo-sx.svg",
+    "email": "info@dipartimentosx.com",
+    "description": "Studio creativo con base a Roma: videomaking, sound design e direzione creativa.",
+    "address": { "@type": "PostalAddress", "addressLocality": "Roma", "addressCountry": "IT" },
+    "sameAs": ["https://www.instagram.com/dipartimento.sx"]
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo-sx.svg">
+  <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
+
+  <link rel="preload" as="image" href="assets/img/showreel-poster.jpg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-view="home">
+
+  <!-- Custom cursor (solo desktop / pointer fine) -->
+  <div class="cursor" id="cursor" aria-hidden="true"><span></span><span></span></div>
+
+  <!-- Cornice: solo barre colorate sopra e sotto -->
+  <div class="frame frame--top" aria-hidden="true"></div>
+  <div class="frame frame--bottom" aria-hidden="true"></div>
+
+  <!-- ===================== VIDEO SHOWREEL (sfondo) ===================== -->
+  <video id="showreel"
+         class="showreel"
+         autoplay muted loop playsinline
+         preload="metadata"
+         poster="assets/img/showreel-poster.jpg"
+         aria-label="Showreel Dipartimento SX">
+    <source src="assets/video/showreel.mp4" type="video/mp4">
+  </video>
+  <div class="showreel-fallback" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER / NAV ===================== -->
+  <header class="site-header">
+    <a class="logo" href="#home" data-nav="home" aria-label="Dipartimento SX — home">
+      <img src="assets/img/logo-sx.svg" alt="Logo Dipartimento SX" width="120" height="120">
+    </a>
+    <nav class="main-nav" aria-label="Navigazione principale">
+      <a href="#catalogue" data-nav="catalogue">catalogue</a>
+      <a href="#about"     data-nav="about">about</a>
+      <a href="#contact"   data-nav="contact">contact</a>
+    </nav>
+  </header>
+
+  <!-- ===================== H1 accessibile / SEO ===================== -->
+  <h1 class="visually-hidden">Dipartimento SX — studio creativo a Roma: videomaking, sound design e direzione creativa</h1>
+
+  <!-- ===================== CATALOGUE ===================== -->
+  <section class="panel panel--catalogue" id="panel-catalogue" aria-hidden="true">
+    <button class="back-btn" data-close aria-label="Torna alla home">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+
+    <div class="wheel-line" aria-hidden="true"></div>
+
+    <div class="wheel" id="wheel" tabindex="0" aria-label="Lista progetti — scorri e seleziona">
+      <ul class="wheel-list" id="wheelList"><!-- popolata da JS --></ul>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECT DETAIL ===================== -->
+  <section class="panel panel--project" id="panel-project" aria-hidden="true">
+    <button class="back-btn" data-back-to="catalogue" aria-label="Torna al catalogo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+
+    <div class="project-scroll" id="projectScroll">
+      <div class="project-inner">
+        <p class="project-neighbor project-neighbor--prev" id="projPrev"></p>
+
+        <div class="project-titlebox">
+          <span class="split-line split-line--top" aria-hidden="true"></span>
+          <h2 class="project-title" id="projTitle"></h2>
+          <span class="split-line split-line--bottom" aria-hidden="true"></span>
+        </div>
+
+        <figure class="project-media" id="projMedia"><!-- video/img da JS --></figure>
+
+        <div class="project-info" id="projInfo">
+          <div class="info-cell">
+            <h3>Data</h3>
+            <p id="projDate"></p>
+          </div>
+          <div class="info-cell">
+            <h3>Scopo del progetto</h3>
+            <p id="projScope"></p>
+          </div>
+          <div class="info-cell">
+            <h3>Attrezzatura</h3>
+            <p id="projGear"></p>
+          </div>
+          <div class="info-cell">
+            <h3>In collaborazione con</h3>
+            <p id="projPartner"></p>
+          </div>
+          <div class="info-cell info-cell--wide">
+            <h3>Descrizione</h3>
+            <p id="projDesc"></p>
+          </div>
+        </div>
+
+        <p class="project-neighbor project-neighbor--next" id="projNext"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="panel panel--about" id="panel-about" aria-hidden="true">
+    <div class="about-header">
+      <button class="back-btn back-btn--dark" data-close aria-label="Chiudi la sezione about">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      </button>
+      <h2 class="about-title">about</h2>
+      <nav class="about-nav" aria-label="Navigazione about">
+        <a href="#home" data-nav="home">home</a>
+        <a href="#catalogue" data-nav="catalogue">catalogue</a>
+        <a href="#contact" data-nav="contact">contact</a>
+      </nav>
+    </div>
+
+    <div class="about-body">
+      <p class="about-intro">
+        Dipartimento SX è uno studio creativo con base a Roma. È composto da quattro
+        persone — due videomaker e due sound designer — che ricoprono il ruolo di
+        direttori creativi.
+      </p>
+
+      <h3 class="about-label">Servizi</h3>
+      <ul class="services" id="servicesList"><!-- popolata da JS --></ul>
+
+      <div class="about-contacts">
+        <h3 class="about-label">Contatti</h3>
+        <a class="about-mail" href="mailto:info@dipartimentosx.com">info@dipartimentosx.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="panel panel--contact" id="panel-contact" aria-hidden="true">
+    <button class="back-btn back-btn--dark" data-close aria-label="Chiudi la sezione contact">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+
+    <h2 class="contact-heading">contact</h2>
+
+    <div class="contact-body">
+      <p class="contact-hint">if you have ideas don&rsquo;t hesitate</p>
+      <a class="contact-link neon" href="mailto:info@dipartimentosx.com">info@dipartimentosx.com</a>
+      <a class="contact-link neon" href="https://www.instagram.com/dipartimento.sx" target="_blank" rel="noopener">@dipartimento.sx</a>
+    </div>
+  </section>
+
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

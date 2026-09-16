@@ -1,0 +1,2135 @@
+/* ============================================================
+   DIPARTIMENTO SX — style.css
+   Home a scorrimento continuo (9 sezioni) + overlay catalogue/about.
+   Lo sfondo è un livello fisso il cui colore viene interpolato da JS
+   da una sezione all'altra: i contenuti sembrano "sospesi".
+   ============================================================ */
+
+/* ===================== FONT ===================== */
+/* Inter — ospitato da noi, non da Google: il sito non fa nessuna richiesta
+   a domini esterni e la cookie policy resta valida com'è.
+   È un font variabile, un file solo copre i pesi 400-600. Licenza SIL OFL. */
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+                 U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter-latin-ext.woff2") format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+                 U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+                 U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face { font-family: "bmon"; src: url("../assets/fonts/bmon.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "GT-Zirkon-Regular"; src: url("../assets/fonts/GT-Zirkon-Regular.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "mono"; src: url("../assets/fonts/mono.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Neue Haas Unica Pro"; src: url("../assets/fonts/NeueHaasUnicaPro-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Neue Haas Unica Pro"; src: url("../assets/fonts/NeueHaasUnicaPro-Medium.woff2") format("woff2"); font-weight: 500 600; font-display: swap; }
+@font-face { font-family: "Neue Haas Unica Pro"; src: url("../assets/fonts/NeueHaasUnicaPro-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root {
+  --green: #b8f04a;
+  --ink: #101010;
+  --white: #ffffff;
+  --grey: #8f8f8f;
+  --light-overlay: rgba(230, 230, 226, 0.86);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 0.65s;
+
+  --font-serif: "bmon", "CMUSerif-UprightItalic", serif;
+  --font-sans: "GT-Zirkon-Regular", "Helvetica Neue", sans-serif;
+  --font-mono: "mono", "Andale Mono", monospace;
+  --font-identity: "Neue Haas Unica Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font: var(--font-identity);
+  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* impostate da JS mentre si scorre */
+  --bg: #000000;
+  --fg: #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  min-height: 100%;
+  font-family: var(--font);
+  background: #000;
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+body.is-locked { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }
+
+@media (pointer: fine) {
+  body, a, button, .wheel-item { cursor: none; }
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ===================== SFONDO GRADUALE ===================== */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+/* ===================== CURSORE CUSTOM ===================== */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 30px; height: 30px;
+  margin: -15px 0 0 -15px;
+  z-index: 999;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transform: rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+  transition: transform 0.35s var(--ease);
+  display: none;
+}
+@media (pointer: fine) { .cursor { display: block; } }
+.cursor.is-hover { --scale: 1.5; }
+.cursor span { position: absolute; background: var(--white); }
+.cursor span:nth-child(1) { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+.cursor span:nth-child(2) { top: 50%; left: 0; height: 2px; width: 100%; transform: translateY(-50%); }
+
+/* ===================== HEADER / NAV FISSA IN NEGATIVO ===================== */
+/* mix-blend-mode: difference => le scritte restano leggibili su qualunque
+   sfondo, video compresi (bianco su nero, nero su bianco). */
+/* display:contents => logo e nav diventano figli diretti della root:
+   solo così mix-blend-mode li fa reagire a ciò che scorre sotto. */
+.site-header { display: contents; }
+
+.logo {
+  position: fixed;
+  left: 42px; bottom: 40px;
+  z-index: 60;
+  pointer-events: auto;
+  display: block;
+  mix-blend-mode: difference;
+  /* --lx/--ly/--ls sono scritte da js/home.js: in cima alla pagina portano il
+     logo accanto alla scritta, appena si scorre lo riportano nell'angolo */
+  transform: translate(var(--lx, 0px), var(--ly, 0px)) scale(var(--ls, 1));
+  transition: opacity var(--dur) var(--ease), transform 0.75s var(--ease);
+}
+.logo img { width: 96px; height: auto; }
+
+.main-nav {
+  position: fixed;
+  top: 34px; right: 46px;
+  z-index: 60;
+  display: flex;
+  gap: 2.2rem;
+  pointer-events: auto;
+  mix-blend-mode: difference;
+  transition: opacity var(--dur) var(--ease);
+}
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: opacity 0.4s var(--ease);
+}
+.main-nav a:hover { opacity: 0.55; }
+.main-nav a.is-active { text-decoration: underline; text-underline-offset: 6px; }
+
+/* dentro gli overlay la nav sparisce (hanno la loro UI) */
+/* sopra il footer il logo darebbe fastidio al testo legale */
+body.at-footer:not(.page-doc) .logo { opacity: 0; pointer-events: none; }
+
+body[data-view="project"] .main-nav,
+body[data-view="project"] .logo { opacity: 0; pointer-events: none; }
+
+/* ===================== IMPALCATURA SEZIONI ===================== */
+.sec {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  color: var(--fg);
+}
+
+.sec-title {
+  /* più contenuta di prima: i nomi italiani dei servizi sono più larghi
+     ("Consulenza", "Sound Design") e a 5.6vw finivano sopra alle foto */
+  font-size: clamp(2rem, 4.4vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.sec-copy {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+  line-height: 1.65;
+  text-align: justify;
+  max-width: 46ch;
+}
+
+/* rivelazione dei testi all'ingresso in viewport */
+[data-anim] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1.15s var(--ease), transform 1.15s var(--ease);
+}
+[data-anim="copy"] { transition-delay: 0.22s; }
+[data-anim].is-in { opacity: 1; transform: none; }
+
+/* Sulle pagine servizio testi e immagini ci sono e basta: niente comparsa
+   a dissolvenza. Su pagine così lunghe l'effetto rallentava la lettura
+   invece di accompagnarla. I titoli invece la mantengono: sono pochi e
+   scandiscono la pagina. Web Development è esclusa: lì il titolo ha già
+   il suo effetto (le lettere che si ricompongono). */
+body.page-service [data-anim]:not([data-anim="title"]),
+body.page-webdev [data-anim] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* linee tratteggiate decorative che si "disegnano" allo scroll */
+/* z-index: -1 => dentro il contesto della sezione le linee stanno
+   sotto a foto e testi, ma restano sopra allo sfondo */
+.conn {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+.dotpath {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0.01 11;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.9;
+}
+
+/* l'estensione della linea è guidata dallo scroll: stroke-dashoffset
+   viene scritto da js/home.js (paintReveals) fotogramma per fotogramma. */
+.conn .reveal { stroke-dashoffset: 1; }
+
+/* In cima alla pagina lo scroll non può guidarle: quando arrivi sono già
+   tutte disegnate. Lì si disegnano da sole al caricamento, una dopo l'altra.
+   (Le animazioni battono lo stile inline, quindi anche se paintReveals ci
+   scrivesse sopra vincerebbe comunque questa.) */
+@keyframes drawLine { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.conn[data-draw="load"] .reveal {
+  animation: drawLine 1.9s var(--ease) both;
+}
+.conn[data-draw="load"] mask:nth-of-type(2) .reveal { animation-delay: 0.3s; }
+.conn[data-draw="load"] mask:nth-of-type(3) .reveal { animation-delay: 0.6s; }
+.conn[data-draw="load"] mask:nth-of-type(4) .reveal { animation-delay: 0.9s; }
+@media (prefers-reduced-motion: reduce) {
+  .conn[data-draw="load"] .reveal { animation: none; stroke-dashoffset: 0; }
+}
+
+/* livello delle linee che nascono al movimento del mouse (trail-lines.js).
+   È lungo quanto la pagina, non quanto lo schermo: le linee restano
+   attaccate al punto in cui sono nate e scorrono via con il contenuto.
+   z-index: -1 => passano dietro a testi e foto, sopra al colore di fondo. */
+body.has-trail { position: relative; }
+.trail {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: visible;   /* una linea nata in fondo non viene tagliata */
+  z-index: -1;
+  pointer-events: none;
+}
+.trail .dotpath { opacity: 0.75; }
+
+/* parallasse: l'immagine si muove dentro la sua cornice */
+.parallax { overflow: hidden; }
+.parallax img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: translate3d(0, var(--py, 0px), 0) scale(1.18);
+  will-change: transform;
+}
+
+/* ===================== SEZIONE 1 — HERO ===================== */
+/* il primo fotogramma fa anche da sfondo della sezione: finché il video
+   non è decodificato non si vede nessun buco fra poster e riproduzione */
+.sec--hero {
+  height: 100svh;
+  overflow: hidden;
+  background: #000 url("../assets/img/showreel-poster.jpg") center / cover no-repeat;
+}
+.showreel, .showreel-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.showreel-fallback {
+  background: radial-gradient(120% 120% at 30% 20%, #4a4a4a 0%, #262626 55%, #161616 100%);
+  display: none;
+}
+body.no-video .showreel { display: none; }
+body.no-video .showreel-fallback { display: block; }
+
+/* ---------- scritta e logo nella testata ---------- */
+.hero-mark {
+  position: absolute;
+  left: clamp(20px, 3vw, 46px);
+  top: 50%;
+  z-index: 2;
+  width: min(52vw, 640px);
+  margin: 0;
+  transform: translateY(-50%);
+  mix-blend-mode: difference;   /* negativo sul video che ci scorre dietro */
+  pointer-events: none;
+}
+.hero-mark img { width: 100%; height: auto; display: block; }
+
+.scroll-hint {
+  position: absolute;
+  left: 50%; bottom: 26px;
+  transform: translateX(-50%);
+  width: 22px; height: 36px;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  mix-blend-mode: difference;
+  opacity: 0.75;
+}
+.scroll-hint i {
+  position: absolute;
+  left: 50%; top: 7px;
+  width: 2px; height: 7px;
+  background: #fff;
+  transform: translateX(-50%);
+  animation: hintDrop 1.9s var(--ease) infinite;
+}
+@keyframes hintDrop { 0%,100% { opacity: 0; transform: translate(-50%, 0); } 40% { opacity: 1; } 80% { opacity: 0; transform: translate(-50%, 12px); } }
+
+/* ===================== SEZIONE 2 — CAROSELLO LAVORI ===================== */
+.sec--reel { height: 100svh; overflow: hidden; }
+.reel { position: absolute; inset: 0; }
+
+.reel-track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.reel-track::-webkit-scrollbar { display: none; }
+
+.reel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  background: #101010;
+}
+.reel-slide video, .reel-slide img {
+  position: relative;
+  z-index: 1;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* video verticale: niente riempitivi ai lati, appare alla sua larghezza
+   vera e alto quanto la sezione */
+.reel-slide.is-portrait { background: transparent; }
+.reel-slide.is-portrait video, .reel-slide.is-portrait img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  object-fit: contain;
+}
+.reel-slide .slide-missing {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: #453767;
+  color: rgba(255,255,255,0.72);
+}
+.reel-slide .slide-missing svg { width: 108px; height: 108px; }
+
+.reel-name {
+  position: absolute;
+  top: 40px; left: 46px;
+  z-index: 4;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  font-weight: 500;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.reel-ui {
+  position: absolute;
+  left: 50%; bottom: 34px;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+.reel-dots, .photo-dots { display: flex; align-items: center; gap: 10px; }
+.reel-dots button, .photo-dots button {
+  width: 11px; height: 11px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.reel-dots button.is-active, .photo-dots button.is-active {
+  background: #fff;
+  transform: scale(1.25);
+}
+.photo-dots button { background: rgba(15, 18, 14, 0.35); }
+.photo-dots button.is-active { background: #0f120e; }
+
+.reel-sound {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.4s var(--ease);
+}
+.reel-sound:hover { background: rgba(255, 255, 255, 0.32); }
+.reel-sound .mute { display: none; }
+.reel-sound[aria-pressed="false"] .wave { display: none; }
+.reel-sound[aria-pressed="false"] .mute { display: block; }
+
+/* ===================== SEZIONE 3 — SERVIZI (puntini) ===================== */
+.sec--services { position: relative; height: 220svh; }
+.services-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.services-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* la linea ha altezza zero: i puntini crescono/rimpiccioliscono
+   attorno al suo asse, così le linee restano ferme al loro posto */
+.dline { position: relative; height: 0; }
+.dline i {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: var(--dot, 6px);
+  transform: translateY(-50%);
+  background-image: radial-gradient(circle at 50% 50%, currentColor 0 43%, transparent 45%);
+  background-size: calc(var(--dot, 6px) * 1.62) var(--dot, 6px);
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.srow {
+  height: clamp(56px, 13svh, 128px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 0 clamp(20px, 3.2vw, 64px);
+}
+.srow[data-align="center"]  { justify-content: center; }
+.srow[data-align="mid-end"] { justify-content: flex-end; }
+.srow[data-align="end"]     { justify-content: flex-end; }
+.srow[data-align="mid-start"] .sitem { margin-left: 15vw; }
+.srow[data-align="mid-end"] .sitem   { margin-right: 15vw; }
+
+.sitem {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(1.15rem, 3.1vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transform: translateX(var(--slide, 60vw));
+  opacity: var(--op, 0);
+  transition: color 0.35s var(--ease);
+}
+.sitem:hover { color: var(--green); }
+
+/* "+" e pannello vivono solo da mobile (vedi la media query in fondo) */
+.splus, .spanel { display: none; }
+
+/* ===================== SEZIONE 4 — SPLIT (Direzione Creativa) ===================== */
+.sec--split { height: 100svh; overflow: hidden; }
+.sec--split .split-col--text .sec-title { position: absolute; left: 7.5%; top: 17%; }
+.sec--split .split-col--text .sec-copy  { position: absolute; left: 7.5%; top: 55%; width: 23%; }   /* a filo col titolo */
+.sec--split .split-col--media {
+  position: absolute;
+  left: 38%; top: 17.5%;
+  width: 55%;
+  aspect-ratio: 4 / 3;
+  max-height: 76svh;
+}
+.sec--split .media { width: 100%; height: 100%; }
+
+/* ===================== SEZIONE 5 — BANNER (Regia) ===================== */
+.sec--banner { height: 100svh; overflow: hidden; }
+.banner-media {
+  position: absolute;
+  left: 1%; top: 5%;
+  width: 78%;
+  aspect-ratio: 3.1 / 1;
+}
+.sec-title--right {
+  position: absolute;
+  right: 5%; bottom: 21%;   /* fra la fine della prima linea tratteggiata e l'inizio della seconda */
+  text-align: right;
+}
+.sec--banner .sec-copy--wide {
+  position: absolute;
+  left: 13%; bottom: 6%;
+  width: 48%;
+  max-width: none;
+}
+
+/* ===================== SEZIONE 6 — COLLAGE ===================== */
+.sec--collage { height: 100svh; overflow: hidden; }
+.col-item { position: absolute; }
+.col-item img { width: 100%; height: 100%; object-fit: cover; }
+.col-item--a { left: 30%; top: 0;    width: 64.3%; aspect-ratio: 2.76; }
+.col-item--b { left: 20%; top: 10%;  width: 34.2%; aspect-ratio: 0.8; max-height: 80svh; }
+.col-item--c { left: 61.5%; top: 48%; width: 33.4%; aspect-ratio: 1.145; }
+.col-item--d { left: 0;   top: 26.7%; width: 23.9%; aspect-ratio: 1.23; }
+
+/* ===================== SEZIONE 7 — SOUND DESIGN ===================== */
+.sec--sound { height: 100svh; overflow: hidden; }
+.sound-media--center { position: absolute; left: 37.5%; top: 10%; width: 25%; aspect-ratio: 5 / 9; max-height: 82svh; }
+.sound-copy  { position: absolute; right: 2.5%; top: 13%; width: 22%; }
+.sound-title { position: absolute; left: 6%; bottom: 19%; }
+
+/* ===================== SEZIONI 7b/7c — STATEMENT ===================== */
+.sec--statement {
+  height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: 2rem;
+  padding: 0 clamp(24px, 8vw, 160px);
+}
+.statement-title { max-width: 12ch; }
+.statement-copy  { max-width: 52ch; }
+.sec--statement-alt { justify-items: end; text-align: right; }
+.sec--statement-alt .statement-copy { text-align: right; }
+
+/* ===================== SEZIONE 8 — FOTOGRAFIA ===================== */
+.sec--photo {
+  height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: clamp(18px, 3svh, 34px);
+  overflow: hidden;
+}
+.photo-rail {
+  display: flex;
+  gap: 3vw;
+  padding: 0 15vw;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.photo-rail::-webkit-scrollbar { display: none; }
+.photo-slide {
+  flex: 0 0 70vw;
+  aspect-ratio: 16 / 10;
+  max-height: 74svh;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.25);
+}
+.photo-slide img { width: 100%; height: 100%; object-fit: cover; }
+.photo-dots { justify-content: center; }
+
+/* ===================== SEZIONE 9 — CONTATTI ===================== */
+.sec--contact {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 12svh clamp(24px, 5.6vw, 108px);
+}
+.contact-title {
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: clamp(1.4rem, 4svh, 3rem);
+}
+.contact-lead {
+  font-size: clamp(1.1rem, 1.9vw, 1.8rem);
+  font-weight: 400;
+  margin-bottom: clamp(1.6rem, 5svh, 3.4rem);
+}
+.contact-row {
+  font-size: clamp(1.1rem, 1.9vw, 1.8rem);
+  line-height: 1.7;
+}
+.contact-row--small { font-size: clamp(0.9rem, 1.1vw, 1.05rem); opacity: 0.55; margin-top: 1.6rem; }
+/* la frase piccola ora sta subito sotto a quella grande, prima dei contatti */
+.contact-lead:has(+ .contact-row--small) { margin-bottom: 0.5rem; }
+.contact-lead + .contact-row--small { margin-top: 0; margin-bottom: clamp(1.6rem, 5svh, 3.4rem); }
+.contact-row a { color: inherit; font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.4s var(--ease); }
+.contact-row a:hover { border-color: currentColor; }
+
+/* ===================== FOOTER ===================== */
+.site-footer {
+  position: relative;
+  z-index: 1;
+  background: #000;
+  color: #fff;
+  padding: clamp(40px, 7vh, 80px) clamp(24px, 5.6vw, 108px) 28px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 56px);
+}
+.foot-copy { font-size: 1rem; font-weight: 500; }
+.foot-small { font-family: var(--font-sans); font-size: 0.82rem; opacity: 0.6; margin-top: 0.4rem; }
+.foot-nav { display: flex; flex-direction: column; gap: 0.4rem; }
+.foot-nav h3 {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 0.5rem;
+}
+.foot-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  transition: opacity 0.3s var(--ease);
+}
+.foot-nav a:hover { opacity: 0.5; }
+
+.foot-legal {
+  margin-top: clamp(32px, 6vh, 64px);
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.16);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  opacity: 0.6;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.foot-legal p { max-width: 70ch; }
+.foot-links { display: flex; gap: 1.2rem; align-items: center; }
+.foot-links a { color: #fff; }
+
+/* ===================== OVERLAY (catalogue / progetto / about) ===================== */
+.panel {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.back-btn {
+  position: absolute;
+  top: 34px; left: 44px;
+  z-index: 30;
+  width: 46px; height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  transition: transform 0.4s var(--ease);
+}
+.back-btn:hover { transform: scale(1.12); }
+.back-btn--dark { background: var(--ink); color: var(--white); }
+
+/* ---------- catalogue (ruota) ---------- */
+/* la scena occupa una schermata; sotto ci sono l'elenco completo e il footer */
+.cat-stage { position: relative; height: 100svh; }
+.wheel-line { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--green); z-index: 2; pointer-events: none; }
+.wheel {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  /* la ruota è infinita: non c'è una fine da cui passare alla pagina */
+  overscroll-behavior: contain;
+  /* è lo snap del browser a posare la voce al centro, non un passo imposto:
+     da qui viene la sensazione della selezione ore su iPhone */
+  scroll-snap-type: y mandatory;
+  perspective: 950px;
+  scrollbar-width: none;
+  outline: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 4%, #000 30%, #000 70%, transparent 96%);
+          mask-image: linear-gradient(to bottom, transparent 4%, #000 30%, #000 70%, transparent 96%);
+}
+.wheel::-webkit-scrollbar { display: none; }
+.wheel-list { list-style: none; padding-left: 25vw; }
+.wheel-item { scroll-snap-align: center; scroll-snap-stop: normal; }
+.wheel-item {
+  height: 76px;
+  /* block + line-height invece di flex: text-overflow non si applica
+     dentro un contenitore flex, e i titoli lunghi venivano tagliati netti */
+  display: block;
+  line-height: 76px;
+  width: max-content;
+  max-width: calc(75vw - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: var(--white);
+  white-space: nowrap;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  transition: color 0.4s var(--ease);
+}
+.wheel-item:hover { color: var(--green); }
+
+/* Effetto tamburo agganciato allo scroll dal browser stesso.
+   Girando sul compositor resta in sincrono con lo scorrimento a qualsiasi
+   velocità: è questo che toglie l'effetto "le scritte si allontanano e poi
+   si riavvicinano" che si vedeva sfogliando veloce, dove la trasformazione
+   calcolata in JS arrivava con un fotogramma di ritardo.
+   Dove non è supportato (Safari vecchi, Firefox) ci pensa updateWheel(). */
+@supports (animation-timeline: view()) {
+  .wheel-item {
+    animation: wheel-drum linear both;
+    animation-timeline: view(block);
+    animation-range: cover 0% cover 100%;
+  }
+}
+@keyframes wheel-drum {
+  0%   { transform: rotateX(-55deg) translateZ(0);    opacity: 0.35; }
+  50%  { transform: rotateX(0deg)   translateZ(40px); opacity: 1; }
+  100% { transform: rotateX(55deg)  translateZ(0);    opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wheel-item { animation: none; }
+}
+
+/* ---------- dettaglio progetto ---------- */
+.panel--project { background: #0c0c0c; z-index: 90; }
+.project-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;   /* le carte si scostano: mai una barra orizzontale */
+  scrollbar-width: none;
+  /* si scorre da un progetto all'altro, e ci si posa su quello al centro */
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+}
+.project-scroll::-webkit-scrollbar { display: none; }
+
+.project-block {
+  min-height: 100svh;
+  scroll-snap-align: center;
+  display: grid;
+  align-content: center;
+  padding: 40px 0;
+  /* i progetti lontani dal centro sfumano: si capisce dov'è il fuoco */
+  transition: opacity 0.4s var(--ease);
+}
+.project-card {
+  /* quanto sbucano ai lati gli episodi che stanno dietro */
+  --peek: 18%;
+  /* la larghezza la detta l'altezza dello schermo: il video è 16/9 e sopra e
+     sotto ci sono titolo, player e scheda tecnica. Così la scheda è la più
+     grande che ci sta, senza costringere a scorrere per leggere le info. */
+  --room: calc(1.7778 * 100svh - 816px);
+  width: max(300px, min(1040px, 88vw, var(--room)));
+  margin: 0 auto;
+  cursor: default;
+}
+/* con gli episodi dietro serve margine ai lati perché possano sbucare */
+.project-card--multi {
+  width: max(300px, min(1040px, 62vw, var(--room)));
+}
+
+.project-titlebox { position: relative; padding: 0.9rem 0; }
+.project-title { font-size: clamp(1.5rem, 3vw, 2.8rem); font-weight: 500; color: var(--white); }
+.split-line { position: absolute; left: 0; right: 0; height: 1px; background: var(--green); transform-origin: center; }
+.split-line--top { top: 0; }
+.split-line--bottom { bottom: 0; }
+.panel--project.is-open .split-line--top    { animation: splitUp   0.7s var(--ease) both; }
+.panel--project.is-open .split-line--bottom { animation: splitDown 0.7s var(--ease) both; }
+@keyframes splitUp   { from { transform: translateY(2.4rem); } to { transform: translateY(0); } }
+@keyframes splitDown { from { transform: translateY(-2.4rem); } to { transform: translateY(0); } }
+
+/* ---------- mazzo degli episodi ----------
+   Le carte stanno una sopra l'altra: quella scelta davanti a misura piena,
+   le altre dietro, spostate di lato, rimpicciolite e scurite. Posizione,
+   scala e luminosità le scrive js/catalogue.js a ogni fotogramma leggendo
+   lo scorrevole trasparente steso sopra (.project-track). */
+.project-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: 2.2rem 0 0;
+}
+/* Il riquadro dentro al palco. Finché il formato del media non si conosce
+   riempie il palco (16/9). Appena js scrive --ar prende la forma vera del
+   contenuto e detta lui l'altezza del palco: un verticale diventa ALTO, non
+   stretto — largo quanto glielo concede la colonna, alto fino a --hmax.
+   Carte, frecce, pista e player stanno dentro e si adattano con lui. */
+.stage-box {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+}
+.project-stage.is-fit { aspect-ratio: auto; height: auto; }
+.project-stage.is-fit .stage-box {
+  position: relative;
+  top: auto; left: auto;
+  transform: none;
+  margin: 0 auto;
+  width: min(100%, calc(var(--hmax, 68vh) * var(--ar, 1.7778)));
+  height: auto;
+  aspect-ratio: var(--ar, 16 / 9);
+}
+.project-deck { position: absolute; inset: 0; }
+
+.project-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  /* NON usare `visibility`: è ereditata, e `visible` su un figlio scavalca
+     l'`hidden` del pannello chiuso — la scheda invisibile resterebbe sopra
+     la ruota a rubarle clic e scorrimento. */
+}
+.project-slide video, .project-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Schermo intero "nostro": si usa quando quello del browser non è concesso
+   (dentro un pannello incorporato la richiesta viene ignorata in silenzio). */
+html.is-cinema, html.is-cinema body { overflow: hidden; }
+.project-card.is-cinema .project-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  margin: 0;
+  aspect-ratio: auto;
+  background: #000;
+}
+.project-card.is-cinema .project-slide video,
+.project-card.is-cinema .project-slide img { object-fit: contain; }
+/* a schermo intero comanda l'altezza dello schermo: un verticale la riempie
+   tutta e resta largo quanto vuole il suo formato */
+.project-card.is-cinema .project-stage.is-fit .stage-box {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  width: auto;
+  max-width: 100vw;
+  height: 100%;
+}
+.project-card.is-cinema .deck-nav { display: none; }
+/* il buio delle carte dietro: cambia solo l'opacità, che il compositor sa
+   fare da solo senza ridisegnare il fotogramma del video */
+.slide-shade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Il motore del gesto: uno scorrevole nativo trasparente sopra il mazzo.
+   Trackpad, dito, inerzia e assestamento li fa il browser. In verticale non
+   scorre, così la scrollata di lato la prende lui e quella su e giù passa
+   oltre, al salto da un progetto all'altro. */
+.project-track {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  /* non scorre da sola: il gesto lo legge js e lo trasforma in un movimento
+     unico, lo stesso delle frecce. Da `hidden` la posizione resta comunque
+     scrivibile da codice, ed è così che si muove. */
+  overflow: hidden;
+  cursor: pointer;
+}
+.track-cell { flex: 0 0 100%; }
+
+.deck-nav {
+  position: absolute;
+  top: 50%;
+  /* sopra le carte: il loro z-index lo scrive js e arriva a 1000 */
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  width: clamp(34px, 4.4vw, 56px);
+  height: clamp(34px, 4.4vw, 56px);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: background-color 0.28s var(--ease), opacity 0.28s var(--ease);
+}
+.deck-nav:hover, .deck-nav:focus-visible {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.17);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.deck-nav svg {
+  display: block;
+  width: 46%;
+  height: auto;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.65));
+}
+.deck-nav--prev {
+  left: calc(-1 * var(--peek) / 2);
+  transform: translate(-50%, -50%);
+}
+.deck-nav--next {
+  right: calc(-1 * var(--peek) / 2);
+  transform: translate(50%, -50%);
+}
+.deck-nav--prev svg { transform: scaleX(-1); }
+
+.project-ep {
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.project-media { width: 100%; margin: 2.2rem 0 0; aspect-ratio: 16 / 9; background: #000; overflow: hidden; }
+.project-media video, .project-media img { width: 100%; height: 100%; object-fit: cover; }
+/* ---------- player minimale ---------- */
+/* il player sta dentro al video, in basso, su una velatura scura */
+.vplayer {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1100;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 20px);
+  padding: clamp(26px, 7%, 60px) clamp(12px, 2.4%, 26px) clamp(10px, 2%, 18px);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.26) 45%, rgba(0, 0, 0, 0));
+}
+.vbtn {
+  width: 22px; height: 22px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #fff;
+  opacity: 0.6;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.25s var(--ease);
+}
+.vbtn:hover { opacity: 1; }
+.vbtn svg { width: 100%; height: 100%; fill: currentColor; }
+.vbtn--play .ico-pause, .vbtn--play .ico-play { grid-area: 1 / 1; }
+.vbtn--play .ico-pause { display: none; }
+.project-block.is-playing .vbtn--play .ico-play { display: none; }
+.project-block.is-playing .vbtn--play .ico-pause { display: block; }
+.vbtn--sound .ico-on, .vbtn--sound .ico-off { grid-area: 1 / 1; }
+.vbtn--sound .ico-on { display: none; }
+.project-block.is-live .vbtn--sound .ico-on { display: block; }
+.project-block.is-live .vbtn--sound .ico-off { display: none; }
+.project-block.is-live .vbtn--sound { opacity: 1; }
+/* schermo intero: la seconda icona compare solo quando ci si è dentro */
+.vbtn--full .ico-full, .vbtn--full .ico-exit { grid-area: 1 / 1; }
+.vbtn--full .ico-exit { display: none; }
+.vplayer.is-full .vbtn--full .ico-full { display: none; }
+.vplayer.is-full .vbtn--full .ico-exit { display: block; }
+
+.vbar {
+  position: relative;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.32);
+  cursor: pointer;
+}
+.vbar::after {   /* area cliccabile più alta della riga */
+  content: "";
+  position: absolute;
+  inset: -12px 0;
+}
+/* niente trattino: si riempie la barra, e basta.
+   Nessuna transizione: la larghezza la scrive js a ogni fotogramma */
+.vbar-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  border-radius: 3px;
+  background: #fff;
+}
+.project-slide.is-active video { cursor: pointer; }
+/* quando l'audio è acceso il titolo si accende anche lui */
+.project-block.is-live .project-title { color: var(--green); }
+
+.media-missing {
+  width: 100%; height: 100%;
+  display: grid; place-items: center;
+  color: var(--grey);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border: 1px dashed rgba(255,255,255,0.35);
+  padding: 1rem; text-align: center; overflow-wrap: anywhere;
+}
+.project-info {
+  width: 100%;
+  margin: 1.4rem 0 0;
+  display: grid;
+  /* data e collaborazione sulla prima riga, la descrizione da sola sotto */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+}
+.info-cell { padding: 0.9rem 1rem 1.1rem 0.9rem; border-right: 1px solid rgba(255,255,255,0.45); border-bottom: 1px solid rgba(255,255,255,0.45); }
+.info-cell:nth-child(2n) { border-right: none; }
+.info-cell--wide { grid-column: 1 / -1; border-right: none; }
+.info-cell h3 {
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; margin-bottom: 0.45rem;
+}
+.info-cell p { font-family: var(--font-sans); font-size: clamp(0.82rem, 0.95vw, 1rem); line-height: 1.55; }
+
+/* ---------- about ---------- */
+.panel--about {
+  background: var(--green);
+  color: var(--ink);
+  overflow-y: auto;
+  padding: 0 clamp(20px, 4vw, 60px) 70px;
+}
+.about-header {
+  display: flex; align-items: center; gap: 2rem;
+  padding: 28px 0 24px;
+  border-bottom: 1px solid var(--ink);
+  position: relative; z-index: 2;
+}
+.about-header .back-btn { position: static; flex-shrink: 0; }
+.about-title { font-size: 1.7rem; font-weight: 500; margin-left: auto; margin-right: auto; }
+.about-nav { display: flex; gap: 1.6rem; }
+.about-nav a { color: var(--ink); text-decoration: none; font-size: 1.25rem; font-weight: 500; transition: opacity 0.4s var(--ease); }
+.about-nav a:hover { opacity: 0.55; }
+.about-body { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+.about-intro {
+  font-family: var(--font-sans);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  line-height: 1.5; text-align: center;
+  margin: 2.6rem auto 3rem; max-width: 1050px;
+}
+.about-label { font-size: 1.5rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.8rem; }
+.services { list-style: none; }
+.services li {
+  display: grid; grid-template-columns: 3.4rem 1fr auto;
+  align-items: baseline; gap: 1.2rem;
+  padding: 0.85rem 0.2rem;
+  border-bottom: 1px solid var(--ink);
+  font-size: 1rem;
+}
+.services li:first-child { border-top: 1px solid var(--ink); }
+.services .num { font-family: var(--font-mono); font-size: 0.8rem; opacity: 0.8; font-variant-numeric: tabular-nums; }
+.services .num--r { justify-self: end; }
+.services .name { font-weight: 500; color: inherit; text-decoration: none; }
+.services .name:hover { opacity: 0.55; }
+.about-contacts { margin-top: 3rem; display: flex; align-items: baseline; gap: 1.6rem; flex-wrap: wrap; }
+.about-contacts .about-label { margin-bottom: 0; }
+.about-mail {
+  color: var(--ink); font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  text-decoration: none; border-bottom: 2px solid transparent;
+  transition: border-color 0.4s var(--ease);
+}
+.about-mail:hover { border-color: var(--ink); }
+
+
+/* ============================================================
+   SUB-PAGES (about / contact): white page, black type
+   ============================================================ */
+/* Sulle pagine interne il CONTENUTO è tutto Inter: prima le didascalie e le
+   etichette usavano il monospaziato e la prosa un font ancora diverso, e la
+   pagina sembrava composta con tre caratteri.
+   Nav e footer restano nel font dell'identità, come sulla home: applicandolo
+   a tutto il body la nav sembrava più grande, perché Inter ha l'occhio più
+   alto a parità di corpo. */
+body.page-doc main,
+body.page-doc .panel {
+  --font: var(--font-inter);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-inter);
+  --font-serif: var(--font-inter);
+  /* serve anche la dichiarazione esplicita: ridefinire la variabile qui non
+     cambia il `font-family: var(--font)` dichiarato su `body`, perché i figli
+     ereditano il valore già calcolato, non la variabile */
+  font-family: var(--font-inter);
+}
+
+body.page-light {
+  --bg: #ffffff;
+  --fg: #0a0a0a;
+  background: #ffffff;
+  color: #0a0a0a;
+}
+body.page-light .sec { color: var(--fg); }
+
+.page-head {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: clamp(90px, 16svh, 190px) clamp(24px, 5.6vw, 108px) clamp(40px, 8svh, 90px);
+}
+.page-title {
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.page-lead {
+  margin-top: clamp(1.4rem, 4svh, 2.6rem);
+  max-width: 30ch;
+  font-size: clamp(1.25rem, 2.4vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+}
+
+.page-body {
+  padding: clamp(40px, 9svh, 110px) clamp(24px, 5.6vw, 108px) 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 72px);
+}
+.page-body p {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.05vw, 1.12rem);
+  line-height: 1.7;
+  text-align: justify;
+}
+.page-body p + p { margin-top: 1.1rem; }
+
+.page-section {
+  padding: clamp(50px, 11svh, 130px) clamp(24px, 5.6vw, 108px) clamp(40px, 8svh, 90px);
+}
+.page-section h2 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: clamp(18px, 3svh, 32px);
+}
+
+/* elenco servizi con lo stesso tratteggio della home */
+.svc-list { list-style: none; }
+.svc-list li {
+  border-top: 2px dotted currentColor;
+  padding: clamp(14px, 2.4svh, 26px) 0;
+}
+.svc-list li:last-child { border-bottom: 2px dotted currentColor; }
+.svc-row {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: baseline;
+  gap: clamp(12px, 2vw, 34px);
+  color: inherit;
+  text-decoration: none;
+}
+.svc-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
+}
+.svc-name {
+  font-size: clamp(1.15rem, 2.4vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.svc-note {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  opacity: 0.72;
+}
+.svc-row:hover .svc-name { opacity: 0.55; }
+
+/* pagina contatti autonoma */
+body.page-light .sec--contact { min-height: 100svh; }
+
+/* sulle pagine di testo il logo va in alto: in basso passerebbe sopra ai paragrafi */
+body.page-doc .logo { top: 26px; bottom: auto; left: clamp(24px, 5.6vw, 108px); }
+body.page-doc .logo img { width: 46px; }
+
+
+/* ============================================================
+   PAGINE SERVIZIO
+   Ogni pagina porta la palette della sua sezione in home:
+   --bg e --fg arrivano dallo style inline sul <body>.
+   ============================================================ */
+body.page-service {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.svc-wrap { padding-inline: clamp(24px, 5.6vw, 108px); }
+
+/* riga tratteggiata, stessa grana dei puntini della home */
+.rule {
+  height: 5px;
+  background-image: radial-gradient(circle at 50% 50%, currentColor 0 43%, transparent 45%);
+  background-size: 8px 5px;
+  background-repeat: repeat-x;
+  opacity: 0.9;
+}
+
+/* ---------- testata ---------- */
+/* l'hero occupa esattamente una schermata: niente anteprima di ciò che segue */
+.svc-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: clamp(18px, 3svh, 34px);
+  padding-block: clamp(110px, 16svh, 190px) clamp(40px, 8svh, 90px);
+}
+.svc-title {
+  font-size: clamp(2.6rem, 8vw, 7rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  max-width: 14ch;
+}
+/* variante: occhiello a destra, sotto al titolo (usata da Creative Direction) */
+.svc-hero--split .svc-lead {
+  justify-self: end;
+  text-align: right;
+}
+.svc-lead {
+  max-width: 44ch;
+  font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- media a tutta larghezza ---------- */
+.svc-figure {
+  position: relative;
+  margin-top: clamp(30px, 6svh, 70px);
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+}
+.svc-figure--tall { aspect-ratio: 16 / 10; }
+.svc-figure img { width: 100%; height: 100%; object-fit: cover; }
+.svc-caption {
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* ---------- blocchi di testo ---------- */
+.svc-block {
+  position: relative;
+  padding-block: clamp(40px, 8svh, 96px);
+}
+.svc-block .rule { margin-bottom: clamp(26px, 5svh, 56px); }
+.svc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
+  gap: clamp(20px, 4vw, 76px);
+  align-items: start;
+}
+.svc-h2 {
+  font-size: clamp(1.35rem, 2.6vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.svc-prose p {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.72;
+  text-align: justify;
+  max-width: 68ch;
+}
+.svc-prose p + p { margin-top: 1.1rem; }
+.svc-prose strong { font-weight: 600; }
+
+/* immagine di servizio, piccola, accanto al titolo del blocco */
+.svc-aside {
+  margin-top: clamp(14px, 2.4svh, 26px);
+  width: 100%;
+  max-width: 220px;
+}
+.svc-aside .frame { display: block; aspect-ratio: 3 / 4; }
+.svc-aside img { width: 100%; height: 100%; object-fit: cover; }
+.svc-aside figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* elenco di cosa consegniamo */
+.svc-facts { list-style: none; margin-top: 1.6rem; }
+.svc-facts li {
+  border-top: 2px dotted currentColor;
+  padding: 0.85rem 0;
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+}
+.svc-facts li:last-child { border-bottom: 2px dotted currentColor; }
+.svc-facts .n { font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.5; }
+
+/* due colonne affiancate: il racconto a sinistra, l'elenco a destra.
+   Sostituisce due blocchi uno sotto l'altro (es. "come lavoriamo" e
+   "cosa ottieni"), che si leggevano come due capitoli separati. */
+.svc-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 6vw, 120px);
+  align-items: start;
+}
+/* nelle sezioni di copy tutti i testi hanno la stessa grandezza, quella
+   (più piccola) delle voci dell'elenco */
+.svc-pair-intro p {
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+  line-height: 1.65;
+  text-align: left;
+  max-width: 60ch;
+}
+.svc-pair .svc-facts { margin-top: 1.2rem; }
+.svc-pair .svc-facts + p { margin-top: 1.5rem; }
+
+/* variante rovesciata (Studio Fotografico): elenco a sinistra, racconto a
+   destra. Titolo, elenco e racconto stanno in una griglia unica, così il
+   racconto parte esattamente alla riga della prima voce dell'elenco invece
+   che all'altezza del titolo. */
+.svc-pair--rev {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: clamp(40px, 10vw, 190px);
+  row-gap: 0;
+}
+.svc-pair--rev .svc-pair-h { grid-column: 1; grid-row: 1; margin-bottom: 1.2rem; }
+.svc-pair--rev .svc-pair-list { grid-column: 1; grid-row: 2; }
+.svc-pair--rev .svc-pair-list .svc-facts { margin-top: 0; }
+.svc-pair--rev .svc-pair-intro {
+  grid-column: 2; grid-row: 2;
+  /* alto quanto l'elenco, dal primo all'ultimo tratteggio: l'altezza e la
+     grandezza del carattere le calcola js/site.js; questa è la base senza js */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.7em;
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+}
+.svc-pair--rev .svc-pair-intro p { font-size: inherit; line-height: 1.42; max-width: none; margin: 0; }
+/* a combaciare con i tratteggi devono essere le lettere, non le scatole:
+   tolgo il vuoto sopra la prima riga e sotto l'ultima */
+.svc-pair--rev .svc-pair-intro p:first-child { margin-top: -0.28em; }
+.svc-pair--rev .svc-pair-intro p:last-child { margin-bottom: -0.3em; }
+
+/* variante normale (Consulenza, Regia, Musica): racconto a sinistra,
+   titolo ed elenco a destra. Stessa griglia: il racconto parte alla riga
+   del primo tratteggio dell'elenco, non all'altezza del titolo. */
+.svc-pair--grid { row-gap: 0; }
+.svc-pair--grid .svc-pair-left { grid-column: 1; grid-row: 2; }
+.svc-pair--grid .svc-pair-h { grid-column: 2; grid-row: 1; margin-bottom: 1.2rem; }
+.svc-pair--grid .svc-pair-list { grid-column: 2; grid-row: 2; }
+.svc-pair--grid .svc-pair-list .svc-facts { margin-top: 0; }
+/* a combaciare con il tratteggio è la prima riga di lettere */
+.svc-pair--grid .svc-pair-intro p:first-child { margin-top: -0.3em; }
+
+/* ---------- chiusura + altri servizi ---------- */
+.svc-cta {
+  padding-block: clamp(50px, 11svh, 130px);
+  display: grid;
+  gap: 1.4rem;
+  justify-items: start;
+}
+.svc-cta p {
+  font-size: clamp(1.4rem, 3.4vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+}
+.svc-cta a.big,
+.svc-prose a.big {
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+.svc-cta a.big:hover,
+.svc-prose a.big:hover { opacity: 0.6; }
+
+.svc-others { padding-bottom: clamp(50px, 10svh, 110px); }
+.svc-others h2 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 1rem;
+}
+.svc-others ul { list-style: none; }
+.svc-others li { border-top: 2px dotted currentColor; }
+.svc-others li:last-child { border-bottom: 2px dotted currentColor; }
+.svc-others a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  font-weight: 500;
+  transition: opacity 0.35s var(--ease);
+}
+.svc-others a:hover { opacity: 0.55; }
+.svc-others a span { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.5; }
+
+/* ---------- link "read more" nelle sezioni della home ---------- */
+.sec-more {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-family: var(--font-inter);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 3px;
+  opacity: 0.75;
+  transition: opacity 0.35s var(--ease);
+}
+.sec-more:hover { opacity: 1; }
+.sec-title a { color: inherit; text-decoration: none; }
+
+
+/* ---------- player audio (Sound Design) ---------- */
+.players { margin-top: 1.8rem; }
+.player {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 3.4rem;
+  gap: clamp(12px, 1.6vw, 22px);
+  align-items: center;
+  border-top: 2px dotted currentColor;
+  padding: clamp(12px, 1.8svh, 20px) 0;
+}
+.player:last-child { border-bottom: 2px dotted currentColor; }
+.player-btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+.player-btn:hover:not(:disabled) { background: currentColor; }
+.player-btn:hover:not(:disabled) svg { color: var(--bg); }
+.player-btn:disabled { opacity: 0.35; }
+.player-btn svg { width: 15px; height: 15px; fill: currentColor; }
+.player-btn .ico-pause { display: none; }
+.player.is-playing .player-btn .ico-play { display: none; }
+.player.is-playing .player-btn .ico-pause { display: block; }
+/* i player stanno dentro .svc-prose, che ha una regola `p` più specifica:
+   qui serve `.player` davanti per riprendersi tipografia e margini */
+.player .player-title {
+  font-family: var(--font);
+  font-size: clamp(0.98rem, 1.2vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+  margin: 0;
+}
+.player .player-sub {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.4;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-align: left;
+  opacity: 0.55;
+  margin: 3px 0 0;
+}
+.player-bar { position: relative; height: 4px; margin-top: 0.7rem; cursor: pointer; }
+.player-bar::before {
+  content: ""; position: absolute; inset: 0;
+  background: currentColor; opacity: 0.22;
+}
+.player-fill {
+  position: absolute; inset: 0;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.player-time {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  opacity: 0.6;
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
+}
+.player.is-missing .player-title { opacity: 0.5; }
+.player.is-missing .player-sub::after { content: " — file coming soon"; }
+
+/* ---------- griglia siti (Web Development) ---------- */
+.sites {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2.2vw, 30px);
+  margin-top: 1.8rem;
+}
+.site-card { display: block; color: inherit; text-decoration: none; }
+.site-shot {
+  display: block;          /* è uno <span>: senza questo aspect-ratio non si applica */
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.07);
+}
+.site-shot img { width: 100%; height: 100%; object-fit: cover; }
+/* il segnaposto compare solo se l'immagine non c'è: onerror rimuove l'<img>
+   e la regola qui sotto smette di applicarsi */
+.site-shot img + .site-missing { display: none; }
+.site-missing {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  border: 1px dashed currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  text-align: center;
+  padding: 1rem;
+}
+.site-name { display: block; margin-top: 0.6rem; font-weight: 500; font-size: 1rem; }
+.site-meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.site-card:hover .site-shot { opacity: 0.82; }
+
+/* ---------- corridoio di immagini (Photography) ---------- */
+.corridor {
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  min-height: 100svh;
+  display: grid;
+}
+.corridor-cards { position: absolute; inset: 0; pointer-events: none; }
+.corridor-stage { position: absolute; inset: 0; transform-style: preserve-3d; }
+.corridor-card { position: absolute; overflow: hidden; }
+.corridor-card img { width: 100%; height: 100%; object-fit: cover; }
+.corridor .svc-hero { position: relative; z-index: 2; min-height: 0; }
+/* velo del colore di pagina sotto al titolo: le card che passano dietro
+   renderebbero il testo illeggibile */
+.corridor .svc-hero::before {
+  content: "";
+  position: absolute;
+  inset: -12% -20% -12% -12%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(100deg, var(--bg) 0%, var(--bg) 32%, transparent 68%);
+}
+
+
+/* ============================================================
+   WEB DEVELOPMENT — la pagina che deve dimostrare, non raccontare
+   ============================================================ */
+.fx-hero { position: relative; overflow: hidden; }
+.dotfield {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  color: var(--fg);
+  z-index: 0;
+  pointer-events: none;
+}
+.fx-hero > .svc-hero {
+  position: relative;
+  z-index: 1;
+  /* qui si clicca per mandare l'onda nel campo di puntini: senza questo,
+     il click e il trascinamento selezionano il titolo */
+  -webkit-user-select: none;
+          user-select: none;
+}
+.fx-hero .svc-title { text-wrap: balance; }
+/* nastro scorrevole */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  border-top: 2px dotted currentColor;
+  border-bottom: 2px dotted currentColor;
+  padding: clamp(10px, 1.6svh, 18px) 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+.marquee-track span {
+  font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding-inline: clamp(14px, 2vw, 30px);
+  white-space: nowrap;
+  opacity: 0.85;
+}
+.marquee-track span::after { content: "·"; margin-left: clamp(14px, 2vw, 30px); opacity: 0.4; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* numeri misurati dal vivo */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 28px);
+  margin-top: 1.8rem;
+}
+.stat { border-top: 2px dotted currentColor; padding-top: 0.9rem; }
+.stat b {
+  display: block;
+  font-size: clamp(1.6rem, 4vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat b i { font-style: normal; }
+.stat b small { font-size: 0.42em; font-weight: 500; letter-spacing: 0; margin-left: 0.15em; opacity: 0.7; }
+.stat span {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* card con inclinazione e riflesso */
+.site-shot {
+  transition: transform 0.45s var(--ease);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.site-card:hover .site-shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%),
+              rgba(255, 255, 255, 0.28), transparent 55%);
+}
+
+
+/* ===================== TABLET ===================== */
+@media (max-width: 1180px) {
+  .sec--split .split-col--text .sec-copy { width: 30%; }
+  .sound-copy { width: 28%; }
+}
+
+/* ===================== MOBILE ===================== */
+@media (max-width: 820px) {
+  /* su mobile il logo va in alto: in basso c'è la nav.
+     Qui l'accostamento alla scritta non si fa: non c'è larghezza. */
+  .logo { left: 18px; top: 16px; bottom: auto; transform: none !important; }
+  .hero-mark { width: 82vw; left: 50%; transform: translate(-50%, -50%); }
+  .logo img { width: 52px; }
+
+  /* le linee tratteggiate sono disegnate su una scena 16:9:
+     su mobile le sezioni si impilano e non avrebbero senso */
+  .conn { display: none; }
+  /* Sulle pagine servizio le linee restano anche da telefono. Il disegno è
+     fatto per una sezione larga: qui viene schiacciato in verticale e i
+     tratti dritti finiscono in mezzo al testo, quindi si alleggeriscono —
+     restano una texture dietro, non una riga che taglia. */
+  body.page-service .conn { display: block; }
+  /* sotto al titolo di pagina no: lì la striscia di puntini finiva addosso al testo */
+  body.page-service .svc-hero .conn { display: none; }
+
+  .main-nav {
+    top: auto; right: 0; left: 0;
+    bottom: 16px;
+    justify-content: center;
+    gap: 1.35rem;
+  }
+  .main-nav a { font-size: 1rem; }
+
+  .scroll-hint { bottom: 74px; }
+  .reel-name { top: 26px; left: 22px; }
+  .reel-ui { bottom: 76px; }
+
+
+  /* ---------- servizi a fisarmonica (solo mobile) ----------
+     La sezione non è più una scena bloccata alta due schermate: le voci
+     stanno una sotto l'altra e si aprono al tocco, con il contenuto preso
+     dalle sezioni-vetrina. Quelle, qui sotto, spariscono. */
+  .sec--services { height: auto; min-height: 0; }
+  .services-stage {
+    position: static;
+    height: auto;
+    display: block;
+    padding: 16svh 0 12svh;
+    overflow: visible;
+  }
+  .services-grid { width: 100%; }
+
+  .srow {
+    height: auto;
+    min-height: 0;
+    padding: clamp(18px, 3.2svh, 30px) 20px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    overflow: visible;
+    cursor: pointer;
+  }
+  .srow[data-align] { justify-content: space-between; }
+  .srow[data-align="mid-start"] .sitem,
+  .srow[data-align="mid-end"] .sitem { margin: 0; }
+
+  .sitem {
+    font-size: clamp(1.45rem, 6.6vw, 2.3rem);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    white-space: normal;      /* "Directing & Video Production" va a capo */
+    transform: none !important;
+    opacity: 1 !important;
+    flex: 1;
+  }
+
+  /* il "+" che diventa "−" verde quando la voce è aperta */
+  .splus {
+    display: block;
+    position: relative;
+    flex: 0 0 auto;
+    width: 26px; height: 26px;
+    transition: transform 0.45s var(--ease);
+  }
+  .splus::before, .splus::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    background: currentColor;
+    transition: opacity 0.3s var(--ease), background 0.3s var(--ease);
+  }
+  .splus::before { width: 26px; height: 4px; transform: translate(-50%, -50%); }
+  .splus::after  { width: 4px; height: 26px; transform: translate(-50%, -50%); }
+  .srow.is-open .splus { transform: rotate(180deg); }
+  .srow.is-open .splus::after { opacity: 0; }
+  .srow.is-open .splus::before { background: var(--green); }
+
+  /* apertura: da 0fr a 1fr, così l'altezza la calcola il browser */
+  .spanel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.55s var(--ease);
+  }
+  .srow.is-open + .spanel { grid-template-rows: 1fr; }
+  .spanel-inner { overflow: hidden; min-height: 0; padding-inline: 20px; }
+  .spanel-text {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding-top: 2px;
+  }
+  .spanel-shot {
+    margin-top: 16px;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .spanel-shot img { width: 100%; height: 100%; object-fit: cover; }
+  .spanel-more {
+    display: inline-block;
+    margin: 16px 0 24px;
+    font-family: var(--font-inter);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 3px;
+  }
+
+  /* le sezioni-vetrina su mobile non servono più: il loro contenuto
+     è dentro la fisarmonica qui sopra */
+  #creative-direction,
+  #directing-video-production,
+  #directing-still,
+  #sound-design,
+  #web-development,
+  #photography { display: none; }
+
+
+  /* --- le sezioni servizio tornano a colonna --- */
+  .sec--split, .sec--banner, .sec--sound {
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.6rem;
+    padding: 16svh 22px 18svh;
+  }
+  .sec--split .split-col--text .sec-title,
+  .sec--split .split-col--text .sec-copy,
+  .sec--split .split-col--media,
+  .banner-media, .sec-title--right, .sec--banner .sec-copy--wide,
+  .sound-media--center, .sound-copy, .sound-title {
+    position: static;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    text-align: left;
+  }
+  .sec--split .split-col--text { display: flex; flex-direction: column; gap: 1.3rem; }
+  .sec--split .split-col--media, .banner-media,
+  .sound-media--center { aspect-ratio: 4 / 3; }
+  .sound-media--center { aspect-ratio: 3 / 4; }
+  .sec--split .media { height: 100%; }
+  .sec-title--right { text-align: left; }
+  .sec--banner .banner-media { order: -1; }
+
+  /* --- collage --- */
+  .sec--collage { height: auto; min-height: 100svh; padding: 14svh 18px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: center; }
+  .col-item { position: static; width: 100%; height: auto; aspect-ratio: 3/4; }
+  .col-item--a { grid-column: 1 / -1; aspect-ratio: 16/7; }
+  .col-item--d { display: none; }
+
+  /* --- statement --- */
+  .sec--statement { padding: 16svh 22px; }
+  .sec--statement-alt { justify-items: start; text-align: left; }
+  .sec--statement-alt .statement-copy { text-align: justify; }
+
+  /* --- fotografia --- */
+  .photo-rail { padding: 0 8vw; gap: 5vw; }
+  .photo-slide { flex: 0 0 84vw; aspect-ratio: 4 / 3; }
+
+  /* --- contatti / footer --- */
+  .sec--contact { padding: 14svh 22px 16svh; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .site-footer { padding-bottom: 96px; }
+  .foot-legal { flex-direction: column; gap: 0.8rem; }
+
+  /* --- catalogue e scheda progetto --- */
+  /* i titoli lunghi vengono troncati nella ruota: per intero stanno
+     nell'elenco qui sotto */
+  .wheel-item { max-width: calc(100vw - 36px); }
+  .cat-list a { grid-template-columns: 2.2rem minmax(0, 1fr); row-gap: 2px; }
+  .cat-y { grid-column: 2; justify-self: start; }
+  .back-btn { top: 18px; left: 18px; width: 40px; height: 40px; }
+  .wheel-list { padding-left: 18px; }
+  .wheel-item { font-size: 1.2rem; height: 56px; line-height: 56px; }
+  .project-block { padding: 76px 0; }
+  .project-card { width: calc(100vw - 36px); }
+  /* da telefono lo spazio è poco: sbucano meno */
+  .project-card--multi { --peek: 10%; width: calc(100vw - 118px); }
+  .project-title { font-size: 1.5rem; }
+  .project-info { grid-template-columns: 1fr 1fr; }
+  .about-header { gap: 1rem; padding-top: 22px; }
+  .about-nav { display: none; }
+  .about-header .back-btn { position: fixed; }
+  .about-intro { font-size: 1.15rem; margin: 2rem auto; }
+  .panel--about { padding-bottom: 110px; }
+  .services li { grid-template-columns: 2.4rem 1fr auto; gap: 0.7rem; font-size: 0.9rem; }
+  .about-contacts { flex-direction: column; align-items: center; gap: 0.4rem; margin-top: 2.4rem; text-align: center; }
+}
+
+/* ===================== REDUCED MOTION ===================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .parallax img { transform: none !important; }
+}
+
+
+/* ===================== SUB-PAGES — MOBILE ===================== */
+@media (max-width: 820px) {
+  .page-head { padding-top: 96px; padding-inline: 22px; }
+  .page-lead { max-width: none; }
+  .page-body { grid-template-columns: 1fr; padding-inline: 22px; }
+  .page-section { padding-inline: 22px; }
+  .svc-row { grid-template-columns: 2.2rem 1fr; row-gap: 6px; }
+  .svc-note { grid-column: 2 / -1; }
+  body.page-light .sec--contact { min-height: 100svh; }
+}
+
+
+/* ===================== PAGINE SERVIZIO — MOBILE ===================== */
+@media (max-width: 820px) {
+  .svc-wrap { padding-inline: 22px; }
+  .svc-hero { min-height: 100svh; padding-block: 108px 40px; }
+  .svc-title { max-width: none; }
+  .svc-lead { max-width: none; }
+  .svc-hero--split .svc-lead { justify-self: start; text-align: left; }
+  .svc-figure { aspect-ratio: 4 / 3; }
+  .svc-grid { grid-template-columns: 1fr; gap: 14px; }
+  .svc-pair { grid-template-columns: 1fr; gap: 36px; }
+  .svc-pair--rev { grid-template-columns: 1fr; row-gap: 0; }
+  .svc-pair--rev .svc-pair-h, .svc-pair--rev .svc-pair-list, .svc-pair--rev .svc-pair-intro { grid-column: 1; grid-row: auto; }
+  .svc-pair--rev .svc-pair-intro { padding-top: 2.2rem; }
+  .svc-pair--grid { grid-template-columns: 1fr; row-gap: 0; }
+  .svc-pair--grid .svc-pair-left, .svc-pair--grid .svc-pair-h, .svc-pair--grid .svc-pair-list { grid-column: 1; grid-row: auto; }
+  .svc-pair--grid .svc-pair-h { margin-top: 2.4rem; }
+  .svc-pair--grid .svc-pair-intro p:first-child { margin-top: 0; }
+  .svc-prose p { text-align: left; }
+  .svc-cta p { max-width: none; }
+  .sites { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .player { grid-template-columns: 40px minmax(0, 1fr) 3rem; }
+  .corridor { min-height: 100svh; }
+}
+
+/* ===================== HOME — ANTEPRIMA VIDEO A TUTTO SCHERMO =====================
+   Si apre cliccando un video del carosello. Il player è lo stesso della scheda
+   del catalogue (.vplayer, .vbtn, .vbar), ridotto a riproduzione e barra. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease), visibility 0s linear 0.45s;
+}
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.45s var(--ease);
+}
+.lightbox-video {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  background: #000;
+  cursor: pointer;
+}
+.lightbox-player {
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: clamp(40px, 8vh, 90px) clamp(22px, 4vw, 60px) clamp(18px, 3vh, 34px);
+}
+.lightbox.is-playing .vbtn--play .ico-play { display: none; }
+.lightbox.is-playing .vbtn--play .ico-pause { display: block; }
+html.is-lightbox, html.is-lightbox body { overflow: hidden; }
+
+/* ===================== ABOUT — UNA SCHERMATA SOLA ===================== */
+/* about e contatti: il titolo cade alla stessa altezza nelle due pagine */
+:root { --titolo-pagina: clamp(150px, 24svh, 260px); }
+.ab {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: clamp(24px, 4.5vw, 96px);
+}
+.ab-dots, .ab-list-wrap { align-self: center; }
+.ab-text { padding-left: clamp(24px, 5.6vw, 108px); padding-top: var(--titolo-pagina); }
+.ab-title {
+  font-size: clamp(3rem, 6.6vw, 7.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.ab-lead {
+  margin-top: clamp(1.4rem, 4svh, 2.8rem);
+  max-width: 38ch;
+  /* tre paragrafi invece di una frase: un filo più piccolo, così stanno
+     ancora tutti nella stessa schermata */
+  font-size: clamp(1.05rem, 1.55vw, 1.9rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.ab-lead p + p { margin-top: 0.75em; }
+/* la colonna dei puntini: il colore e l'accensione li scrive js/about-dots.js,
+   senza transizioni — quando si spengono spariscono e basta */
+.ab-dots {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+}
+.ab-dot {
+  width: clamp(24px, 5svh, 54px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #000;
+  /* si suonano: tenendo premuto il dito non deve far scorrere la pagina
+     né aprire il menu del telefono */
+  cursor: pointer;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ab-list-wrap { padding-block: clamp(80px, 12svh, 140px); }
+.ab-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: clamp(18px, 4svh, 44px);
+}
+.ab-list { list-style: none; }
+.ab-list li { border-top: 2px dotted currentColor; }
+.ab-list li:last-child { border-bottom: 2px dotted currentColor; }
+.ab-row {
+  display: grid;
+  grid-template-columns: clamp(3rem, 6vw, 7.2rem) minmax(0, 1fr);
+  align-items: baseline;
+  padding: clamp(14px, 3.4svh, 38px) 0;
+  color: inherit;
+  text-decoration: none;
+}
+.ab-num { font-size: 0.8rem; opacity: 0.55; font-variant-numeric: tabular-nums; }
+.ab-name { font-size: clamp(1.2rem, 2.3vw, 2.75rem); font-weight: 500; letter-spacing: -0.01em; }
+.ab-row:hover .ab-name { opacity: 0.55; }
+
+/* ===================== CONTACT — VIDEO DIETRO ===================== */
+.contact-bg, .contact-shade {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.contact-bg { object-fit: cover; }
+.contact-shade { background: rgba(0, 0, 0, 0.52); }
+body.page-contact .sec--contact {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  align-content: start;
+  padding-top: var(--titolo-pagina);
+}
+
+@media (max-width: 820px) {
+  .ab { grid-template-columns: 1fr; row-gap: 40px; padding: 110px 22px 70px; }
+  .ab-text { padding-left: 0; padding-top: 0; }
+  body.page-contact .sec--contact { padding: 110px 22px 16svh; }
+  .ab-dots { height: auto; flex-direction: row; padding: 0; }
+  .ab-dot { width: clamp(14px, 5vw, 24px); }
+  .ab-list-wrap { padding-block: 0; }
+  .lightbox-player { padding: 60px 22px 26px; }
+}
+
+/* ===================== WEB DEVELOPMENT — COLONNA DI PUNTINI =====================
+   In "Come li costruiamo" la linea tratteggiata scende dritta sotto al titolo,
+   nella colonna di sinistra dove non c'è testo. È fatta di puntini veri, non di
+   un tratteggio disegnato, così ognuno si può accendere e spegnere da solo. */
+.svc-grid > div:has(> .dotcol) {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.dotcol {
+  flex: 1;
+  min-height: 0;
+  width: 3px;
+  margin: 1.6rem 0 0 0.12em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.dotcol i {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.9;
+}
+.dotcol i.is-off { opacity: 0; }
+@media (max-width: 820px) {
+  .dotcol { display: none; }   /* su una colonna sola sotto al titolo c'è subito il testo */
+}

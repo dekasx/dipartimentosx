@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- ===================== SEO ===================== -->
+  <title>Dipartimento SX — Reparto creativo audio/video a Roma | Regia, Musica, Fotografia</title>
+  <meta name="description" content="Dipartimento SX è un reparto creativo audio/video con base a Roma: consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico. Guarda lo showreel e i lavori selezionati.">
+  <meta name="keywords" content="dipartimento sx, reparto creativo roma, produzione video roma, regia, sound design, musiche originali, direzione creativa, color grading, web development, studio fotografico, showreel">
+  <link rel="canonical" href="https://www.dipartimentosx.com/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dipartimento SX">
+  <meta property="og:title" content="Dipartimento SX — Reparto creativo audio/video a Roma">
+  <meta property="og:description" content="Consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico.">
+  <meta property="og:url" content="https://www.dipartimentosx.com/">
+  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+  <meta property="og:locale" content="it_IT">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dipartimento SX — Reparto creativo audio/video a Roma">
+  <meta name="twitter:description" content="Consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico.">
+  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Dipartimento SX",
+    "url": "https://www.dipartimentosx.com/",
+    "logo": "https://www.dipartimentosx.com/assets/img/logo-sx.svg",
+    "image": "https://www.dipartimentosx.com/assets/img/og-cover.jpg",
+    "email": "info@dipartimentosx.com",
+    "description": "Reparto creativo audio/video con base a Roma: consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico.",
+    "address": { "@type": "PostalAddress", "addressLocality": "Roma", "addressRegion": "RM", "addressCountry": "IT" },
+    "sameAs": ["https://www.instagram.com/dipartimento.sx"],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Creative Direction" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Directing & Video Production" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sound Design & Score" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Development" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Photography & Set" } }
+      ]
+    }
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
+
+  <link rel="preload" as="image" href="assets/img/showreel-poster.jpg">
+  <link rel="stylesheet" href="css/style.css?v=202609161645">
+</head>
+<body data-view="home">
+
+  <!-- Background layer: its colour is interpolated between sections -->
+  <div class="bg-canvas" id="bgCanvas" aria-hidden="true"></div>
+
+  <div class="cursor" id="cursor" aria-hidden="true"><span></span><span></span></div>
+
+  <!-- ===================== HEADER / NAV (fixed, negative) ===================== -->
+  <header class="site-header" role="banner">
+    <a class="logo" href="#home" data-scroll="home" aria-label="Dipartimento SX — home">
+      <img src="assets/img/logo-sx-white.svg" alt="Logo Dipartimento SX" width="120" height="120">
+    </a>
+    <nav class="main-nav" aria-label="Navigazione principale">
+      <a href="catalogue.html">catalogo</a>
+      <a href="#services"  data-scroll="services">servizi</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contatti</a>
+    </nav>
+  </header>
+
+  <main id="page">
+
+    <!-- ============ 1 — HERO / SHOWREEL ============ -->
+    <section class="sec sec--hero" id="home" data-bg="#000000" data-fg="#ffffff">
+      <video id="showreel"
+             class="showreel"
+             autoplay muted loop playsinline
+             preload="auto"
+             poster="assets/img/showreel-poster.jpg"
+             aria-label="Showreel di Dipartimento SX">
+        <source src="assets/video/showreel-web.mp4" type="video/mp4">
+      </video>
+      <div class="showreel-fallback" aria-hidden="true"></div>
+
+      <p class="hero-mark" aria-hidden="true">
+        <img src="assets/img/wordmark.png" alt="" width="1456" height="144" decoding="async">
+      </p>
+
+      <h1 class="visually-hidden">Dipartimento SX — reparto creativo audio/video a Roma: consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico</h1>
+
+      <span class="scroll-hint" aria-hidden="true"><i></i></span>
+    </section>
+
+    <!-- ============ 2 — SELECTED WORK (carousel) ============ -->
+    <section class="sec sec--reel" id="work" data-bg="#000000" data-fg="#ffffff" aria-label="Lavori selezionati">
+      <h2 class="visually-hidden">Lavori selezionati</h2>
+
+      <div class="reel">
+        <div class="reel-track" id="reelTrack"><!-- slides built by JS --></div>
+
+        <p class="reel-name" id="reelName" aria-live="polite"></p>
+
+        <div class="reel-ui">
+          <div class="reel-dots" id="reelDots" role="tablist" aria-label="Scegli il progetto"></div>
+          <button class="reel-sound" id="reelSound" type="button" aria-pressed="false" aria-label="Attiva l'audio">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 5 6 9H3v6h3l5 4z"/>
+              <path class="wave wave-1" d="M15.5 8.5a5 5 0 0 1 0 7"/>
+              <path class="wave wave-2" d="M18.5 5.5a9 9 0 0 1 0 13"/>
+              <path class="mute" d="M22 9l-5 6M17 9l5 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3 — SERVICES (dot animation) ============ -->
+    <section class="sec sec--services" id="services" data-bg="#ffffff" data-fg="#0a0a0a">
+      <div class="services-stage">
+        <h2 class="visually-hidden">Cosa facciamo</h2>
+        <div class="services-grid" id="servicesGrid"><!-- lines and items built by JS --></div>
+      </div>
+    </section>
+
+    <!-- ============ 4 — CREATIVE DIRECTION ============ -->
+    <section class="sec sec--split" id="creative-direction" data-bg="#d6d6d6" data-fg="#0a0a0a">
+      <svg class="conn" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="mk-cd" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M300 410 C 360 550, 520 580, 700 550" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+          <mask id="mk-cd2" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M690 890 C 620 850, 560 810, 500 795" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+        </defs>
+        <g mask="url(#mk-cd)"><path d="M300 410 C 360 550, 520 580, 700 550" class="dotpath"/></g>
+        <g mask="url(#mk-cd2)"><path d="M690 890 C 620 850, 560 810, 500 795" class="dotpath"/></g>
+      </svg>
+
+      <div class="split-col split-col--text">
+        <h2 class="sec-title" data-anim="title"><a href="creative-direction.html">Consulenza e<br>Direzione<br>Creativa</a></h2>
+        <p class="sec-copy" data-anim="copy">
+          Il nostro lavoro nasce da una fase conoscitiva con il cliente e si sviluppa con la creazione di un’intenzione comunicativa definita. Ci approcciamo con aziende, brand, istituzioni e professionisti in modo personale.
+        </p>
+      </div>
+      <div class="split-col split-col--media">
+        <figure class="media parallax" data-parallax="0.14">
+          <img src="assets/img/sec-creative-direction.jpg" alt="File di rocchetti di filo colorati sulla parete di una merceria" loading="lazy" decoding="async" width="1600" height="1095">
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ 5 — DIRECTING & VIDEO PRODUCTION ============ -->
+    <section class="sec sec--banner" id="directing-video-production" data-bg="#000000" data-fg="#ffffff">
+      <svg class="conn" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="mk-dv" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M1490 290 H1660 V560 H1810 V640" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+          <mask id="mk-dv2" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M1160 940 C 1230 900, 1230 800, 1290 760" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+        </defs>
+        <g mask="url(#mk-dv)"><path d="M1490 290 H1660 V560 H1810 V640" class="dotpath"/></g>
+        <g mask="url(#mk-dv2)"><path d="M1160 940 C 1230 900, 1230 800, 1290 760" class="dotpath"/></g>
+      </svg>
+
+      <figure class="banner-media parallax" data-parallax="0.18">
+        <img src="assets/img/sec-directing.jpg" alt="Estratto da “Thanks, Putin” — auto su un telo rosso in un parcheggio sotterraneo addobbato con luci" loading="lazy" decoding="async" width="2400" height="1350">
+      </figure>
+
+      <h2 class="sec-title sec-title--right" data-anim="title"><a href="directing-video-production.html">Regia &amp;<br>Video</a></h2>
+      <p class="sec-copy sec-copy--wide" data-anim="copy">
+        Ogni lavoro è concepito, ripreso, editato e post prodotto da noi. Le persone che scrivono la creatività sono le stesse che stanno sul set, e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.
+      </p>
+    </section>
+
+    <!-- ============ 6 — STILLS (transition) ============ -->
+    <section class="sec sec--collage" id="directing-still" data-bg="#000000" data-fg="#ffffff" aria-label="Foto dai nostri set">
+      <figure class="col-item col-item--a parallax" data-parallax="0.10" data-drift="-90">
+        <img src="assets/img/still-3.jpg" alt="Cabine di una ruota panoramica contro un cielo chiaro" loading="lazy" decoding="async" width="1600" height="890">
+      </figure>
+      <figure class="col-item col-item--b parallax" data-parallax="0.16" data-drift="140">
+        <img src="assets/img/still-2.jpg" alt="Due monaci in tunica arancione seduti davanti alla biglietteria dell’Atomium" loading="lazy" decoding="async" width="1600" height="890">
+      </figure>
+      <figure class="col-item col-item--c parallax" data-parallax="0.12" data-drift="-160">
+        <img src="assets/img/still-4.jpg" alt="Passanti che attraversano la Grand-Place di Bruxelles controluce" loading="lazy" decoding="async" width="1600" height="890">
+      </figure>
+      <figure class="col-item col-item--d parallax" data-parallax="0.2" data-drift="80">
+        <img src="assets/img/still-1.jpg" alt="Gru a torre sopra un edificio in cemento sotto un cielo blu intenso" loading="lazy" decoding="async" width="1600" height="890">
+      </figure>
+    </section>
+
+    <!-- ============ 7 — SOUND DESIGN & SCORE ============ -->
+    <section class="sec sec--sound" id="sound-design" data-bg="#38211b" data-fg="#ffffff">
+      <svg class="conn" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="mk-sd" maskUnits="userSpaceOnUse">
+            <path class="reveal" data-from="1.35" pathLength="1" d="M150 60 C 400 190, 620 60, 860 130 S 1180 200, 1320 120" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+          <mask id="mk-sd2" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M460 540 H1240" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+          <mask id="mk-sd3" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M1240 540 H1560 V420 H1700 V330" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+        </defs>
+        <g mask="url(#mk-sd)"><path d="M150 60 C 400 190, 620 60, 860 130 S 1180 200, 1320 120" class="dotpath"/></g>
+        <g mask="url(#mk-sd2)"><path d="M460 540 H1240" class="dotpath"/></g>
+        <g mask="url(#mk-sd3)"><path d="M1240 540 H1560 V420 H1700 V330" class="dotpath"/></g>
+      </svg>
+
+      <figure class="sound-media sound-media--center parallax" data-parallax="0.2">
+        <img src="assets/img/zoom.jpg" alt="Registrazione ambientale con un registratore Zoom H6 tra gli alberi" loading="lazy" decoding="async" width="479" height="864">
+      </figure>
+
+      <p class="sec-copy sound-copy" data-anim="copy">
+        Componiamo musiche originali, effetti sonori, sound design per transizioni e prese audio dirette. Ogni parte del sonoro è studiata in correlazione al materiale video specifico, garantendo un approccio che arricchisce le immagini.
+      </p>
+      <h2 class="sec-title sound-title" data-anim="title"><a href="sound-design.html">Musica,<br>Sound Design<br>&amp; Foley</a></h2>
+    </section>
+
+    <!-- ============ 8 — WEB DEVELOPMENT ============ -->
+    <section class="sec sec--statement sec--statement-alt" id="web-development" data-bg="#5b6157" data-fg="#ffffff">
+      <svg class="conn" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="mk-wd" maskUnits="userSpaceOnUse">
+            <path class="reveal" pathLength="1" d="M900 300 H340 V560 H760 V800 H120" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/>
+          </mask>
+        </defs>
+        <g mask="url(#mk-wd)"><path d="M900 300 H340 V560 H760 V800 H120" class="dotpath"/></g>
+      </svg>
+      <h2 class="sec-title statement-title" data-anim="title"><a href="web-development.html">Web Development,<br>UX &amp; UI</a></h2>
+      <p class="sec-copy statement-copy" data-anim="copy">
+        Ideiamo e sviluppiamo siti dal back al front end. Curiamo l’estetica, la user experience (UX) e l’interfaccia (UI), programmando direttamente in html, css e javascript, react, webGL.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- anteprima a tutto schermo dei video del carosello: stesso player del catalogue,
+       solo riproduzione e barra -->
+  <div class="lightbox" id="reelLightbox" role="dialog" aria-modal="true" aria-label="Anteprima video">
+    <button class="back-btn lightbox-close" type="button" aria-label="Chiudi il video">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+    <video class="lightbox-video" playsinline preload="auto"></video>
+    <div class="vplayer lightbox-player">
+      <button class="vbtn vbtn--play" type="button" aria-label="Pausa">
+        <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4v15h-4zM13.5 4.5h4v15h-4z"/></svg>
+      </button>
+      <div class="vbar"><span class="vbar-fill"></span></div>
+    </div>
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <p class="foot-copy">&copy; Dipartimento SX <span id="year">2026</span></p>
+        <p class="foot-small">Reparto creativo audio/video — Roma, Italia</p>
+      </div>
+
+      <nav class="foot-nav" aria-label="Mappa del sito">
+        <h3>Sito</h3>
+        <a href="#home" data-scroll="home">Home</a>
+        <a href="#work" data-scroll="work">Lavori</a>
+        <a href="#services" data-scroll="services">Servizi</a>
+        <a href="catalogue.html">Catalogo</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contatti</a>
+      </nav>
+
+      <nav class="foot-nav" aria-label="Servizi">
+        <h3>Servizi</h3>
+        <a href="creative-direction.html">Consulenza e Direzione Creativa</a>
+        <a href="directing-video-production.html">Regia &amp; Video</a>
+        <a href="sound-design.html">Musica, Sound Design &amp; Foley</a>
+        <a href="web-development.html">Web Development, UX &amp; UI</a>
+        <a href="photography.html">Studio Fotografico &amp; Post-Produzione</a>
+      </nav>
+
+      <div class="foot-nav">
+        <h3>Contatti</h3>
+        <a href="mailto:info@dipartimentosx.com">info@dipartimentosx.com</a>
+        <a href="https://www.instagram.com/dipartimento.sx" target="_blank" rel="noopener">@dipartimento.sx</a>
+      </div>
+    </div>
+
+    <div class="foot-legal">
+      <p>
+        Tutti i contenuti audio, video e fotografici di questo sito appartengono a Dipartimento SX o ai rispettivi clienti e non possono essere riprodotti senza autorizzazione.
+      </p>
+      <p class="foot-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="cookie-policy.html">Cookie Policy</a>
+        <span>P. IVA [DA COMPLETARE]</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/data.js?v=202609161645" defer></script>
+  <script src="js/scroll-fx.js?v=202609161645" defer></script>
+  <script src="js/site.js?v=202609161645" defer></script>
+  <script src="js/home.js?v=202609161645" defer></script>
+</body>
+</html>

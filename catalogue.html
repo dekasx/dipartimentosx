@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>Catalogo — Dipartimento SX | Lavori selezionati</title>
+  <meta name="description" content="Il catalogo completo di Dipartimento SX: pubblicità, videoclip, documentari, brand film e fotografia di un reparto creativo audio/video a Roma.">
+  <link rel="canonical" href="https://www.dipartimentosx.com/catalogue.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dipartimento SX">
+  <meta property="og:title" content="Catalogo — Dipartimento SX">
+  <meta property="og:description" content="Ogni progetto, dalla pubblicità al documentario.">
+  <meta property="og:url" content="https://www.dipartimentosx.com/catalogue.html">
+  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
+  <link rel="stylesheet" href="css/style.css?v=202609161645">
+</head>
+<body class="page-doc page-service" data-view="catalogue" style="--bg: #0a0a0a; --fg: #ffffff;">
+
+  <div class="cursor" id="cursor" aria-hidden="true"><span></span><span></span></div>
+
+  <header class="site-header" role="banner">
+    <a class="logo" href="index.html" aria-label="Dipartimento SX — home">
+      <img src="assets/img/logo-sx-white.svg" alt="Logo Dipartimento SX" width="120" height="120">
+    </a>
+    <nav class="main-nav" aria-label="Navigazione principale">
+      <a href="catalogue.html" class="is-active">catalogo</a>
+      <a href="index.html#services">servizi</a>
+      <a href="about.html">about</a>
+      <a href="contact.html">contatti</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="cat-stage" aria-labelledby="cat-h">
+      <h1 class="visually-hidden" id="cat-h">Catalogo — tutti i progetti di Dipartimento SX</h1>
+
+      <div class="wheel-line" aria-hidden="true"></div>
+      <div class="wheel" id="wheel" tabindex="0" aria-label="Elenco dei progetti — scorri e scegli">
+        <ul class="wheel-list" id="wheelList"><!-- built by JS --></ul>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- scheda del singolo progetto -->
+  <section class="panel panel--project" id="panel-project" aria-hidden="true">
+    <button class="back-btn" data-close-project aria-label="Torna al catalogo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+
+    <div class="project-scroll" id="projectScroll">
+      <!-- un blocco per progetto, generato da JS: si scorre da uno all'altro -->
+    </div>
+  </section>
+
+  <script src="js/data.js?v=202609161645" defer></script>
+  <script src="js/scroll-fx.js?v=202609161645" defer></script>
+  <script src="js/site.js?v=202609161645" defer></script>
+  <script src="js/catalogue.js?v=202609161645" defer></script>
+</body>
+</html>

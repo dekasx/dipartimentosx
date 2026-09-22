@@ -328,7 +328,8 @@ body.no-video .showreel-fallback { display: block; }
   transform: translateX(-50%);
   animation: hintDrop 1.9s var(--ease) infinite;
 }
-@keyframes hintDrop { 0%,100% { opacity: 0; transform: translate(-50%, 0); } 40% { opacity: 1; } 80% { opacity: 0; transform: translate(-50%, 12px); } }
+/* il pallino sale dal basso verso l'alto: stesso ritmo, verso invertito */
+@keyframes hintDrop { 0%,100% { opacity: 0; transform: translate(-50%, 12px); } 40% { opacity: 1; } 80% { opacity: 0; transform: translate(-50%, 0); } }
 
 /* ===================== SEZIONE 2 — CAROSELLO LAVORI ===================== */
 .sec--reel { height: 100svh; overflow: hidden; }

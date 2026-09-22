@@ -3,8 +3,8 @@
    pagina venga disegnata, perché `pagereveal` arriva proprio lì.
 
    1. Direzione. La gerarchia del sito è home → catalogo → servizi → about →
-      contatti, con le pagine servizio dentro "servizi" (la sezione servizi
-      della home conta come home). Se la pagina nuova
+      contatti, con le pagine servizio dentro "servizi" (e la sezione servizi
+      della home, quando ci sei). Se la pagina nuova
       sta più in alto di quella da cui arrivi, la pellicola scorre indietro.
       Da dove arrivi lo dice la Navigation API; dove non c'è (Safari prima
       della 26.2) il referrer, che vale per i link ma non per il tasto
@@ -33,12 +33,14 @@
     "cookie-policy": 5.1
   };
 
-  /* La home è sempre la home, anche con #services nell'indirizzo: "servizi"
-     del menu porta comunque sulla home, quindi dal catalogo ci si torna
-     indietro, e dalla home il catalogo è avanti. */
+  /* La sezione servizi della home (#services) vale "servizi": dal catalogo
+     ci si va avanti, e da lì al catalogo si torna indietro. La home tiene
+     #services nell'indirizzo solo mentre ci sei davvero (js/home.js), quindi
+     dall'hero il catalogo resta avanti. */
   function rango(indirizzo) {
     const u = new URL(indirizzo, location.href);
     const nome = (u.pathname.split("/").pop() || "index.html").replace(/\.html$/, "") || "index";
+    if (nome === "index" && u.hash === "#services") return 2;
     return nome in ORDINE ? ORDINE[nome] : 0;
   }
 

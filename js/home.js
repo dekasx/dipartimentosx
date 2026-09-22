@@ -648,6 +648,26 @@
   const src = showreel.querySelector("source");
   if (src) src.addEventListener("error", () => body.classList.add("no-video"));
 
+  /* ==================== #services SOLO QUANDO CI SEI ====================
+     Il passaggio a pellicola sceglie la direzione dalla pagina di partenza,
+     e per la home legge l'indirizzo: #services vuol dire "sono nei servizi",
+     che nella gerarchia viene dopo il catalogo. Cliccando "servizi" nel menu
+     l'indirizzo diventava #services e ci restava anche risalendo all'hero,
+     quindi dalla home il catalogo risultava sempre "indietro". Ora #services
+     c'è solo mentre la sezione attraversa la metà dello schermo. */
+  if ("IntersectionObserver" in window && servicesSec) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        const dentro = en.isIntersecting;
+        if (dentro && location.hash !== "#services") {
+          history.replaceState(null, "", "#services");
+        } else if (!dentro && location.hash === "#services") {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+      });
+    }, { rootMargin: "-50% 0px -50% 0px" }).observe(servicesSec);
+  }
+
   /* ==================== INCOMING HASH ==================== */
   function applyHash() {
     const h = decodeURIComponent(location.hash.replace("#", ""));

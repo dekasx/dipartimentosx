@@ -1756,7 +1756,10 @@ body.page-service {
 @media (max-width: 820px) {
   /* su mobile il logo va in alto: in basso c'è la nav.
      Qui l'accostamento alla scritta non si fa: non c'è larghezza. */
-  .logo { left: 18px; top: 16px; bottom: auto; transform: none !important; }
+  /* logo e menu attaccati alla barra del browser: 10 px dal bordo, anche
+     nelle pagine interne (che da computer lo tengono più in basso) */
+  .logo,
+  body.page-doc .logo { left: 18px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; transform: none !important; }
   .hero-mark { width: 82vw; left: 50%; transform: translate(-50%, -50%); }
   .logo img { width: 52px; }
 
@@ -1775,16 +1778,16 @@ body.page-service {
   body.page-service .conn.conn--solo-telefono { display: block; }
 
   /* il menu in alto a destra, centrato in altezza sul logo: in home il logo
-     è 52 px a 16 px dal bordo (centro a 42), nelle altre pagine 46 px a 26 px
-     (centro a 49). Prima stava in fondo allo schermo. */
+     è 52 px a 10 px dal bordo (centro a 36), nelle altre pagine 46 px (centro
+     a 33). Prima stava in fondo allo schermo. */
   .main-nav {
-    top: 42px; bottom: auto;
+    top: calc(36px + env(safe-area-inset-top)); bottom: auto;
     left: auto; right: 18px;
     transform: translateY(-50%);
     justify-content: flex-end;
     gap: 1rem;
   }
-  body.page-doc .main-nav { top: 49px; right: 24px; }
+  body.page-doc .main-nav { top: calc(33px + env(safe-area-inset-top)); }
   .main-nav a { font-size: 1rem; }
 
   .reel-name { top: 26px; left: 22px; }
@@ -2151,7 +2154,8 @@ body.page-contact .sec--contact {
 @media (max-width: 820px) {
   .ab { grid-template-columns: 1fr; row-gap: 40px; padding: 110px 22px 70px; }
   .ab-text { padding-left: 0; padding-top: 0; }
-  body.page-contact .sec--contact { padding: 110px 22px 16svh; }
+  /* da telefono le scritte stanno al centro dello schermo, non in alto */
+  body.page-contact .sec--contact { align-content: center; padding: 84px 22px 48px; }
   .ab-dots { height: auto; flex-direction: row; padding: 0; }
   .ab-dot { width: clamp(14px, 5vw, 24px); }
   .ab-list-wrap { padding-block: 0; }

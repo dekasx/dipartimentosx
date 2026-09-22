@@ -3,7 +3,8 @@
    pagina venga disegnata, perché `pagereveal` arriva proprio lì.
 
    1. Direzione. La gerarchia del sito è home → catalogo → servizi → about →
-      contatti, con le pagine servizio dentro "servizi". Se la pagina nuova
+      contatti, con le pagine servizio dentro "servizi" (la sezione servizi
+      della home conta come home). Se la pagina nuova
       sta più in alto di quella da cui arrivi, la pellicola scorre indietro.
       Da dove arrivi lo dice la Navigation API; dove non c'è (Safari prima
       della 26.2) il referrer, che vale per i link ma non per il tasto
@@ -32,15 +33,12 @@
     "cookie-policy": 5.1
   };
 
-  /* La sezione servizi della home vale "servizi" solo come DESTINAZIONE (da
-     una pagina servizio torni a "servizi": indietro). Come partenza la home
-     è sempre la home: cliccando "servizi" nel menu l'indirizzo diventa
-     index.html#services e ci resta anche risalendo, e da lì il catalogo
-     risultava sempre "indietro". */
-  function rango(indirizzo, comePartenza) {
+  /* La home è sempre la home, anche con #services nell'indirizzo: "servizi"
+     del menu porta comunque sulla home, quindi dal catalogo ci si torna
+     indietro, e dalla home il catalogo è avanti. */
+  function rango(indirizzo) {
     const u = new URL(indirizzo, location.href);
     const nome = (u.pathname.split("/").pop() || "index.html").replace(/\.html$/, "") || "index";
-    if (nome === "index" && u.hash === "#services" && !comePartenza) return 2;
     return nome in ORDINE ? ORDINE[nome] : 0;
   }
 
@@ -51,7 +49,7 @@
     const nav = window.navigation && navigation.activation;
     const da = (nav && nav.from && nav.from.url) || document.referrer;
     try {
-      if (da && new URL(da).origin === location.origin && rango(location.href) < rango(da, true)) {
+      if (da && new URL(da).origin === location.origin && rango(location.href) < rango(da)) {
         vt.types.add("indietro");
       }
     } catch (_) { /* indirizzo non leggibile: si va avanti */ }

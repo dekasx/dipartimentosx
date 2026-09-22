@@ -364,7 +364,27 @@
       if (!r) return;
       box.style.setProperty("--ar", r.toFixed(4));
       stage.classList.add("is-fit");
+      adattaAltezza();
     }
+
+    /* Quanto può essere alto il riquadro. Prima era un 68% fisso dello
+       schermo: con un video verticale 9:16 da telefono il riquadro arrivava
+       a 517 px e, con titolo, etichetta e scheda sotto (282 px), player e
+       descrizione finivano fuori dallo schermo. Ora è lo spazio che resta
+       davvero: altezza visibile, meno i margini del blocco, meno quello che
+       occupa il resto della scheda. Così tutto il progetto sta in una
+       schermata; i formati orizzontali non ne sono toccati, perché lì
+       comanda la larghezza. */
+    function adattaAltezza() {
+      if (!stage.classList.contains("is-fit")) return;
+      const cs = getComputedStyle(block);
+      const disponibile = scroller.clientHeight
+        - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const resto = card.offsetHeight - stage.offsetHeight;
+      const h = Math.max(180, Math.min(disponibile - resto - 8, innerHeight * 0.68));
+      box.style.setProperty("--hmax", Math.floor(h) + "px");
+    }
+    block._altezza = adattaAltezza;
 
     items.forEach((m, k) => {
       const slide = document.createElement("figure");
@@ -1050,6 +1070,7 @@
     if (!isOpen || inPieno()) return;
     clearTimeout(giroT);
     giroT = setTimeout(() => {
+      blocks.forEach((b) => b._altezza && b._altezza());
       if (inCampo) centra(inCampo);
       raddrizza();
       aggiornaInCampo();
@@ -1157,6 +1178,7 @@
          diretto (nessun gesto) resta muto: `_show` se ne accorge e riparte
          in muto da solo invece di non partire affatto. */
       if (withSound) soundOn = true;
+      if (b._altezza) { b._altezza(); centra(b); }
       blocks.forEach((x) => { if (x !== b && x._stop) x._stop(); });
       inCampo = b;
       if (b._show) b._show(b._active || 0, !!withSound);

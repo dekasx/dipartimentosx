@@ -58,13 +58,20 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { height: 100%; scroll-behavior: smooth; }
+/* Logo e menu sono in negativo (mix-blend-mode: difference) e sono fissi.
+   Su iPhone un elemento fisso spesso NON si fonde con un altro elemento fisso
+   (la home dipinge i colori delle sezioni su .bg-canvas, che è fisso) né con
+   lo sfondo della "tela" della pagina: il logo restava bianco, e sulla
+   sezione servizi, bianca, spariva. Quindi lo stesso colore lo dipinge anche
+   il <body>, che non è fisso; e l'<html> ha uno sfondo suo, perché altrimenti
+   il browser sposterebbe quello del body sulla tela. */
+html { height: 100%; scroll-behavior: smooth; background: var(--bg); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   min-height: 100%;
   font-family: var(--font);
-  background: #000;
+  background: var(--bg);
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
@@ -1767,17 +1774,20 @@ body.page-service {
   body.page-service .conn.conn--solo-desktop { display: none; }
   body.page-service .conn.conn--solo-telefono { display: block; }
 
+  /* il menu in alto a destra, centrato in altezza sul logo: in home il logo
+     è 52 px a 16 px dal bordo (centro a 42), nelle altre pagine 46 px a 26 px
+     (centro a 49). Prima stava in fondo allo schermo. */
   .main-nav {
-    top: auto; right: 0; left: 0;
-    bottom: 16px;
-    justify-content: center;
-    gap: 1.35rem;
+    top: 42px; bottom: auto;
+    left: auto; right: 18px;
+    transform: translateY(-50%);
+    justify-content: flex-end;
+    gap: 1rem;
   }
+  body.page-doc .main-nav { top: 49px; right: 24px; }
   .main-nav a { font-size: 1rem; }
 
-  .scroll-hint { bottom: 74px; }
   .reel-name { top: 26px; left: 22px; }
-  .reel-ui { bottom: 76px; }
 
 
   /* ---------- servizi a fisarmonica (solo mobile) ----------
@@ -1930,7 +1940,7 @@ body.page-service {
   /* --- contatti / footer --- */
   .sec--contact { padding: 14svh 22px 16svh; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
-  .site-footer { padding-bottom: 96px; }
+  .site-footer { padding-bottom: 40px; }
   .foot-legal { flex-direction: column; gap: 0.8rem; }
 
   /* --- catalogue e scheda progetto --- */
@@ -2177,4 +2187,10 @@ body.page-contact .sec--contact {
 .dotcol i.is-off { opacity: 0; }
 @media (max-width: 820px) {
   .dotcol { display: none; }   /* su una colonna sola sotto al titolo c'è subito il testo */
+}
+
+/* telefoni stretti: il menu deve stare a destra del logo senza toccarlo */
+@media (max-width: 380px) {
+  .main-nav { gap: 0.7rem; }
+  .main-nav a { font-size: 0.9rem; }
 }

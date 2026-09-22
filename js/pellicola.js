@@ -32,10 +32,15 @@
     "cookie-policy": 5.1
   };
 
-  function rango(indirizzo) {
+  /* La sezione servizi della home vale "servizi" solo come DESTINAZIONE (da
+     una pagina servizio torni a "servizi": indietro). Come partenza la home
+     è sempre la home: cliccando "servizi" nel menu l'indirizzo diventa
+     index.html#services e ci resta anche risalendo, e da lì il catalogo
+     risultava sempre "indietro". */
+  function rango(indirizzo, comePartenza) {
     const u = new URL(indirizzo, location.href);
     const nome = (u.pathname.split("/").pop() || "index.html").replace(/\.html$/, "") || "index";
-    if (nome === "index" && u.hash === "#services") return 2;   // la sezione servizi della home
+    if (nome === "index" && u.hash === "#services" && !comePartenza) return 2;
     return nome in ORDINE ? ORDINE[nome] : 0;
   }
 
@@ -46,7 +51,7 @@
     const nav = window.navigation && navigation.activation;
     const da = (nav && nav.from && nav.from.url) || document.referrer;
     try {
-      if (da && new URL(da).origin === location.origin && rango(location.href) < rango(da)) {
+      if (da && new URL(da).origin === location.origin && rango(location.href) < rango(da, true)) {
         vt.types.add("indietro");
       }
     } catch (_) { /* indirizzo non leggibile: si va avanti */ }

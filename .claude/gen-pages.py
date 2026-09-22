@@ -50,7 +50,7 @@ TRAIL = '  <svg class="trail" data-trail aria-hidden="true"></svg>\n'
 
 write("directing-video-production", tpl.page(
   slug="directing-video-production",
-  title="Regia &amp;<br>Video",
+  title="Regia, Documentari<br>&amp; Video",
   kicker="",
   lead="Ogni lavoro è concepito, ripreso, editato e post prodotto da noi.",
   desc="Regia e produzione video a Roma: documentari, pubblicità e cortometraggi concepiti, ripresi, montati e post prodotti internamente da Dipartimento SX.",

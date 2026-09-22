@@ -29,6 +29,15 @@
     });
   }
 
+  /* -------- sfondo dell'<html> uguale a quello della pagina --------
+     Le pagine interne dichiarano il loro colore sul <body>, che l'<html> non
+     vede: glielo copio, così nel rimbalzo di iOS in cima e in fondo alla
+     pagina si vede il colore giusto e non il nero. In home il colore cambia
+     scorrendo ed è già sull'<html> (var(--bg)). Vedi style.css, "negativo". */
+  if (!isHome) {
+    document.documentElement.style.backgroundColor = getComputedStyle(body).backgroundColor;
+  }
+
   /* -------- the fixed logo would sit on top of the footer text -------- */
   const footer = document.querySelector(".site-footer");
   if (footer && "IntersectionObserver" in window) {

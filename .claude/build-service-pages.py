@@ -6,7 +6,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SERVICES = [
     ("creative-direction", "Consulenza e Direzione Creativa"),
-    ("directing-video-production", "Regia &amp; Video"),
+    ("directing-video-production", "Regia, Documentari &amp; Video"),
     ("sound-design", "Musica, Sound Design &amp; Foley"),
     ("web-development", "Web Development, UX &amp; UI"),
     ("photography", "Studio Fotografico &amp; Post-Produzione"),
@@ -112,7 +112,7 @@ FOOTER = '''
       <nav class="foot-nav" aria-label="Servizi">
         <h3>Servizi</h3>
         <a href="creative-direction.html">Consulenza e Direzione Creativa</a>
-        <a href="directing-video-production.html">Regia &amp; Video</a>
+        <a href="directing-video-production.html">Regia, Documentari &amp; Video</a>
         <a href="sound-design.html">Musica, Sound Design &amp; Foley</a>
         <a href="web-development.html">Web Development, UX &amp; UI</a>
         <a href="photography.html">Studio Fotografico &amp; Post-Produzione</a>

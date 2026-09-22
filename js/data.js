@@ -171,7 +171,7 @@ const PROJECTS = [
    ------------------------------------------------------------ */
 const SERVICES = [
   { name: "Consulenza e Direzione Creativa",       target: "creative-direction",          align: "start" },
-  { name: "Regia & Video",                         target: "directing-video-production",  align: "mid-start" },
+  { name: "Regia, Documentari & Video",            target: "directing-video-production",  align: "mid-start" },
   { name: "Musica, Sound Design & Foley",          target: "sound-design",                align: "end" },
   { name: "Web Development, UX & UI",              target: "web-development",             align: "center" },
   { name: "Studio Fotografico & Post-Produzione",  target: "photography",                 align: "start",

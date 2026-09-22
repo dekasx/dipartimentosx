@@ -113,7 +113,8 @@ const PROJECTS = [
     slug: "beat-skatepark",
     title: "Beat Skatepark",
     reel: true,
-    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/beat-skatepark.mp4", poster: "assets/projects/beat-skatepark-poster.jpg" },
+    // intero nel catalogo e a schermo intero; nel carosello della home il clip leggero
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/beat-skatepark-full.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/beat-skatepark.mp4", poster: "assets/projects/beat-skatepark-poster.jpg" },
     date: "2023 [PLACEHOLDER]",
     scope: "Aftermovie / video evento [PLACEHOLDER]",
     gear: "[PLACEHOLDER]",

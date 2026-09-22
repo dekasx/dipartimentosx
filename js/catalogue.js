@@ -70,7 +70,7 @@
     const target = li.offsetTop - (wheel.clientHeight - li.offsetHeight) / 2;
     const dist = Math.abs(wheel.scrollTop - target);
     if (dist < 4 || reduceMotion) { openProject(projectIndex, true); return; }
-    if (TOCCO) vaiA(target, 110);
+    if (TOCCO) vaiA(target, 320, true);
     else wheel.scrollTo({ top: target, behavior: "smooth" });
     setTimeout(() => openProject(projectIndex, true), Math.min(650, 280 + dist * 0.3));
   }
@@ -167,26 +167,30 @@
     return Math.round((pos + mezza - base - h / 2) / h) * h + base + h / 2 - mezza;
   }
 
-  /* frenata esponenziale verso T: x(t) = T - (T - x0)·e^(-t/tau).
-     La velocità iniziale è (T - x0)/tau: scegliendo tau così combacia con
-     quella del dito. */
-  function vaiA(T, tau) {
+  /* Arrivo sulla riga T in un tempo definito.
+     - Dopo una spinta: frenata "ease-out" cubica, x = x0 + (T-x0)·(1-(1-t)³).
+       La sua velocità iniziale è 3·(T-x0)/durata: scegliendo la durata così
+       parte alla stessa velocità del dito e arriva a zero proprio sulla riga.
+       Prima era una frenata esponenziale, che ha una coda lunghissima (quasi
+       3 s di strisciamento lento dopo una spinta forte): sembrava che
+       l'assestamento non finisse mai.
+     - Da fermo (dito staccato senza velocità): curva morbida in entrata e in
+       uscita, breve. */
+  function vaiA(T, durata, daFermo) {
     fermaMoto(); fermaPosa();
     let x0 = wheel.scrollTop;
-    if (reduceMotion) { wheel.scrollTop = T; recentre(); return; }
+    if (reduceMotion || Math.abs(T - x0) < 0.5) { wheel.scrollTop = T; recentre(); return; }
     const t0 = performance.now();
+    const curva = daFermo
+      ? (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+      : (t) => 1 - Math.pow(1 - t, 3);
     const passo = (now) => {
-      const resto = (T - x0) * Math.exp(-(now - t0) / tau);
-      if (Math.abs(resto) < 0.35) {
-        wheel.scrollTop = T;
-        recentre();
-        motoRaf = null;
-        return;
-      }
-      wheel.scrollTop = T - resto;
+      const t = Math.min(1, (now - t0) / durata);
+      wheel.scrollTop = x0 + (T - x0) * curva(t);
       const d = recentre();
       if (d) { T += d; x0 += d; }
-      motoRaf = requestAnimationFrame(passo);
+      if (t < 1) motoRaf = requestAnimationFrame(passo);
+      else motoRaf = null;
     };
     motoRaf = requestAnimationFrame(passo);
   }
@@ -195,10 +199,13 @@
     const pos = wheel.scrollTop;
     const T = rigaVicina(pos + v * PROIEZIONE);
     const strada = T - pos;
-    let tau = 190;                               // stacco da fermo: posa morbida
-    if (Math.abs(v) > 0.05 && Math.sign(v) === Math.sign(strada)) tau = strada / v;
-    tau = Math.min(Math.max(tau, 140), 650);
-    vaiA(T, tau);
+    if (Math.abs(v) < 0.05 || Math.sign(v) !== Math.sign(strada)) {
+      // quasi fermo: posa breve, più lunga solo se la riga è lontana
+      vaiA(T, 200 + Math.min(Math.abs(strada), 60) * 1.5, true);
+      return;
+    }
+    const durata = Math.min(Math.max((3 * strada) / v, 220), 1400);
+    vaiA(T, durata, false);
   }
 
   if (TOCCO) {
@@ -1010,32 +1017,14 @@
     }, 180);
   }, { passive: true });
 
-  /* iPhone: dopo schermo intero e un giro orizzontale → verticale, Safari a
-     volte tiene la pagina impaginata alla larghezza orizzontale e mostra
-     solo la parte sinistra: tutto sembra spostato a destra. Si azzera ogni
-     scostamento orizzontale e si fa ricalcolare la larghezza a iOS con un
-     ritocco momentaneo del viewport (maximum-scale=1 e poi di nuovo com'era:
-     lo zoom con le dita resta permesso). Due volte, perché iOS a volte
-     finisce di sistemare la rotazione dopo l'ultimo evento. */
-  const metaVP = document.querySelector('meta[name="viewport"]');
-  const baseVP = metaVP ? metaVP.content : "";
-  let raddT = null;
+  /* iPhone: dopo una rotazione il pannello a volte resta spostato di lato.
+     Qui si azzerano gli scostamenti del catalogo; il ricalcolo completo della
+     pagina dopo la rotazione lo fa js/site.js, per tutte le pagine. */
   function raddrizza() {
-    const azzera = () => {
-      scroller.scrollLeft = 0;
-      document.documentElement.scrollLeft = 0;
-      document.body.scrollLeft = 0;
-    };
-    azzera();
-    if (!TOCCO || !metaVP) return;
-    metaVP.content = baseVP + ", maximum-scale=1";
-    clearTimeout(raddT);
-    raddT = setTimeout(() => {
-      metaVP.content = baseVP;
-      azzera();
-      if (isOpen && inCampo && !inPieno()) centra(inCampo);
-    }, 450);
+    scroller.scrollLeft = 0;
+    wheel.scrollLeft = 0;
   }
+
 
   /* click fuori dalla scheda: si torna al catalogo */
   scroller.addEventListener("click", (e) => {

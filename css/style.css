@@ -714,7 +714,7 @@ body.no-video .showreel-fallback { display: block; }
    riga come il timer di iPhone): niente scroll nativo né snap del browser,
    che si metterebbero in mezzo. La posizione resta scrivibile da codice. */
 @media (pointer: coarse) {
-  .wheel { overflow-y: hidden; scroll-snap-type: none; touch-action: none; }
+  .wheel { overflow: hidden; scroll-snap-type: none; touch-action: none; }
 }
 .wheel-list { list-style: none; padding-left: 25vw; }
 .wheel-item { scroll-snap-align: center; scroll-snap-stop: normal; }
@@ -1921,16 +1921,18 @@ body.page-service {
   /* --- catalogue e scheda progetto --- */
   /* i titoli lunghi vengono troncati nella ruota: per intero stanno
      nell'elenco qui sotto */
-  .wheel-item { max-width: calc(100vw - 36px); }
+  /* larghezze sul contenitore, non sullo schermo (vw): su iPhone le unità
+     dello schermo possono restare vecchie dopo una rotazione */
+  .wheel-item { max-width: calc(100% - 18px); }
   .cat-list a { grid-template-columns: 2.2rem minmax(0, 1fr); row-gap: 2px; }
   .cat-y { grid-column: 2; justify-self: start; }
   .back-btn { top: 18px; left: 18px; width: 40px; height: 40px; }
   .wheel-list { padding-left: 18px; }
   .wheel-item { font-size: 1.2rem; height: 56px; line-height: 56px; }
   .project-block { padding: 76px 0; }
-  .project-card { width: calc(100vw - 36px); }
+  .project-card { width: calc(100% - 36px); }
   /* da telefono lo spazio è poco: sbucano meno */
-  .project-card--multi { --peek: 10%; width: calc(100vw - 118px); }
+  .project-card--multi { --peek: 10%; width: calc(100% - 118px); }
   .project-title { font-size: 1.5rem; }
   .project-info { grid-template-columns: 1fr 1fr; }
   .about-header { gap: 1rem; padding-top: 22px; }

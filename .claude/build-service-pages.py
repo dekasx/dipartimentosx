@@ -144,8 +144,14 @@ def conn(mid, paths, draw_load=False, solo=None):
     (da telefono la colonna è una sola e il disegno del computer, stirato,
     può finire sopra una foto)."""
     defs, gs = [], []
-    for i, (d, frm) in enumerate(paths):
+    for i, pth in enumerate(paths):
+        # (d, from) oppure (d, from, to): "to" è dove la linea deve essere
+        # già tutta disegnata (posizione della sezione in schermate)
+        d, frm = pth[0], pth[1]
+        to = pth[2] if len(pth) > 2 else None
         f = f' data-from="{frm}"' if frm else ""
+        if to is not None:
+            f += f' data-to="{to}"'
         defs.append(f'          <mask id="mk-{mid}{i}" maskUnits="userSpaceOnUse">'
                     f'<path class="reveal"{f} pathLength="1" d="{d}" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/></mask>')
         gs.append(f'        <g mask="url(#mk-{mid}{i})"><path d="{d}" class="dotpath"/></g>')

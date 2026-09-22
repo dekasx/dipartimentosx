@@ -146,9 +146,10 @@ write("sound-design", tpl.page(
       "Mixing &amp; Mastering adattati a impianti audio, cinema e teatri"
     ], conn_svg=tpl.conn("sd2", [("M1780 240 H1080 V620 H500", None)], solo="desktop") +
                  # da telefono la foto sta a sinistra (5–67% della larghezza, 15–49%
-                 # dell'altezza): la linea entra da destra, scende nella colonna libera
-                 # accanto alla foto e gira nello spazio fra foto e "I nostri servizi"
-                 tpl.conn("sd2m", [("M1920 190 H1575 V563 H300", None)], solo="telefono"),
+                 # dell'altezza): la linea entra da destra e scende nella colonna
+                 # libera accanto alla foto, fermandosi prima di "I nostri servizi".
+                 # Tutta disegnata già con la sezione a un terzo di schermo (to=0.35)
+                 tpl.conn("sd2m", [("M1920 190 H1575 V555", None, 0.35)], solo="telefono"),
        rule=False,          # niente striscia tratteggiata sopra "I nostri servizi"
        aside=aside("assets/img/zoom.jpg", "Registrazione ambientale con un registratore Zoom H6 tra gli alberi", "", w=479, h=864))
   ),

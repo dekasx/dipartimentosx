@@ -940,6 +940,7 @@
 
     block._show = (k, sound) => {
       block._active = k;
+      if (block._scheda) block._scheda(k);
       adattaFormato();
       if (epLabel) epLabel.textContent = items[k].label || "";
 
@@ -995,27 +996,62 @@
       }, { passive: true });
     }
 
-    /* ---------- scheda tecnica ---------- */
+    /* ---------- scheda tecnica ----------
+       Data, cliente e descrizione possono cambiare da un episodio all'altro
+       (ognuno delle Botteghe ha il suo): ogni video/foto di `media` può
+       sovrascrivere quelli del progetto, e la scheda si riscrive quando
+       cambia l'episodio (vedi _show). I clienti con un sito sono link. */
     const info = document.createElement("div");
     info.className = "project-info";
-    const cells = [
-      ["Data", p.date],
-      ["In collaborazione con", p.partner]
-    ];
-    cells.forEach(([k, v]) => {
+    const nuovaCella = (titolo, larga) => {
       const c = document.createElement("div");
-      c.className = "info-cell";
-      c.innerHTML = "<h3></h3><p></p>";
-      c.querySelector("h3").textContent = k;
-      c.querySelector("p").textContent = v || "—";
+      c.className = "info-cell" + (larga ? " info-cell--wide" : "");
+      c.innerHTML = "<h3></h3><div class=\"info-val\"></div>";
+      c.querySelector("h3").textContent = titolo;
       info.appendChild(c);
-    });
-    const wide = document.createElement("div");
-    wide.className = "info-cell info-cell--wide";
-    wide.innerHTML = "<h3></h3><p></p>";
-    wide.querySelector("h3").textContent = "Descrizione";
-    wide.querySelector("p").textContent = p.description || "";
-    info.appendChild(wide);
+      return c;
+    };
+    const cData = nuovaCella("Data"), cCliente = nuovaCella("Cliente"), cDescr = nuovaCella("Descrizione", true);
+
+    const campo = (k, nome) => (items[k] && nome in items[k] ? items[k][nome] : p[nome]);
+
+    function scriviScheda(k) {
+      const data = campo(k, "date") || "";
+      const clienti = campo(k, "clients") || [];
+      const descr = campo(k, "description") || "";
+
+      cData.querySelector(".info-val").textContent = data || "—";
+
+      const vc = cCliente.querySelector(".info-val");
+      vc.textContent = "";
+      clienti.forEach((cl, n) => {
+        if (n) vc.appendChild(document.createTextNode(", "));
+        if (cl.url) {
+          const a = document.createElement("a");
+          a.className = "client-link";
+          a.href = cl.url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = cl.name;
+          vc.appendChild(a);
+        } else {
+          vc.appendChild(document.createTextNode(cl.name));
+        }
+      });
+      if (!clienti.length) vc.textContent = "—";
+
+      // una riga di testo = un paragrafo; senza descrizione la riga sparisce
+      const vd = cDescr.querySelector(".info-val");
+      vd.textContent = "";
+      descr.split("\n").filter(Boolean).forEach((riga) => {
+        const par = document.createElement("p");
+        par.textContent = riga;
+        vd.appendChild(par);
+      });
+      cDescr.hidden = !descr;
+    }
+    block._scheda = scriviScheda;
+    scriviScheda(0);
     card.appendChild(info);
 
     return block;

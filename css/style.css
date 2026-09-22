@@ -1085,7 +1085,24 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
   font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; margin-bottom: 0.45rem;
 }
-.info-cell p { font-family: var(--font-sans); font-size: clamp(0.82rem, 0.95vw, 1rem); line-height: 1.55; }
+.info-cell p,
+.info-val { font-family: var(--font-sans); font-size: clamp(0.82rem, 0.95vw, 1rem); line-height: 1.55; }
+.info-val p + p { margin-top: 0.6em; }
+.info-cell[hidden] { display: none; }
+
+/* il nome del cliente porta al suo sito: sottolineato per dire che si può
+   cliccare, sempre del colore del testo (anche dopo il clic, mai il blu o il
+   viola del browser), verde al passaggio o col tasto Tab */
+.client-link,
+.client-link:visited {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: color 0.25s var(--ease), text-decoration-color 0.25s var(--ease);
+}
+.client-link:hover,
+.client-link:focus-visible { color: var(--green); text-decoration-color: var(--green); outline: none; }
 
 /* ---------- about ---------- */
 .panel--about {

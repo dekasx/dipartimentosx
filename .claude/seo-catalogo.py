@@ -13,7 +13,7 @@ c'è, la durata si omette (non è obbligatoria)."""
 import io, json, os, re, subprocess, html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITO = "https://www.dipartimentosx.com/"
+SITO = "https://dipartimentosx.netlify.app/"
 INIZIO, FINE = "<!-- seo-catalogo:inizio -->", "<!-- seo-catalogo:fine -->"
 
 def progetti():

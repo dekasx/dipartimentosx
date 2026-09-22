@@ -25,7 +25,7 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
 
   <title>{full}</title>
   <meta name="description" content="{desc}">
-  <link rel="canonical" href="https://www.dipartimentosx.com/{slug}.html">
+  <link rel="canonical" href="https://dipartimentosx.netlify.app/{slug}.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="{bg}">
 
@@ -33,8 +33,8 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
   <meta property="og:site_name" content="Dipartimento SX">
   <meta property="og:title" content="{full}">
   <meta property="og:description" content="{desc}">
-  <meta property="og:url" content="https://www.dipartimentosx.com/{slug}.html">
-  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-logo.jpg">
+  <meta property="og:url" content="https://dipartimentosx.netlify.app/{slug}.html">
+  <meta property="og:image" content="https://dipartimentosx.netlify.app/assets/img/og-logo.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/jpeg">
@@ -43,7 +43,7 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{full}">
   <meta name="twitter:description" content="{desc}">
-  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-logo.jpg">
+  <meta name="twitter:image" content="https://dipartimentosx.netlify.app/assets/img/og-logo.jpg">
 
   <script type="application/ld+json">
   {{
@@ -52,12 +52,12 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
     "name": "{title.replace('&amp;', '&')}",
     "serviceType": "{title.replace('&amp;', '&')}",
     "description": "{desc}",
-    "url": "https://www.dipartimentosx.com/{slug}.html",
+    "url": "https://dipartimentosx.netlify.app/{slug}.html",
     "areaServed": [{{ "@type": "City", "name": "Roma" }}, {{ "@type": "Country", "name": "Italia" }}],
     "provider": {{
       "@type": "ProfessionalService",
       "name": "Dipartimento SX",
-      "url": "https://www.dipartimentosx.com/",
+      "url": "https://dipartimentosx.netlify.app/",
       "email": "info@dipartimentosx.com",
       "address": {{ "@type": "PostalAddress", "addressLocality": "Roma", "addressCountry": "IT" }}
     }}
@@ -68,9 +68,9 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dipartimentosx.com/" }},
-      {{ "@type": "ListItem", "position": 2, "name": "Servizi", "item": "https://www.dipartimentosx.com/#services" }},
-      {{ "@type": "ListItem", "position": 3, "name": "{nome}", "item": "https://www.dipartimentosx.com/{slug}.html" }}
+      {{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dipartimentosx.netlify.app/" }},
+      {{ "@type": "ListItem", "position": 2, "name": "Servizi", "item": "https://dipartimentosx.netlify.app/#services" }},
+      {{ "@type": "ListItem", "position": 3, "name": "{nome}", "item": "https://dipartimentosx.netlify.app/{slug}.html" }}
     ]
   }}
   </script>{extra_ld}

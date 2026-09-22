@@ -43,6 +43,8 @@ def testo(t):
 def elementi():
     lista = []
     for p in progetti():
+        if p.get("catalogo") is False:   # solo nella home, non nel catalogo
+            continue
         items = p["media"] if isinstance(p["media"], list) else [p["media"]]
         for k, m in enumerate(items):
             campo = lambda n: m[n] if n in m else p.get(n)

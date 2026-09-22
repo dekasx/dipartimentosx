@@ -41,6 +41,7 @@ const PROJECTS = [
     slug: "lodigiani",
     title: "Lodigiani × Umbro",
     reel: true,
+    catalogo: false,  // solo nel carosello della home: nel catalogo c'è già Umbro × Lodigiani
     portrait: true,   // girato 9:16: nel carosello non viene ritagliato
     media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/lodigiani.mp4", poster: "assets/projects/lodigiani-poster.jpg" },
     date: "2024",

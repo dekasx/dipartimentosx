@@ -19,7 +19,10 @@
   const wheel = el("wheel");
   if (!wheel) return;
 
-  PROJECTS.sort((a, b) => a.title.localeCompare(b.title, "en"));
+  /* i progetti con catalogo: false restano nel carosello della home ma qui
+     non compaiono (Lodigiani × Umbro ripeteva Umbro × Lodigiani) */
+  const CATALOGO = PROJECTS.filter((p) => p.catalogo !== false)
+    .sort((a, b) => a.title.localeCompare(b.title, "en"));
 
   /* ==================== RUOTA ====================
      Scorrimento libero e continuo, come la selezione dell'ora su iPhone:
@@ -35,10 +38,10 @@
   const TOCCO = matchMedia("(pointer: coarse)").matches;
   const COPIES = TOCCO ? 21 : 9;
   const wheelList = el("wheelList");
-  const N = PROJECTS.length;
+  const N = CATALOGO.length;
 
   for (let c = 0; c < COPIES; c++) {
-    PROJECTS.forEach((p, i) => {
+    CATALOGO.forEach((p, i) => {
       const li = document.createElement("li");
       li.className = "wheel-item";
       li.textContent = p.title;
@@ -1133,7 +1136,7 @@
     return block;
   }
 
-  PROJECTS.forEach((p) => {
+  CATALOGO.forEach((p) => {
     const b = buildBlock(p);
     blocks.push(b);
     scroller.appendChild(b);
@@ -1227,7 +1230,7 @@
         const d = Math.abs(r.top + r.height / 2 - scroller.getBoundingClientRect().top - mid);
         if (d < bestD) { bestD = d; best = i; }
       });
-      const slug = PROJECTS[best].slug;
+      const slug = CATALOGO[best].slug;
       if (location.hash !== "#" + slug) history.replaceState(null, "", "#" + slug);
     });
   }, { passive: true });
@@ -1299,7 +1302,7 @@
       inCampo = b;
       if (b._show) b._show(b._active || 0, !!withSound);
     }
-    history.replaceState(null, "", "#" + PROJECTS[i].slug);
+    history.replaceState(null, "", "#" + CATALOGO[i].slug);
   }
 
   /* ==================== AVVIO ==================== */
@@ -1316,7 +1319,7 @@
   function fromHash() {
     const slug = decodeURIComponent(location.hash.replace("#", ""));
     if (!slug) { closePanel(); return; }
-    const i = PROJECTS.findIndex((p) => p.slug === slug);
+    const i = CATALOGO.findIndex((p) => p.slug === slug);
     if (i >= 0) openProject(i);
   }
   addEventListener("hashchange", fromHash);

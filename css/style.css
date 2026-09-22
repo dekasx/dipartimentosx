@@ -850,12 +850,13 @@ body.no-video .showreel-fallback { display: block; }
   /* la scheda coi dati resta larga com'era prima di allargare il video:
      lo spazio recuperato è per l'anteprima, non per il testo. Centrata
      sotto al video. */
-  .project-card .project-info {
+  /* il nome dell'episodio va allineato al box dei dati, non alla scheda */
+  .project-card { --dati-w: min(100%, max(300px, min(1040px, 88vw, calc(1.7778 * 100svh - 816px)))); }
+  .project-card--multi { --dati-w: min(100%, max(300px, min(1040px, 62vw, calc(1.7778 * 100svh - 816px)))); }
+  .project-card .project-info,
+  .project-card .project-ep {
     align-self: center;
-    width: min(100%, max(300px, min(1040px, 88vw, calc(1.7778 * 100svh - 816px))));
-  }
-  .project-card--multi .project-info {
-    width: min(100%, max(300px, min(1040px, 62vw, calc(1.7778 * 100svh - 816px))));
+    width: var(--dati-w);
   }
   .project-block {
     min-height: 100%;
@@ -1164,7 +1165,8 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  min-height: 3.1em;          /* 2 righe × interlinea 1.55 */
+  /* le righe da riservare alla descrizione le decide catalogue.js
+     (riservaRighe): quelle della più lunga del progetto, massimo due */
 }
 /* da chiusa i paragrafi scorrono di seguito, così il taglio cade dopo due
    righe di testo e non dopo due paragrafi */
@@ -1179,8 +1181,12 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
 .project-block.is-misura .info-cell.is-aperta .info-val--due {
   display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
 }
+/* "leggi tutto" sulla riga dell'etichetta, a destra: non occupa una riga sua */
+.info-cell--wide { position: relative; }
 .info-altro {
-  margin-top: 0.35rem;
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
   padding: 0;
   border: none;
   background: none;

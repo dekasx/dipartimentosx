@@ -1082,12 +1082,7 @@
 
       // una riga di testo = un paragrafo; senza descrizione la riga sparisce
       const vd = cDescr.querySelector(".info-val");
-      vd.textContent = "";
-      descr.split("\n").filter(Boolean).forEach((riga) => {
-        const par = document.createElement("p");
-        par.textContent = riga;
-        vd.appendChild(par);
-      });
+      scriviDescr(vd, descr);
       // vuota ma con altri episodi descritti: lo spazio resta, il testo no
       cDescr.hidden = !qualcheDescr;
       cDescr.classList.toggle("is-vuota", !descr);
@@ -1096,9 +1091,44 @@
       // lo spazio del pulsante c'è sempre (altezza costante), si vede solo se serve
       altro.classList.toggle("is-inutile", !(vd.scrollHeight > vd.clientHeight + 1));
     }
+    function scriviDescr(vd, testo) {
+      vd.textContent = "";
+      testo.split("\n").filter(Boolean).forEach((riga) => {
+        const par = document.createElement("p");
+        par.textContent = riga;
+        vd.appendChild(par);
+      });
+    }
+
+    /* Quante righe riservare alla descrizione: quelle della più lunga del
+       progetto, al massimo due. Così l'altezza è la stessa per ogni episodio
+       (il video non cambia misura) ma senza righe vuote se sono tutte corte.
+       Si rimisura quando cambia la larghezza. */
+    function riservaRighe() {
+      // data, cliente e descrizione: per ciascuno le righe dell'episodio che
+      // ne ha di più (massimo due), così nessuno cambia altezza cambiando
+      // episodio — da telefono anche un nome di cliente può andare a capo
+      const valori = [cData, cCliente, cDescr].map((c) => c.querySelector(".info-val"));
+      valori.forEach((v) => { v.style.minHeight = ""; });
+      const lh = valori.map((v) => parseFloat(getComputedStyle(v).lineHeight) || 20);
+      const righe = [1, 1, 1];
+      items.forEach((m, k) => {
+        scriviScheda(k);
+        valori.forEach((v, n) => {
+          if (!v.textContent.trim()) return;
+          righe[n] = Math.max(righe[n], Math.min(2, Math.round(v.scrollHeight / lh[n])));
+        });
+      });
+      valori.forEach((v, n) => { v.style.minHeight = (righe[n] * lh[n]).toFixed(1) + "px"; });
+      scriviScheda(block._active || 0);
+    }
+    block._righe = riservaRighe;
+
     block._scheda = scriviScheda;
     scriviScheda(0);
     card.appendChild(info);
+    riservaRighe();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(riservaRighe);
 
     return block;
   }
@@ -1156,7 +1186,7 @@
     if (!isOpen || inPieno()) return;
     clearTimeout(giroT);
     giroT = setTimeout(() => {
-      blocks.forEach((b) => b._altezza && b._altezza());
+      blocks.forEach((b) => { if (b._righe) b._righe(); if (b._altezza) b._altezza(); });
       if (inCampo) centra(inCampo);
       raddrizza();
       aggiornaInCampo();

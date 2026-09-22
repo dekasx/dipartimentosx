@@ -818,6 +818,53 @@ body.no-video .showreel-fallback { display: block; }
 }
 
 .project-titlebox { position: relative; padding: 0.9rem 0; }
+
+/* ---------- scheda progetto da computer: come da telefono ----------
+   Il titolo sale sulla riga del pulsante indietro invece di occupare una
+   fascia sua, e lo spazio recuperato va al video. Le linee verdi partono
+   all'altezza del pulsante (44 px dal bordo) e finiscono simmetriche
+   dall'altra parte; il titolo resta allineato al bordo del video, o si
+   scosta quanto basta per non toccare il pulsante.
+   Altezza: il pulsante (46 px, top 34) ha il centro a 57 px; il blocco parte
+   a 11 px, quindi la prima riga del titolo (interlinea 1.2) è centrata lì
+   con 46 px − 0.6 × corpo del titolo di spazio sopra, e altrettanto sotto.
+   Larghezza: il video è 16/9 e deve stare in una schermata con tutto il
+   resto; --fuori-video è l'altezza di tutto quello che non è video. */
+@media (min-width: 821px) {
+  .project-card {
+    --tf: clamp(1.5rem, 3vw, 2.8rem);
+    /* misurato: da 392 px (1024×768) a 410 px (1920×1080), perché titolo e
+       scheda crescono con la larghezza; qualche px in più di margine, così
+       la scheda non è mai più larga di quanto il video possa riempire */
+    --fuori-video: calc(372px + 2.1vw);
+    --room: calc(1.7778 * (100svh - var(--fuori-video)));
+    width: max(300px, min(1280px, 88vw, var(--room)));
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card--multi { width: max(300px, min(1280px, 62vw, var(--room))); }
+  .project-block {
+    min-height: 100%;
+    align-content: stretch;
+    scroll-snap-align: start;
+    padding: 11px 0 28px;
+  }
+  .project-title { font-size: var(--tf); line-height: 1.2; }
+  .project-titlebox {
+    margin-inline: calc((100% - 100vw) / 2 + 44px);
+    margin-bottom: 22px;
+    padding: calc(46px - 0.6 * var(--tf)) 0 calc(46px - 0.6 * var(--tf))
+             max(60px, calc((100vw - 100%) / 2 - 44px));
+  }
+  /* video e scheda al centro dello spazio sotto al titolo (più specifico
+     della regola base .project-stage, che sta più in basso e metteva 35 px
+     fissi: il blocco risultava più alto dello schermo) */
+  .project-card .project-stage { margin-top: auto; }
+  .project-card .project-info { margin-bottom: auto; }
+  .project-block.is-misura { align-content: start; }
+  .project-block.is-misura .project-stage { margin-top: 0; }
+  .project-block.is-misura .project-info { margin-bottom: 0; }
+}
 .project-title { font-size: clamp(1.5rem, 3vw, 2.8rem); font-weight: 500; color: var(--white); }
 .split-line { position: absolute; left: 0; right: 0; height: 1px; background: var(--green); transform-origin: center; }
 .split-line--top { top: 0; }

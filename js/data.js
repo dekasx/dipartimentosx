@@ -25,10 +25,10 @@ const CLIENTI = {
   orazio:      { name: "Bar Orazio" },
   mercatoArabo:{ name: "Mercato Arabo", url: "https://www.mercatoarabo.it/" },
   beat:        { name: "Beat Skatepark", url: "https://beatsb.it/" },
-  rce:         { name: "RCE Foto", url: "https://www.rcefoto.it/" },
+  rce:         { name: "RCE Foto", url: "https://www.rcefoto.com/" },
   cacaoCrudo:  { name: "Cacao Crudo S.r.l.", url: "https://cacaocrudo.it/" },
   elektron:    { name: "Elektron", url: "https://www.elektron.se/" },
-  lodigiani:   { name: "Lodigiani" },
+  lodigiani:   { name: "Lodigiani", url: "https://www.lodigianicalcio1972.it/" },   // ASD Lodigiani Calcio 1972
   umbro:       { name: "Umbro", url: "https://www.umbro.com/it/" },
   fasce:       { name: "fascedacapitano.it", url: "https://fascedacapitano.it/" },
   halal:       { name: "Halal Express" },

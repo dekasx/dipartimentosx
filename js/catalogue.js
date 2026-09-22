@@ -687,6 +687,9 @@
 
     function nudge(dir) {
       if (!multi) return;
+      // da fermi la pista si rimette esattamente sull'episodio: un passo è
+      // sempre una carta sola, anche se qualcosa l'avesse spostata
+      if (modo !== "assesta") track.scrollLeft = cella * cellW();
       // se un movimento è già in corso si parte da dove arriverà, così due
       // frecce di fila fanno due episodi invece di annullarsi
       cella += dir;
@@ -983,6 +986,24 @@
         track.scrollLeft = cella * cellW();
         paintDeck();
       });
+      /* La pista cambia larghezza anche senza che la finestra cambi: quando
+         il video carica e se ne scopre il formato, il riquadro si stringe
+         (le Botteghe sono 4:3). Senza riallineare, la posizione restava
+         calcolata sulla larghezza vecchia e al primo passo il mazzo correva
+         attraverso decine di carte in mezzo secondo. Qualunque cambio di
+         larghezza riporta la pista esattamente sull'episodio corrente. */
+      if ("ResizeObserver" in window) {
+        let ultimaLarghezza = 0;
+        new ResizeObserver(() => {
+          const w = track.clientWidth;
+          if (!w || w === ultimaLarghezza) return;
+          ultimaLarghezza = w;
+          if (modo === "assesta") modo = "fermo";
+          track.scrollLeft = cella * w;
+          recentreTrack();
+          paintDeck();
+        }).observe(track);
+      }
       /* La posizione è in pixel: se la larghezza cambia (rotazione, schermo
          intero) va riscalata, altrimenti la stessa posizione cade su un altro
          episodio. Si riscala anche un movimento in corso. */

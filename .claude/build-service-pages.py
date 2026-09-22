@@ -174,7 +174,10 @@ def pair(left, right_h2, facts, after=None, conn_svg="", aside="", reverse=False
     l'elenco e il racconto parte alla riga del primo tratteggio dell'elenco.
     reverse=False: racconto a sinistra, elenco a destra. True: il contrario."""
     out = io.StringIO()
-    out.write('    <section class="svc-block svc-wrap">\n')
+    # senza striscia la sezione prosegue il discorso di quella sopra:
+    # da telefono le si avvicina (vedi .svc-block--segue nel CSS)
+    segue = "" if rule else " svc-block--segue"
+    out.write(f'    <section class="svc-block svc-wrap{segue}">\n')
     out.write(conn_svg)
     if rule:
         out.write('      <div class="rule" aria-hidden="true"></div>\n')

@@ -1288,6 +1288,14 @@ body.page-service {
   padding-block: clamp(40px, 8svh, 96px);
 }
 .svc-block .rule { margin-bottom: clamp(26px, 5svh, 56px); }
+/* Una sezione senza striscia prosegue il discorso di quella sopra (in
+   Musica & Sound Design il testo dopo i player). Da telefono, con i due
+   margini sommati, restavano 130 px di vuoto e il testo sembrava staccato:
+   lo si riporta vicino a quello che continua. */
+@media (max-width: 820px) {
+  .svc-block:has(+ .svc-block--segue) { padding-bottom: 0; }
+  .svc-block--segue { padding-top: clamp(22px, 4svh, 32px); }
+}
 .svc-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
@@ -2133,3 +2141,53 @@ body.page-contact .sec--contact {
 @media (max-width: 820px) {
   .dotcol { display: none; }   /* su una colonna sola sotto al titolo c'è subito il testo */
 }
+
+/* ===================== PASSAGGIO FRA LE PAGINE =====================
+   Una pellicola che scorre: la pagina in cui sei esce a sinistra e quella
+   nuova entra da destra, attaccate come due fotogrammi, con una sfocatura
+   che cresce a metà corsa e sparisce all'arrivo.
+
+   È una transizione fra documenti (@view-transition): il browser fotografa
+   la pagina vecchia, carica la nuova e anima le due fotografie. Niente
+   JavaScript e niente cambi alle pagine. Dove non è supportata (Firefox)
+   si passa di pagina normalmente, come prima.
+
+   La pellicola va sempre avanti, anche tornando indietro: è il senso della
+   metafora, e così il movimento è uno solo in tutto il sito.
+
+   Si muove anche il logo: fa parte del fotogramma. Dargli un nome suo per
+   tenerlo fermo lo fotograferebbe da solo, e perderebbe il negativo
+   (mix-blend-mode: difference) per tutta la durata del passaggio. */
+@view-transition { navigation: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* le due fotografie non si sommano dove si toccano: niente bordo più chiaro */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation-duration: 0.72s;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+  animation-fill-mode: both;
+}
+::view-transition-old(root) { animation-name: pellicola-esce; }
+::view-transition-new(root) { animation-name: pellicola-entra; }
+
+/* stessa curva e stessa durata: i due fotogrammi restano attaccati. La
+   sfocatura segue la velocità, che con questa curva è massima a metà. */
+@keyframes pellicola-esce {
+  0%   { transform: translateX(0);     filter: blur(0); }
+  50%  {                               filter: blur(5px); }
+  100% { transform: translateX(-100%); filter: blur(0); }
+}
+@keyframes pellicola-entra {
+  0%   { transform: translateX(100%);  filter: blur(0); }
+  50%  {                               filter: blur(5px); }
+  100% { transform: translateX(0);     filter: blur(0); }
+}
+
+/* dietro, durante il passaggio, solo nero: se un bordo sfocato lascia
+   intravedere qualcosa, è il buio fra due fotogrammi */
+::view-transition { background: #000; }

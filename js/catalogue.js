@@ -29,7 +29,11 @@
      L'infinito è ottenuto ripetendo l'elenco COPIES volte e riportando
      silenziosamente lo scroll al centro quando ci si avvicina a un'estremità:
      essendo i blocchi identici, il salto è invisibile. */
-  const COPIES = 9;
+  /* Da telefono il riposizionamento avviene solo a ruota ferma (vedi più
+     sotto), quindi una spinta forte deve avere abbastanza elenco davanti per
+     non sbattere contro la fine: 21 copie sono circa 6.700 px per parte. */
+  const TOCCO = matchMedia("(pointer: coarse)").matches;
+  const COPIES = TOCCO ? 21 : 9;
   const wheelList = el("wheelList");
   const N = PROJECTS.length;
 
@@ -125,7 +129,9 @@
     fermaPosa();
     const passo = (now) => {
       const t = Math.min(1, (now - t0) / DUR_POSA);
-      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      // da telefono arriva dopo l'inerzia: solo frenata, senza ripartenza
+      const e = TOCCO ? 1 - Math.pow(1 - t, 3)
+                      : (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
       wheel.scrollTop = da + (mira - da) * e;
       if (t < 1) posaRaf = requestAnimationFrame(passo); else posaRaf = null;
     };
@@ -135,11 +141,44 @@
   ["pointerdown", "touchstart", "wheel"].forEach((ev) =>
     wheel.addEventListener(ev, fermaPosa, { passive: true }));
 
+  /* Da telefono comanda il browser. Su iPhone scrivere la posizione mentre
+     l'inerzia è in corso la ferma di colpo, e l'aggancio dopo l'inerzia è
+     un'animazione lenta con pause negli eventi: il mio assestamento partiva a
+     metà, la interrompeva e ripartiva da velocità zero. Era lo scatto.
+     Quindi: niente riposizionamenti durante il moto, e la rete di sicurezza
+     solo quando il browser dice che lo scorrimento è davvero finito
+     (`scrollend`), mai col dito ancora appoggiato. */
+  const HA_SCROLLEND = "onscrollend" in window;
+  let dito = false;
+
+  function aRuotaFerma() {
+    if (dito) return;
+    if (TOCCO) recentre();          // un salto di blocchi interi: invisibile
+    posaSullaRiga();
+  }
+
+  if (TOCCO) {
+    wheel.addEventListener("touchstart", () => { dito = true; }, { passive: true });
+    const stacca = () => {
+      dito = false;
+      // senza scrollend, e se il dito si stacca da fermo, non arriverebbe più niente
+      if (!HA_SCROLLEND) { clearTimeout(posaT); posaT = setTimeout(aRuotaFerma, 450); }
+    };
+    wheel.addEventListener("touchend", stacca, { passive: true });
+    wheel.addEventListener("touchcancel", stacca, { passive: true });
+    if (HA_SCROLLEND) wheel.addEventListener("scrollend", aRuotaFerma, { passive: true });
+  }
+
   let wheelRaf = null;
   wheel.addEventListener("scroll", () => {
-    recentre();
-    clearTimeout(posaT);
-    posaT = setTimeout(posaSullaRiga, 140);
+    if (!TOCCO) {
+      recentre();
+      clearTimeout(posaT);
+      posaT = setTimeout(posaSullaRiga, 140);
+    } else if (!HA_SCROLLEND) {
+      clearTimeout(posaT);
+      posaT = setTimeout(aRuotaFerma, 450);
+    }
     if (wheelRaf) return;
     wheelRaf = requestAnimationFrame(() => { wheelRaf = null; updateWheel(); });
   }, { passive: true });
@@ -157,6 +196,28 @@
 
   /* se l'audio è acceso resta acceso passando da un progetto all'altro */
   let soundOn = false;
+
+  /* Schermo intero e rotazione del telefono ridimensionano la pagina. Senza
+     precauzioni, a finestra più grande più progetti risultano "in campo"
+     insieme e partivano tutti, con l'audio sovrapposto; e il mazzo degli
+     episodi, ricalcolato su una larghezza nuova, poteva saltare a un altro
+     episodio. Finché dura lo schermo intero non cambia niente. */
+  let schermoPieno = false;
+  let bloccoPieno = null;
+  const inPieno = () => schermoPieno ||
+    !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+  function entraPieno(b) { schermoPieno = true; bloccoPieno = b; }
+  function esciPieno() {
+    const b = bloccoPieno;
+    bloccoPieno = null;
+    // il layout è cambiato sotto: riporto al centro il progetto che guardavi
+    if (b && isOpen) centra(b);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      schermoPieno = false;
+      aggiornaInCampo();
+    }));
+  }
 
   function buildBlock(p) {
     const block = document.createElement("article");
@@ -346,6 +407,7 @@
     }
 
     const cellW = () => track.clientWidth || 1;
+    let ultimaW = 0;       // larghezza con cui è stata scritta la posizione
 
     /* ritorno silenzioso al centro: il salto è di un numero intero di blocchi,
        quindi le carte si ritrovano esattamente dov'erano */
@@ -428,7 +490,7 @@
       }
 
       const nuovo = centro;
-      if (nuovo !== block._active) block._show(nuovo, soundOn || block.classList.contains("is-live"));
+      if (nuovo !== block._active && !inPieno()) block._show(nuovo, soundOn || block.classList.contains("is-live"));
     }
 
     /* ---------- il movimento ----------
@@ -658,6 +720,8 @@
          niente apriamo il nostro: il video si stende su tutta la finestra e i
          comandi restano dove sono. */
       block._cinema = (on) => {
+        if (on) entraPieno(block);
+        else if (card.classList.contains("is-cinema")) esciPieno();
         card.classList.toggle("is-cinema", on);
         document.documentElement.classList.toggle("is-cinema", on);
         ui.classList.toggle("is-full", on);
@@ -680,6 +744,7 @@
         if (document.fullscreenElement) { document.exitFullscreen(); return; }
 
         const apri = v.requestFullscreen || v.webkitRequestFullscreen || v.webkitEnterFullscreen;
+        entraPieno(block);
         if (apri) {
           try {
             const p = apri.call(v);
@@ -691,8 +756,19 @@
           if (!document.fullscreenElement && !v.webkitDisplayingFullscreen) block._cinema(true);
         }, 250);
       });
-      document.addEventListener("fullscreenchange", () => {
-        ui.classList.toggle("is-full", !!document.fullscreenElement);
+      const cambioPieno = () => {
+        const el = document.fullscreenElement || document.webkitFullscreenElement;
+        ui.classList.toggle("is-full", !!el);
+        if (el && block.contains(el)) entraPieno(block);
+        else if (!el && bloccoPieno === block && !card.classList.contains("is-cinema")) esciPieno();
+      };
+      document.addEventListener("fullscreenchange", cambioPieno);
+      document.addEventListener("webkitfullscreenchange", cambioPieno);
+      // iPhone: il player a schermo intero è quello di sistema, con eventi suoi
+      videos.forEach((v) => {
+        if (!v) return;
+        v.addEventListener("webkitbeginfullscreen", () => entraPieno(block));
+        v.addEventListener("webkitendfullscreen", () => esciPieno());
       });
 
       bar.addEventListener("click", (e) => {
@@ -747,9 +823,24 @@
     if (multi) {
       requestAnimationFrame(() => {
         track.scrollLeft = cellW() * items.length * Math.floor(NCOPIE / 2);
+        ultimaW = cellW();
         paintDeck();
       });
-      addEventListener("resize", () => { if (block.isConnected) paintDeck(); }, { passive: true });
+      /* La posizione è in pixel: se la larghezza cambia (rotazione, schermo
+         intero) va riscalata, altrimenti la stessa posizione cade su un altro
+         episodio. Si riscala anche un movimento in corso. */
+      addEventListener("resize", () => {
+        if (!block.isConnected) return;
+        const w = cellW();
+        if (ultimaW && w !== ultimaW) {
+          const k = w / ultimaW;
+          track.scrollLeft = Math.round(track.scrollLeft / ultimaW) * w;
+          tFrom *= k; tTo *= k;
+          if (modo !== "assesta") recentreTrack();
+        }
+        ultimaW = w;
+        paintDeck();
+      }, { passive: true });
     }
 
     /* ---------- scheda tecnica ---------- */
@@ -787,19 +878,54 @@
   /* Il video si carica e parte solo quando il suo blocco è in campo.
      L'audio segue: se lo stavi ascoltando, scorrendo al progetto successivo
      continui a sentirlo senza doverlo riaccendere. */
+  /* Suona un solo progetto alla volta: quello più vicino al centro, e solo
+     se è davvero in vista. Prima ogni blocco che entrava in campo partiva
+     per conto suo, e quando la finestra si allargava ne partivano diversi. */
+  let inCampo = null;
+
+  function aggiornaInCampo() {
+    if (!isOpen || inPieno()) return;
+    const r0 = scroller.getBoundingClientRect();
+    const h = scroller.clientHeight, mid = r0.top + h / 2;
+    let best = null, bestD = Infinity;
+    blocks.forEach((b) => {
+      const r = b.getBoundingClientRect();
+      const vis = Math.min(r.bottom, r0.top + h) - Math.max(r.top, r0.top);
+      if (vis < Math.min(r.height, h) * 0.55) return;
+      const d = Math.abs(r.top + r.height / 2 - mid);
+      if (d < bestD) { bestD = d; best = b; }
+    });
+    suona(best);
+  }
+
+  function suona(b) {
+    if (b === inCampo) return;
+    if (inCampo && inCampo._stop) inCampo._stop();
+    inCampo = b;
+    if (b && b._show) b._show(b._active || 0, soundOn);
+  }
+
+  function centra(b) {
+    scroller.scrollTop = b.offsetTop - (scroller.clientHeight - b.offsetHeight) / 2;
+  }
+
   if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        const b = en.target;
-        if (en.isIntersecting) {
-          if (b._show) b._show(b._active || 0, soundOn);
-        } else {
-          if (b._stop) b._stop();
-        }
-      });
-    }, { root: scroller, threshold: 0.55 });
+    const io = new IntersectionObserver(() => aggiornaInCampo(),
+      { root: scroller, threshold: [0, 0.25, 0.55, 0.8, 1] });
     blocks.forEach((b) => io.observe(b));
   }
+
+  /* ruotando il telefono l'altezza dei blocchi cambia sotto lo scorrimento:
+     si resta sul progetto che stavi guardando */
+  let giroT = null;
+  addEventListener("resize", () => {
+    if (!isOpen || inPieno()) return;
+    clearTimeout(giroT);
+    giroT = setTimeout(() => {
+      if (inCampo) centra(inCampo);
+      aggiornaInCampo();
+    }, 180);
+  }, { passive: true });
 
   /* click fuori dalla scheda: si torna al catalogo */
   scroller.addEventListener("click", (e) => {
@@ -846,6 +972,7 @@
     body.dataset.view = "catalogue";
     history.replaceState(null, "", location.pathname);
     blocks.forEach((b) => { if (b._stop) b._stop(); });
+    inCampo = null;
     soundOn = false;
   }
 
@@ -879,12 +1006,14 @@
     const b = blocks[i];
     if (b) {
       // salto secco all'apertura: da lì in poi si scorre
-      scroller.scrollTop = b.offsetTop - (scroller.clientHeight - b.offsetHeight) / 2;
+      centra(b);
       /* Aprendo da un click il video parte **con l'audio**: il click è un
          gesto dell'utente, quindi il browser lo consente. Aprendo da un link
          diretto (nessun gesto) resta muto: `_show` se ne accorge e riparte
          in muto da solo invece di non partire affatto. */
       if (withSound) soundOn = true;
+      blocks.forEach((x) => { if (x !== b && x._stop) x._stop(); });
+      inCampo = b;
       if (b._show) b._show(b._active || 0, !!withSound);
     }
     history.replaceState(null, "", "#" + PROJECTS[i].slug);

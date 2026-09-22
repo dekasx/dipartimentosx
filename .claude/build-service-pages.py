@@ -34,12 +34,16 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
   <meta property="og:title" content="{full}">
   <meta property="og:description" content="{desc}">
   <meta property="og:url" content="https://www.dipartimentosx.com/{slug}.html">
-  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+  <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-logo.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Logo di Dipartimento SX">
   <meta property="og:locale" content="it_IT">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{full}">
   <meta name="twitter:description" content="{desc}">
-  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
+  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-logo.jpg">
 
   <script type="application/ld+json">
   {{

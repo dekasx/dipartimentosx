@@ -41,13 +41,13 @@ const PROJECTS = [
     // la scheda del catalogo e l'anteprima a tutto schermo della home.
     // `clip` sono i 10 secondi leggeri che girano nel carosello della home.
     media: [
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep1.mp4", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep2.mp4", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep3.mp4", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep4.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep5.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep6.mp4", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep7.mp4", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep1.mp4?v=20260922", poster: "assets/projects/botteghe-ep1-poster.jpg", label: "Ep. 1 — Merceria Frustaci" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep2.mp4?v=20260922", poster: "assets/projects/botteghe-ep2-poster.jpg", label: "Ep. 2 — Fratelli Tocci" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep3.mp4?v=20260922", poster: "assets/projects/botteghe-ep3-poster.jpg", label: "Ep. 3 — Studio d’Arte Candeloro" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep4.mp4?v=20260922", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep4.mp4", poster: "assets/projects/botteghe-ep4-poster.jpg", label: "Ep. 4 — Il Dono degli Gnomi" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep5.mp4?v=20260922", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep5.mp4", poster: "assets/projects/botteghe-ep5-poster.jpg", label: "Ep. 5 — Di Biagio" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep6.mp4?v=20260922", poster: "assets/projects/botteghe-ep6-poster.jpg", label: "Ep. 6 — Bar Orazio" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe/ep7.mp4?v=20260922", clip: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/botteghe-ep7.mp4", poster: "assets/projects/botteghe-ep7-poster.jpg", label: "Ep. 7 — Mercato Arabo" }
     ],
     date: "2026 [PLACEHOLDER]",
     scope: "Serie documentaria [PLACEHOLDER]",

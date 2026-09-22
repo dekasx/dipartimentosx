@@ -836,18 +836,22 @@ body.no-video .showreel-fallback { display: block; }
     /* misurato: da 392 px (1024×768) a 410 px (1920×1080), perché titolo e
        scheda crescono con la larghezza; qualche px in più di margine, così
        la scheda non è mai più larga di quanto il video possa riempire */
-    --fuori-video: calc(372px + 2.1vw);
+    --fuori-video: calc(340px + 2.1vw);
     --room: calc(1.7778 * (100svh - var(--fuori-video)));
-    width: max(300px, min(1280px, 88vw, var(--room)));
+    width: max(300px, min(1280px, 92vw, var(--room)));
     display: flex;
     flex-direction: column;
   }
-  .project-card--multi { width: max(300px, min(1280px, 62vw, var(--room))); }
+  /* con più episodi serve spazio ai lati per le carte che sbucano; ma su
+     uno schermo alto e stretto il video era limitato dalla larghezza e
+     restavano 160 px vuoti sopra e sotto: fino all'80%, le carte sbucano
+     un po' meno. Sugli schermi larghi comanda comunque l'altezza. */
+  .project-card--multi { width: max(300px, min(1280px, 80vw, var(--room))); }
   /* la scheda coi dati resta larga com'era prima di allargare il video:
-     lo spazio recuperato è per l'anteprima, non per il testo. Allineata a
-     sinistra, sotto al bordo del video e del titolo. */
+     lo spazio recuperato è per l'anteprima, non per il testo. Centrata
+     sotto al video. */
   .project-card .project-info {
-    align-self: flex-start;
+    align-self: center;
     width: min(100%, max(300px, min(1040px, 88vw, calc(1.7778 * 100svh - 816px))));
   }
   .project-card--multi .project-info {
@@ -857,13 +861,16 @@ body.no-video .showreel-fallback { display: block; }
     min-height: 100%;
     align-content: stretch;
     scroll-snap-align: start;
-    padding: 11px 0 28px;
+    padding: 19px 0 12px;
   }
   .project-title { font-size: var(--tf); line-height: 1.2; }
   .project-titlebox {
     margin-inline: calc((100% - 100vw) / 2 + 44px);
-    margin-bottom: 22px;
-    padding: calc(46px - 0.6 * var(--tf)) 0 calc(46px - 0.6 * var(--tf))
+    margin-bottom: 14px;
+    /* linee un po' più vicine (8 px per parte): il blocco parte 8 px più in
+       basso, così la prima riga resta centrata sul pulsante:
+       19 + (38 − 0.6 corpo) + 0.6 corpo = 57 */
+    padding: calc(38px - 0.6 * var(--tf)) 0 calc(38px - 0.6 * var(--tf))
              max(60px, calc((100vw - 100%) / 2 - 44px));
   }
   /* video e scheda al centro dello spazio sotto al titolo (più specifico

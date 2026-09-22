@@ -12,14 +12,18 @@ SERVICES = [
     ("photography", "Studio Fotografico &amp; Post-Produzione"),
 ]
 
-def head(slug, title, desc, bg, extra_ld=""):
+def head(slug, title, desc, bg, extra_ld="", seo_title=None):
+    # titolo per i motori di ricerca: corto (~60 caratteri) e con quello che
+    # la gente cerca davvero; senza seo_title si ricade sul vecchio schema
+    full = seo_title or f"{title} — Dipartimento SX | Reparto creativo audio/video a Roma"
+    nome = title.replace('&amp;', '&')
     return f'''<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <title>{title} — Dipartimento SX | Reparto creativo audio/video a Roma</title>
+  <title>{full}</title>
   <meta name="description" content="{desc}">
   <link rel="canonical" href="https://www.dipartimentosx.com/{slug}.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -27,12 +31,15 @@ def head(slug, title, desc, bg, extra_ld=""):
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Dipartimento SX">
-  <meta property="og:title" content="{title} — Dipartimento SX">
+  <meta property="og:title" content="{full}">
   <meta property="og:description" content="{desc}">
   <meta property="og:url" content="https://www.dipartimentosx.com/{slug}.html">
   <meta property="og:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
   <meta property="og:locale" content="it_IT">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{full}">
+  <meta name="twitter:description" content="{desc}">
+  <meta name="twitter:image" content="https://www.dipartimentosx.com/assets/img/og-cover.jpg">
 
   <script type="application/ld+json">
   {{
@@ -42,7 +49,7 @@ def head(slug, title, desc, bg, extra_ld=""):
     "serviceType": "{title.replace('&amp;', '&')}",
     "description": "{desc}",
     "url": "https://www.dipartimentosx.com/{slug}.html",
-    "areaServed": "IT",
+    "areaServed": [{{ "@type": "City", "name": "Roma" }}, {{ "@type": "Country", "name": "Italia" }}],
     "provider": {{
       "@type": "ProfessionalService",
       "name": "Dipartimento SX",
@@ -50,6 +57,17 @@ def head(slug, title, desc, bg, extra_ld=""):
       "email": "info@dipartimentosx.com",
       "address": {{ "@type": "PostalAddress", "addressLocality": "Roma", "addressCountry": "IT" }}
     }}
+  }}
+  </script>
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dipartimentosx.com/" }},
+      {{ "@type": "ListItem", "position": 2, "name": "Servizi", "item": "https://www.dipartimentosx.com/#services" }},
+      {{ "@type": "ListItem", "position": 3, "name": "{nome}", "item": "https://www.dipartimentosx.com/{slug}.html" }}
+    ]
   }}
   </script>{extra_ld}
 
@@ -234,7 +252,7 @@ def pair(left, right_h2, facts, after=None, conn_svg="", aside="", reverse=False
     out.write('      </div>\n    </section>\n')
     return out.getvalue()
 
-def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extras,
+def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extras, seo_title=None,
          scripts="", extra_ld="", corridor=False, extras_first=False, hero_html=None,
          body_class="page-doc page-service", hero_class="", body_extra=""):
     # senza frase sotto il titolo non resta un paragrafo vuoto
@@ -248,7 +266,7 @@ def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extra
     if corridor:
         hero = '    <div class="corridor" data-corridor data-cards="9" data-speed="20">\n' + hero + '    </div>\n'
     body = (extras + blocks_html) if extras_first else (blocks_html + extras)
-    return (head(slug, title.replace('<br>', ' ').replace('&amp;', '&'), desc, bg, extra_ld) +
+    return (head(slug, title.replace('<br>', ' ').replace('&amp;', '&'), desc, bg, extra_ld, seo_title) +
 f'''
 <body class="{body_class}" style="--bg: {bg}; --fg: {fg};">
 {body_extra}{NAV}

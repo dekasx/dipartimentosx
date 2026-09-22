@@ -23,7 +23,8 @@ write("creative-direction", tpl.page(
   kicker="",
   # la frase resta in inglese: lang="en" perché la leggano bene anche gli screen reader
   lead='<span lang="en">Images are the only property that our eyes are allowed to own</span>',
-  desc="Consulenza e direzione creativa per aziende, brand, istituzioni e professionisti: concetto e narrazione, linguaggio visivo, direzione sonora e direzione artistica sul set. Dipartimento SX, Roma.",
+  desc="Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica sul set.",
+  seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
   hero_class=" svc-hero--split",
   hero_extra=tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
@@ -53,7 +54,8 @@ write("directing-video-production", tpl.page(
   title="Regia, Documentari<br>&amp; Video",
   kicker="",
   lead="Ogni lavoro è concepito, ripreso, editato e post prodotto da noi.",
-  desc="Regia e produzione video a Roma: documentari, pubblicità e cortometraggi concepiti, ripresi, montati e post prodotti internamente da Dipartimento SX.",
+  desc="Regia e produzione video a Roma: documentari, spot pubblicitari, cortometraggi e contenuti social ideati, girati, montati e post-prodotti in casa.",
+  seo_title="Regia, documentari e produzione video a Roma | Dipartimento SX",
   bg="#000000", fg="#ffffff",
   body_class="page-doc page-service has-trail",
   body_extra=TRAIL,
@@ -128,7 +130,8 @@ write("sound-design", tpl.page(
   title="Musica, Sound<br>Design &amp; Foley",
   kicker="",
   lead="Componiamo musiche originali, effetti sonori, sound design per transizioni e prese audio dirette.",
-  desc="Musiche originali, sound design, foley, audio in presa diretta, audio branding, mixing e mastering per video, cinema e teatri. Dipartimento SX, Roma.",
+  desc="Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.",
+  seo_title="Musica, sound design e foley a Roma | Dipartimento SX",
   bg="#38211b", fg="#ffffff",
   hero_extra=tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
                              ("M300 860 H1100 V960", "1.1")], draw_load=True),
@@ -164,6 +167,26 @@ SITES = [
     ("Dipartimento SX", "Questo sito &middot; 2026", "assets/img/web-dipartimentosx.jpg", "index.html"),
 ]
 
+
+def misure_jpeg(rel):
+    """width/height letti dal file: senza, la pagina "salta" mentre le
+    immagini caricano (e Google lo conta nel punteggio di stabilità)."""
+    import struct
+    try:
+        with open(os.path.join(ROOT, rel), "rb") as f:
+            dati = f.read()
+        i = 2
+        while i < len(dati):
+            if dati[i] != 0xFF: i += 1; continue
+            m = dati[i + 1]
+            if m in (0xC0, 0xC1, 0xC2):
+                h, w = struct.unpack(">HH", dati[i + 5:i + 9])
+                return f' width="{w}" height="{h}"'
+            i += 2 + struct.unpack(">H", dati[i + 2:i + 4])[0]
+    except (OSError, struct.error, IndexError):
+        pass
+    return ""
+
 def sites():
     cards = []
     for name, meta, img, href in SITES:
@@ -171,7 +194,7 @@ def sites():
         fuori = ' target="_blank" rel="noopener"' if href.startswith("http") else ""
         cards.append(f'''            <a class="site-card" href="{href}"{fuori}>
               <span class="site-shot">
-                <img src="{img}" alt="{name} — sito" loading="lazy" decoding="async"
+                <img src="{img}" alt="{name} — sito" loading="lazy" decoding="async"{misure_jpeg(img)}
                      onerror="this.remove()">
                 <span class="site-missing">anteprima<br>in arrivo</span>
               </span>
@@ -246,7 +269,8 @@ write("web-development", tpl.page(
   title="Web Development,<br>UX &amp; UI",
   kicker="",
   lead="Ideiamo e sviluppiamo siti dal back al front end.",
-  desc="Ideiamo e sviluppiamo siti dal back al front end a Roma: estetica, user experience e interfaccia, in HTML, CSS, JavaScript, React e WebGL, con foto, video e grafiche realizzate da noi.",
+  desc="Siti web su misura a Roma, dal back al front end: estetica, UX e UI in HTML, CSS, JavaScript, React e WebGL, con foto e video realizzati da noi.",
+  seo_title="Sviluppo siti web, UX e UI a Roma | Dipartimento SX",
   bg="#5b6157", fg="#ffffff",
   hero_extra="",
   hero_html=WD_HERO,
@@ -279,7 +303,8 @@ write("photography", tpl.page(
   title="Studio Fotografico<br>&amp; Post-Produzione",
   kicker="",
   lead="",
-  desc="Studio fotografico e post-produzione a Roma: un set modulare e adattabile, con attrezzatura analogica e digitale, per riprese, fotografia e sperimentazioni visive.",
+  desc="Studio fotografico e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per shooting, riprese video e sperimentazioni visive.",
+  seo_title="Studio fotografico e post-produzione a Roma | Dipartimento SX",
   bg="#8e948b", fg="#0f120e",
   hero_extra="",
   corridor=True,

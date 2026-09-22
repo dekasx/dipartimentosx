@@ -1955,13 +1955,47 @@ body.page-service {
   .cat-list a { grid-template-columns: 2.2rem minmax(0, 1fr); row-gap: 2px; }
   .cat-y { grid-column: 2; justify-self: start; }
   .back-btn { top: 18px; left: 18px; width: 40px; height: 40px; }
+
+  /* ---------- scheda progetto da telefono: più spazio al video ----------
+     Il titolo sale sulla riga del pulsante indietro invece di occupare una
+     fascia sua, e sotto non c'è più il margine pensato per la vecchia barra:
+     lo spazio recuperato lo prende il video (l'altezza la calcola
+     adattaAltezza in catalogue.js). Ogni progetto parte dall'alto dello
+     schermo, così il titolo cade sempre accanto al pulsante.
+     Allineamento: il pulsante (36 px) è centrato sulla PRIMA riga del
+     titolo — 10 px di margine + 12 px di spazio sopra + metà riga (13 px) =
+     35 px — così anche un titolo che va a capo resta affiancato. */
+  .panel--project .back-btn { top: 17px; width: 36px; height: 36px; }
+  .project-block {
+    min-height: 100%;
+    align-content: stretch;
+    scroll-snap-align: start;
+    padding: 10px 0 18px;
+  }
+  /* titolo in alto accanto al pulsante; video e scheda al centro dello
+     spazio che resta (i margini automatici si dividono il vuoto). Con un
+     video verticale, che occupa tutto, i margini valgono zero. */
+  .project-card { display: flex; flex-direction: column; }
+  .project-titlebox { margin-bottom: 18px; }
+  .project-stage { margin-top: auto; }
+  .project-info { margin-bottom: auto; }
+  /* per misurare lo spazio che occupa la scheda senza il vuoto (vedi
+     adattaAltezza in catalogue.js) */
+  .project-block.is-misura { align-content: start; }
+  .project-block.is-misura .project-stage { margin-top: 0; }
+  .project-block.is-misura .project-info { margin-bottom: 0; }
+  /* linee da bordo a bordo, 18 px per lato come la scheda senza mazzo: nei
+     progetti con più episodi la scheda è più stretta, quindi si allarga */
+  .project-titlebox { padding: 12px 0 12px 50px; }
+  .project-card--multi .project-titlebox { margin-inline: -41px; }
+  .project-title { line-height: 26px; }
+  .project-info { margin-top: 14px; }
   .wheel-list { padding-left: 18px; }
   .wheel-item { font-size: 1.2rem; height: 56px; line-height: 56px; }
-  .project-block { padding: 76px 0; }
   .project-card { width: calc(100% - 36px); }
   /* da telefono lo spazio è poco: sbucano meno */
   .project-card--multi { --peek: 10%; width: calc(100% - 118px); }
-  .project-title { font-size: 1.5rem; }
+  .project-title { font-size: 1.35rem; }
   .project-info { grid-template-columns: 1fr 1fr; }
   .about-header { gap: 1rem; padding-top: 22px; }
   .about-nav { display: none; }

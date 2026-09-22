@@ -380,7 +380,11 @@
       const cs = getComputedStyle(block);
       const disponibile = scroller.clientHeight
         - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      // la scheda compatta per un istante: da telefono si allunga per
+      // centrare video e dati, e il vuoto non va contato come contenuto
+      block.classList.add("is-misura");
       const resto = card.offsetHeight - stage.offsetHeight;
+      block.classList.remove("is-misura");
       const h = Math.max(180, Math.min(disponibile - resto - 8, innerHeight * 0.68));
       box.style.setProperty("--hmax", Math.floor(h) + "px");
     }

@@ -56,6 +56,8 @@ def head(slug, title, desc, bg, extra_ld=""):
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pellicola.css">
+  <script src="js/pellicola.js"></script>
 </head>'''
 
 NAV = '''
@@ -135,9 +137,12 @@ FOOTER = '''
   </footer>
 '''
 
-def conn(mid, paths, draw_load=False):
+def conn(mid, paths, draw_load=False, solo=None):
     """paths: lista di (d, from_attr). draw_load: le linee in cima alla pagina
-    si disegnano da sole al caricamento invece che con lo scroll."""
+    si disegnano da sole al caricamento invece che con lo scroll.
+    solo: "desktop" o "telefono" quando una sezione ha due disegni diversi
+    (da telefono la colonna è una sola e il disegno del computer, stirato,
+    può finire sopra una foto)."""
     defs, gs = [], []
     for i, (d, frm) in enumerate(paths):
         f = f' data-from="{frm}"' if frm else ""
@@ -145,7 +150,8 @@ def conn(mid, paths, draw_load=False):
                     f'<path class="reveal"{f} pathLength="1" d="{d}" stroke="#fff" stroke-width="40" fill="none" stroke-dasharray="1 1"/></mask>')
         gs.append(f'        <g mask="url(#mk-{mid}{i})"><path d="{d}" class="dotpath"/></g>')
     dl = ' data-draw="load"' if draw_load else ""
-    return (f'      <svg class="conn"{dl} viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">\n'
+    cl = f" conn--solo-{solo}" if solo else ""
+    return (f'      <svg class="conn{cl}"{dl} viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">\n'
             '        <defs>\n' + "\n".join(defs) + '\n        </defs>\n' + "\n".join(gs) + '\n      </svg>\n')
 
 def block(h2, paras, facts=None, conn_svg="", aside=""):

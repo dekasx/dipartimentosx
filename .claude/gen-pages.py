@@ -144,7 +144,11 @@ write("sound-design", tpl.page(
       "Audio branding e Sound Logo",
       "Pulizia Dialoghi per podcast e doppiaggio",
       "Mixing &amp; Mastering adattati a impianti audio, cinema e teatri"
-    ], conn_svg=tpl.conn("sd2", [("M1780 240 H1080 V620 H500", None)]),
+    ], conn_svg=tpl.conn("sd2", [("M1780 240 H1080 V620 H500", None)], solo="desktop") +
+                 # da telefono la foto sta a sinistra (5–67% della larghezza, 15–49%
+                 # dell'altezza): la linea entra da destra, scende nella colonna libera
+                 # accanto alla foto e gira nello spazio fra foto e "I nostri servizi"
+                 tpl.conn("sd2m", [("M1920 190 H1575 V563 H300", None)], solo="telefono"),
        rule=False,          # niente striscia tratteggiata sopra "I nostri servizi"
        aside=aside("assets/img/zoom.jpg", "Registrazione ambientale con un registratore Zoom H6 tra gli alberi", "", w=479, h=864))
   ),

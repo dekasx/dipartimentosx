@@ -1,0 +1,50 @@
+/* ===================== PASSAGGIO FRA LE PAGINE =====================
+   Una pellicola che scorre: la pagina in cui sei esce da una parte e quella
+   nuova entra dall'altra, attaccate come due fotogrammi.
+
+   È una transizione fra documenti (@view-transition): il browser fotografa
+   la pagina vecchia, carica la nuova e anima le due fotografie. Dove non è
+   supportata (Firefox) si passa di pagina normalmente, come prima.
+
+   La direzione segue la gerarchia del sito, home → catalogo → servizi →
+   about → contatti, con le pagine servizio dentro "servizi": andando avanti
+   la pellicola scorre verso sinistra, tornando indietro verso destra. Il
+   tipo "indietro" lo aggiunge js/pellicola.js.
+
+   Si muove anche il logo: fa parte del fotogramma. Dargli un nome suo per
+   tenerlo fermo lo fotograferebbe da solo, e perderebbe il negativo
+   (mix-blend-mode: difference) per tutta la durata del passaggio.
+
+   Sta in un file suo perché lo usano anche le pagine legali, che hanno un
+   foglio di stile diverso: un passaggio c'è solo se tutte e due le pagine
+   lo dichiarano. */
+@view-transition { navigation: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* stessa curva e stessa durata: i due fotogrammi restano attaccati. Dove si
+   toccano non si sommano (niente bordo più chiaro). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: 0.72s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+::view-transition-old(root) { animation-name: pellicola-esce; }
+::view-transition-new(root) { animation-name: pellicola-entra; }
+
+html:active-view-transition-type(indietro)::view-transition-old(root) { animation-name: pellicola-esce-indietro; }
+html:active-view-transition-type(indietro)::view-transition-new(root) { animation-name: pellicola-entra-indietro; }
+
+@keyframes pellicola-esce           { to   { transform: translateX(-100%); } }
+@keyframes pellicola-entra          { from { transform: translateX(100%); } }
+@keyframes pellicola-esce-indietro  { to   { transform: translateX(100%); } }
+@keyframes pellicola-entra-indietro { from { transform: translateX(-100%); } }
+
+/* dietro, durante il passaggio, solo nero */
+::view-transition { background: #000; }
+
+/* i testi della prima schermata arrivando col passaggio: già al loro posto,
+   senza la loro dissolvenza (vedi js/pellicola.js) */
+.vt-subito { transition: none !important; }

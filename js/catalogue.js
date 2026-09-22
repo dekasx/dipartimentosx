@@ -59,15 +59,19 @@
   function recentre() {
     const b = blockH();
     const st = wheel.scrollTop;
-    if (st < b * 1.5) wheel.scrollTop = st + b * (COPIES - 3);
-    else if (st > b * (COPIES - 1.5)) wheel.scrollTop = st - b * (COPIES - 3);
+    let d = 0;
+    if (st < b * 1.5) d = b * (COPIES - 3);
+    else if (st > b * (COPIES - 1.5)) d = -b * (COPIES - 3);
+    if (d) wheel.scrollTop = st + d;
+    return d;      // chi sta animando la ruota sposta il suo traguardo di tanto
   }
 
   function selectItem(li, projectIndex) {
     const target = li.offsetTop - (wheel.clientHeight - li.offsetHeight) / 2;
     const dist = Math.abs(wheel.scrollTop - target);
     if (dist < 4 || reduceMotion) { openProject(projectIndex, true); return; }
-    wheel.scrollTo({ top: target, behavior: "smooth" });
+    if (TOCCO) vaiA(target, 110);
+    else wheel.scrollTo({ top: target, behavior: "smooth" });
     setTimeout(() => openProject(projectIndex, true), Math.min(650, 280 + dist * 0.3));
   }
 
@@ -129,9 +133,7 @@
     fermaPosa();
     const passo = (now) => {
       const t = Math.min(1, (now - t0) / DUR_POSA);
-      // da telefono arriva dopo l'inerzia: solo frenata, senza ripartenza
-      const e = TOCCO ? 1 - Math.pow(1 - t, 3)
-                      : (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       wheel.scrollTop = da + (mira - da) * e;
       if (t < 1) posaRaf = requestAnimationFrame(passo); else posaRaf = null;
     };
@@ -141,43 +143,122 @@
   ["pointerdown", "touchstart", "wheel"].forEach((ev) =>
     wheel.addEventListener(ev, fermaPosa, { passive: true }));
 
-  /* Da telefono comanda il browser. Su iPhone scrivere la posizione mentre
-     l'inerzia è in corso la ferma di colpo, e l'aggancio dopo l'inerzia è
-     un'animazione lenta con pause negli eventi: il mio assestamento partiva a
-     metà, la interrompeva e ripartiva da velocità zero. Era lo scatto.
-     Quindi: niente riposizionamenti durante il moto, e la rete di sicurezza
-     solo quando il browser dice che lo scorrimento è davvero finito
-     (`scrollend`), mai col dito ancora appoggiato. */
-  const HA_SCROLLEND = "onscrollend" in window;
-  let dito = false;
+  /* ---------- da telefono: la ruota come il timer di iPhone ----------
+     Lo scroll nativo con lo snap del browser dava un aggancio secco: l'inerzia
+     andava per conto suo e alla fine la voce veniva tirata sulla riga, tutta
+     in una volta. Il picker di iOS fa un'altra cosa: sceglie la riga di arrivo
+     NEL MOMENTO in cui stacchi il dito, e frena dolcemente proprio fin lì.
+     Quindi da telefono il gesto lo gestisco io:
+       - col dito appoggiato la ruota segue il dito, 1:1;
+       - allo stacco misuro la velocità, proietto dove arriverebbe per inerzia
+         (con la decelerazione di iOS) e arrotondo alla riga più vicina;
+       - poi ci arrivo con una frenata esponenziale che PARTE dalla velocità
+         del dito: nessuno strappo allo stacco, nessuno scatto all'arrivo.
+     Il riposizionamento dell'elenco infinito si fa in qualsiasi momento:
+     sposta ruota e traguardo dello stesso numero intero di blocchi. */
+  const DECEL = 0.997;                          // per millisecondo, come iOS
+  const PROIEZIONE = DECEL / (1 - DECEL);       // ms: velocità × questo = strada
+  let motoRaf = null, sopprimiClick = false;
 
-  function aRuotaFerma() {
-    if (dito) return;
-    if (TOCCO) recentre();          // un salto di blocchi interi: invisibile
-    posaSullaRiga();
+  function fermaMoto() { if (motoRaf) cancelAnimationFrame(motoRaf); motoRaf = null; }
+
+  function rigaVicina(pos) {
+    const h = itemH(), base = items[0].offsetTop, mezza = wheel.clientHeight / 2;
+    return Math.round((pos + mezza - base - h / 2) / h) * h + base + h / 2 - mezza;
+  }
+
+  /* frenata esponenziale verso T: x(t) = T - (T - x0)·e^(-t/tau).
+     La velocità iniziale è (T - x0)/tau: scegliendo tau così combacia con
+     quella del dito. */
+  function vaiA(T, tau) {
+    fermaMoto(); fermaPosa();
+    let x0 = wheel.scrollTop;
+    if (reduceMotion) { wheel.scrollTop = T; recentre(); return; }
+    const t0 = performance.now();
+    const passo = (now) => {
+      const resto = (T - x0) * Math.exp(-(now - t0) / tau);
+      if (Math.abs(resto) < 0.35) {
+        wheel.scrollTop = T;
+        recentre();
+        motoRaf = null;
+        return;
+      }
+      wheel.scrollTop = T - resto;
+      const d = recentre();
+      if (d) { T += d; x0 += d; }
+      motoRaf = requestAnimationFrame(passo);
+    };
+    motoRaf = requestAnimationFrame(passo);
+  }
+
+  function lancia(v) {                           // v in px/ms, verso lo scroll
+    const pos = wheel.scrollTop;
+    const T = rigaVicina(pos + v * PROIEZIONE);
+    const strada = T - pos;
+    let tau = 190;                               // stacco da fermo: posa morbida
+    if (Math.abs(v) > 0.05 && Math.sign(v) === Math.sign(strada)) tau = strada / v;
+    tau = Math.min(Math.max(tau, 140), 650);
+    vaiA(T, tau);
   }
 
   if (TOCCO) {
-    wheel.addEventListener("touchstart", () => { dito = true; }, { passive: true });
+    let dito = false, yDito = 0, stDito = 0, campioni = [], mosso = false, eraInMoto = false;
+
+    wheel.addEventListener("touchstart", (e) => {
+      eraInMoto = motoRaf !== null;
+      fermaMoto(); fermaPosa();
+      dito = true; mosso = false; sopprimiClick = false;
+      yDito = e.touches[0].clientY;
+      stDito = wheel.scrollTop;
+      campioni = [{ t: performance.now(), y: yDito }];
+    }, { passive: true });
+
+    wheel.addEventListener("touchmove", (e) => {
+      if (!dito) return;
+      const y = e.touches[0].clientY;
+      if (!mosso && Math.abs(y - yDito) > 6) mosso = true;
+      wheel.scrollTop = stDito - (y - yDito);
+      const d = recentre();
+      if (d) stDito += d;
+      const now = performance.now();
+      campioni.push({ t: now, y });
+      while (campioni.length > 2 && now - campioni[0].t > 100) campioni.shift();
+    }, { passive: true });
+
     const stacca = () => {
+      if (!dito) return;
       dito = false;
-      // senza scrollend, e se il dito si stacca da fermo, non arriverebbe più niente
-      if (!HA_SCROLLEND) { clearTimeout(posaT); posaT = setTimeout(aRuotaFerma, 450); }
+      // un tocco che ferma la ruota in moto non apre niente: la ferma e basta
+      if (mosso || eraInMoto) sopprimiClick = true;
+      if (!mosso) { if (eraInMoto) lancia(0); return; }
+      /* velocità allo stacco: sugli ultimi 50 ms, non su tutto il gesto.
+         Un gesto che accelera ha la media più bassa della velocità finale,
+         e la ruota sembrava frenare appena staccato il dito. */
+      const b = campioni[campioni.length - 1];
+      const recenti = campioni.filter((c) => b.t - c.t <= 50);
+      const a = recenti.length >= 2 ? recenti[0] : campioni[0];
+      const dt = b.t - a.t;
+      // dito fermo prima di staccare: niente inerzia
+      const fermo = performance.now() - b.t > 60;
+      const v = dt > 0 && !fermo ? -(b.y - a.y) / dt : 0;
+      lancia(v);
     };
     wheel.addEventListener("touchend", stacca, { passive: true });
     wheel.addEventListener("touchcancel", stacca, { passive: true });
-    if (HA_SCROLLEND) wheel.addEventListener("scrollend", aRuotaFerma, { passive: true });
+
+    // il click che segue un trascinamento o una frenata non seleziona
+    wheel.addEventListener("click", (e) => {
+      if (sopprimiClick) { e.stopPropagation(); e.preventDefault(); sopprimiClick = false; }
+    }, true);
   }
 
   let wheelRaf = null;
   wheel.addEventListener("scroll", () => {
+    // da telefono la posizione la scrive solo il codice qui sopra
     if (!TOCCO) {
       recentre();
       clearTimeout(posaT);
       posaT = setTimeout(posaSullaRiga, 140);
-    } else if (!HA_SCROLLEND) {
-      clearTimeout(posaT);
-      posaT = setTimeout(aRuotaFerma, 450);
     }
     if (wheelRaf) return;
     wheelRaf = requestAnimationFrame(() => { wheelRaf = null; updateWheel(); });
@@ -213,6 +294,7 @@
     bloccoPieno = null;
     // il layout è cambiato sotto: riporto al centro il progetto che guardavi
     if (b && isOpen) centra(b);
+    raddrizza();
     requestAnimationFrame(() => requestAnimationFrame(() => {
       schermoPieno = false;
       aggiornaInCampo();
@@ -923,9 +1005,37 @@
     clearTimeout(giroT);
     giroT = setTimeout(() => {
       if (inCampo) centra(inCampo);
+      raddrizza();
       aggiornaInCampo();
     }, 180);
   }, { passive: true });
+
+  /* iPhone: dopo schermo intero e un giro orizzontale → verticale, Safari a
+     volte tiene la pagina impaginata alla larghezza orizzontale e mostra
+     solo la parte sinistra: tutto sembra spostato a destra. Si azzera ogni
+     scostamento orizzontale e si fa ricalcolare la larghezza a iOS con un
+     ritocco momentaneo del viewport (maximum-scale=1 e poi di nuovo com'era:
+     lo zoom con le dita resta permesso). Due volte, perché iOS a volte
+     finisce di sistemare la rotazione dopo l'ultimo evento. */
+  const metaVP = document.querySelector('meta[name="viewport"]');
+  const baseVP = metaVP ? metaVP.content : "";
+  let raddT = null;
+  function raddrizza() {
+    const azzera = () => {
+      scroller.scrollLeft = 0;
+      document.documentElement.scrollLeft = 0;
+      document.body.scrollLeft = 0;
+    };
+    azzera();
+    if (!TOCCO || !metaVP) return;
+    metaVP.content = baseVP + ", maximum-scale=1";
+    clearTimeout(raddT);
+    raddT = setTimeout(() => {
+      metaVP.content = baseVP;
+      azzera();
+      if (isOpen && inCampo && !inPieno()) centra(inCampo);
+    }, 450);
+  }
 
   /* click fuori dalla scheda: si torna al catalogo */
   scroller.addEventListener("click", (e) => {

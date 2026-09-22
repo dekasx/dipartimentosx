@@ -843,6 +843,16 @@ body.no-video .showreel-fallback { display: block; }
     flex-direction: column;
   }
   .project-card--multi { width: max(300px, min(1280px, 62vw, var(--room))); }
+  /* la scheda coi dati resta larga com'era prima di allargare il video:
+     lo spazio recuperato è per l'anteprima, non per il testo. Allineata a
+     sinistra, sotto al bordo del video e del titolo. */
+  .project-card .project-info {
+    align-self: flex-start;
+    width: min(100%, max(300px, min(1040px, 88vw, calc(1.7778 * 100svh - 816px))));
+  }
+  .project-card--multi .project-info {
+    width: min(100%, max(300px, min(1040px, 62vw, calc(1.7778 * 100svh - 816px))));
+  }
   .project-block {
     min-height: 100%;
     align-content: stretch;
@@ -1110,7 +1120,6 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
 }
 .project-slide.is-active video { cursor: pointer; }
 /* quando l'audio è acceso il titolo si accende anche lui */
-.project-block.is-live .project-title { color: var(--green); }
 
 .media-missing {
   width: 100%; height: 100%;

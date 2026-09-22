@@ -26,7 +26,7 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
   <title>{full}</title>
   <meta name="description" content="{desc}">
   <link rel="canonical" href="https://dipartimentosx.netlify.app/{slug}.html">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="{bg}">
 
   <meta property="og:type" content="website">

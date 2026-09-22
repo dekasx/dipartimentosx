@@ -1088,6 +1088,45 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
 .info-cell p,
 .info-val { font-family: var(--font-sans); font-size: clamp(0.82rem, 0.95vw, 1rem); line-height: 1.55; }
 .info-val p + p { margin-top: 0.6em; }
+/* due righe esatte: la scheda ha la stessa altezza per ogni episodio e il
+   video non cambia misura (vedi catalogue.js, "scheda tecnica") */
+.info-val--due {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-height: 3.1em;          /* 2 righe × interlinea 1.55 */
+}
+/* da chiusa i paragrafi scorrono di seguito, così il taglio cade dopo due
+   righe di testo e non dopo due paragrafi */
+.info-val--due p { display: inline; margin: 0; }
+.info-val--due p + p::before { content: " "; }
+.info-cell.is-aperta .info-val--due { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+.info-cell.is-aperta .info-val--due p { display: block; }
+.info-cell.is-aperta .info-val--due p + p { margin-top: 0.6em; }
+.info-cell.is-aperta .info-val--due p + p::before { content: none; }
+.info-cell.is-vuota .info-val, .info-cell.is-vuota h3 { visibility: hidden; }
+/* adattaAltezza misura sempre la scheda chiusa */
+.project-block.is-misura .info-cell.is-aperta .info-val--due {
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+}
+.info-altro {
+  margin-top: 0.35rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.78rem;
+  opacity: 0.7;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  transition: color 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+.info-altro:hover, .info-altro:focus-visible { color: var(--green); opacity: 1; outline: none; }
+.info-altro.is-inutile { visibility: hidden; pointer-events: none; }
 .info-cell[hidden] { display: none; }
 
 /* il nome del cliente porta al suo sito: sottolineato per dire che si può

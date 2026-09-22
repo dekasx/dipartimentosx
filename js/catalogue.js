@@ -1024,6 +1024,7 @@
        cambia l'episodio (vedi _show). I clienti con un sito sono link. */
     const info = document.createElement("div");
     info.className = "project-info";
+    const campo = (k, nome) => (items[k] && nome in items[k] ? items[k][nome] : p[nome]);
     const nuovaCella = (titolo, larga) => {
       const c = document.createElement("div");
       c.className = "info-cell" + (larga ? " info-cell--wide" : "");
@@ -1033,8 +1034,24 @@
       return c;
     };
     const cData = nuovaCella("Data"), cCliente = nuovaCella("Cliente"), cDescr = nuovaCella("Descrizione", true);
-
-    const campo = (k, nome) => (items[k] && nome in items[k] ? items[k][nome] : p[nome]);
+    /* Tutti i testi della scheda stanno su due righe esatte (CSS): la scheda
+       ha la stessa altezza per ogni episodio, quindi il video non cambia
+       misura passando da uno all'altro. Un testo più lungo si taglia e
+       compare "leggi tutto": aprendolo si allunga verso il basso, ma il video
+       resta com'è (l'altezza la misura adattaAltezza sempre a due righe). */
+    [cData, cCliente, cDescr].forEach((c) => c.querySelector(".info-val").classList.add("info-val--due"));
+    const altro = document.createElement("button");
+    altro.type = "button";
+    altro.className = "info-altro";
+    altro.textContent = "leggi tutto";
+    cDescr.appendChild(altro);
+    altro.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const aperta = cDescr.classList.toggle("is-aperta");
+      altro.textContent = aperta ? "chiudi" : "leggi tutto";
+    });
+    // la riga della descrizione sparisce solo se nel progetto non ce n'è nessuna
+    const qualcheDescr = items.some((m, k) => campo(k, "description"));
 
     function scriviScheda(k) {
       const data = campo(k, "date") || "";
@@ -1069,7 +1086,13 @@
         par.textContent = riga;
         vd.appendChild(par);
       });
-      cDescr.hidden = !descr;
+      // vuota ma con altri episodi descritti: lo spazio resta, il testo no
+      cDescr.hidden = !qualcheDescr;
+      cDescr.classList.toggle("is-vuota", !descr);
+      cDescr.classList.remove("is-aperta");
+      altro.textContent = "leggi tutto";
+      // lo spazio del pulsante c'è sempre (altezza costante), si vede solo se serve
+      altro.classList.toggle("is-inutile", !(vd.scrollHeight > vd.clientHeight + 1));
     }
     block._scheda = scriviScheda;
     scriviScheda(0);

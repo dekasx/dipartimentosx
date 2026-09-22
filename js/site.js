@@ -155,6 +155,8 @@
     });
     window.scrollTo(0, y);                  // mai scostati di lato
     document.body.scrollLeft = 0;
+    // chi tiene posizioni proprie (il mazzo degli episodi) si riallinea
+    document.dispatchEvent(new Event("ripaginato"));
   }
 
   const girato = () => {

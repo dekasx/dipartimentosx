@@ -892,6 +892,21 @@ html.is-cinema, html.is-cinema body { overflow: hidden; }
   height: 100%;
 }
 .project-card.is-cinema .deck-nav { display: none; }
+/* copertina sopra al video finché non c'è un fotogramma vero (vedi
+   catalogue.js): niente riquadri neri mentre le carte si scambiano */
+.slide-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease);
+}
+.project-slide.is-frame .slide-cover { opacity: 0; }
+/* a schermo intero (il nostro) la copertina segue la proporzione del video */
+.project-card.is-cinema .slide-cover { object-fit: contain; }
+
 /* il buio delle carte dietro: cambia solo l'opacità, che il compositor sa
    fare da solo senza ridisegnare il fotogramma del video */
 .slide-shade {

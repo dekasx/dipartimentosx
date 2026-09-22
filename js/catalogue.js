@@ -401,6 +401,31 @@
           adattaFormato();
         });
         slide.appendChild(v);
+
+        /* L'anteprima come immagine vera sopra al video. Il `poster` del video
+           non basta: quando una carta smette di essere attiva le tolgo il
+           video (gli episodi pesano centinaia di mega) e quella nuova lo
+           riceve a metà del movimento. In quell'istante, su iOS soprattutto,
+           il riquadro non ha né fotogramma né poster e diventa nero. Questa
+           copertina sparisce solo quando il video ha mostrato davvero il suo
+           primo fotogramma, e torna appena la carta smette di essere attiva. */
+        if (m.poster) {
+          const cop = document.createElement("img");
+          cop.className = "slide-cover";
+          cop.src = m.poster;
+          cop.alt = "";
+          cop.decoding = "async";
+          cop.setAttribute("aria-hidden", "true");
+          slide.appendChild(cop);
+          const scopri = () => {
+            if (!v.getAttribute("src")) return;
+            if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(() => slide.classList.add("is-frame"));
+            else slide.classList.add("is-frame");
+          };
+          v.addEventListener("playing", scopri);
+          v.addEventListener("seeked", scopri);
+          v.addEventListener("emptied", () => slide.classList.remove("is-frame"));
+        }
         videos.push(v);
       } else {
         const img = document.createElement("img");
@@ -496,16 +521,33 @@
     }
 
     const cellW = () => track.clientWidth || 1;
-    let ultimaW = 0;       // larghezza con cui è stata scritta la posizione
+    /* L'episodio che stai guardando è un NUMERO, non una posizione in pixel.
+       Prima lo ricavavo da scrollLeft ÷ larghezza: ruotando il telefono la
+       larghezza cambia, e WebKit durante il riadattamento può toccare anche
+       scrollLeft per conto suo; il conto sbagliava di un episodio e tornando
+       in verticale il video era cambiato. Ora la posizione in pixel si
+       ricava sempre da qui, e mai il contrario. */
+    let cella = 0;
 
     /* ritorno silenzioso al centro: il salto è di un numero intero di blocchi,
        quindi le carte si ritrovano esattamente dov'erano */
     function recentreTrack() {
-      const w = cellW(), b = w * items.length;
-      const sl = track.scrollLeft;
-      if (sl < b * 1.5) track.scrollLeft = sl + b * (NCOPIE - 3);
-      else if (sl > b * (NCOPIE - 1.5)) track.scrollLeft = sl - b * (NCOPIE - 3);
+      const n = items.length;
+      let salto = 0;
+      if (cella < n * 1.5) salto = n * (NCOPIE - 3);
+      else if (cella > n * (NCOPIE - 1.5)) salto = -n * (NCOPIE - 3);
+      if (!salto) return;
+      cella += salto;
+      track.scrollLeft = cella * cellW();
     }
+
+    // rimette la pista esattamente sull'episodio corrente (dopo rotazioni)
+    function riallinea() {
+      if (!multi || modo === "assesta") return;
+      track.scrollLeft = cella * cellW();
+      paintDeck();
+    }
+    block._riallinea = riallinea;
 
     /* posa una carta al posto `pos` (0 = davanti, ±1 = un posto di lato)
 
@@ -621,11 +663,10 @@
 
     function nudge(dir) {
       if (!multi) return;
-      const w = cellW();
       // se un movimento è già in corso si parte da dove arriverà, così due
       // frecce di fila fanno due episodi invece di annullarsi
-      const da = modo === "assesta" ? tTo : track.scrollLeft;
-      tweenA((Math.round(da / w) + dir) * w, DUR_FRECCIA);
+      cella += dir;
+      tweenA(cella * cellW(), DUR_FRECCIA);
     }
 
     if (multi) {
@@ -883,6 +924,8 @@
         if (n === k) return;
         v.pause();
         v.muted = true;
+        // la copertina torna PRIMA di togliere il video: nessun istante nero
+        slides[n].classList.remove("is-frame");
         // gli episodi completi pesano centinaia di mega: quello che non si sta
         // guardando smette di scaricare e torna al suo poster
         if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); }
@@ -911,8 +954,8 @@
     /* si parte con lo scorrevole al centro dell'elenco ripetuto */
     if (multi) {
       requestAnimationFrame(() => {
-        track.scrollLeft = cellW() * items.length * Math.floor(NCOPIE / 2);
-        ultimaW = cellW();
+        cella = items.length * Math.floor(NCOPIE / 2);
+        track.scrollLeft = cella * cellW();
         paintDeck();
       });
       /* La posizione è in pixel: se la larghezza cambia (rotazione, schermo
@@ -920,14 +963,10 @@
          episodio. Si riscala anche un movimento in corso. */
       addEventListener("resize", () => {
         if (!block.isConnected) return;
-        const w = cellW();
-        if (ultimaW && w !== ultimaW) {
-          const k = w / ultimaW;
-          track.scrollLeft = Math.round(track.scrollLeft / ultimaW) * w;
-          tFrom *= k; tTo *= k;
-          if (modo !== "assesta") recentreTrack();
-        }
-        ultimaW = w;
+        // un movimento a metà durante una rotazione arriva subito a destinazione
+        if (modo === "assesta") modo = "fermo";
+        track.scrollLeft = cella * cellW();
+        recentreTrack();
         paintDeck();
       }, { passive: true });
     }
@@ -1016,6 +1055,13 @@
       aggiornaInCampo();
     }, 180);
   }, { passive: true });
+
+  // dopo che site.js ha rifatto l'impaginazione (rotazione su iPhone) ogni
+  // mazzo torna esattamente sul suo episodio
+  document.addEventListener("ripaginato", () => {
+    blocks.forEach((b) => b._riallinea && b._riallinea());
+    raddrizza();
+  });
 
   /* iPhone: dopo una rotazione il pannello a volte resta spostato di lato.
      Qui si azzerano gli scostamenti del catalogo; il ricalcolo completo della

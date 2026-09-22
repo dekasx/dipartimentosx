@@ -176,9 +176,11 @@ const PROJECTS = [
     slug: "umbro",
     title: "Umbro × Lodigiani",
     media: [
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-1.mp4", poster: "assets/projects/umbro-1-poster.jpg", label: "Kit Reveal — Lodigiani" },
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-1.mp4", poster: "assets/projects/umbro-1-poster.jpg", label: "Kit Reveal — Lodigiani",
+        description: "Umbro è stato lo sponsor tecnico dell’Associazione Sportiva Lodigiani per l’anno 2023/2024. Il Parco degli Acquedotti fa da sfondo alla presentazione, e il dualismo fra Casa e Trasferta identifica in modo netto la forza del brand, omaggiandolo con lo storicismo di Roma." },
       { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-2.mp4", poster: "assets/projects/umbro-2-poster.jpg", label: "Fasce da capitano — reveal kit" },
-      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-3.mp4", poster: "assets/projects/umbro-3-poster.jpg", label: "Video Stefano Gallo", description: "" }
+      { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/umbro-3.mp4", poster: "assets/projects/umbro-3-poster.jpg", label: "Video Stefano Gallo",
+        description: "Presentazione per l’approdo in Prima Squadra della Lodigiani di Stefano Gallo, classe 1996." }
     ],
     date: "2024",
     clients: [CLIENTI.umbro, CLIENTI.lodigiani],

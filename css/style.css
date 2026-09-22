@@ -72,6 +72,11 @@ body {
   min-height: 100%;
   font-family: var(--font);
   background: var(--bg);
+  /* Le linee tratteggiate e la scia di pallini stanno dietro ai contenuti
+     con z-index: -1. Da quando lo sfondo lo dipinge il body (vedi sopra),
+     senza un gruppo proprio finivano dietro anche a quello e sparivano.
+     isolate: dietro ai contenuti, ma davanti allo sfondo della pagina. */
+  isolation: isolate;
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
@@ -1827,12 +1832,12 @@ body.page-service {
      fatto per una sezione larga: qui viene schiacciato in verticale e i
      tratti dritti finiscono in mezzo al testo, quindi si alleggeriscono —
      restano una texture dietro, non una riga che taglia. */
-  body.page-service .conn { display: block; }
+  /* da telefono le pagine servizio restano senza puntini (solo da computer) */
+  body.page-service .conn { display: none; }
   /* sotto al titolo di pagina no: lì la striscia di puntini finiva addosso al testo */
   body.page-service .svc-hero .conn { display: none; }
   /* sezioni con un disegno apposta per il telefono */
   body.page-service .conn.conn--solo-desktop { display: none; }
-  body.page-service .conn.conn--solo-telefono { display: block; }
 
   /* il menu in alto a destra, centrato in altezza sul logo: in home il logo
      è 52 px a 10 px dal bordo (centro a 36), nelle altre pagine 46 px (centro

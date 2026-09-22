@@ -1059,6 +1059,8 @@
       const descr = campo(k, "description") || "";
 
       cData.querySelector(".info-val").textContent = data || "—";
+      // "Cliente" o "Clienti" secondo quanti sono
+      cCliente.querySelector("h3").textContent = clienti.length > 1 ? "Clienti" : "Cliente";
 
       const vc = cCliente.querySelector(".info-val");
       vc.textContent = "";

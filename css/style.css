@@ -659,6 +659,28 @@ body.no-video .showreel-fallback { display: block; }
 .sec--statement-alt { justify-items: end; text-align: right; }
 .sec--statement-alt .statement-copy { text-align: right; }
 
+/* Studio Podcast, ultima sezione della home. Web e podcast sono due sezioni
+   di solo testo, una dopo l'altra: alte uno schermo ciascuna e col testo al
+   centro lasciavano fra i due quasi tre quarti di schermo vuoti. Questa sale
+   nel vuoto in fondo alla sezione web e tiene il testo in alto.
+   Il margine negativo non va oltre -14svh: il colore di sfondo vira attorno
+   al confine fra due sezioni con una finestra di 0.9 schermi (vedi
+   paintBackground in js/home.js), e sotto quella distanza fra un confine e
+   il successivo il viraggio farebbe uno scatto.
+   Solo da desktop: da telefono queste sezioni non ci sono. */
+@media (min-width: 821px) {
+  #photography {
+    margin-top: -14svh;
+    /* alta quanto lo schermo meno il footer (circa 440px): arrivati in fondo
+       alla pagina il titolo resta intero sotto il menu, non ci finisce dietro */
+    height: auto;
+    min-height: calc(100svh - 440px);
+    align-content: start;
+    padding-top: 10svh;
+    padding-bottom: 8svh;
+  }
+}
+
 /* ===================== SEZIONE 8 — FOTOGRAFIA ===================== */
 .sec--photo {
   height: 100svh;
@@ -1711,6 +1733,25 @@ body.page-service {
 .svc-pair--grid .svc-pair-list .svc-facts { margin-top: 0; }
 /* a combaciare con il tratteggio è la prima riga di lettere */
 .svc-pair--grid .svc-pair-intro p:first-child { margin-top: -0.3em; }
+
+/* ---------- rimando al catalogo, in fondo a ogni pagina servizio ---------- */
+.svc-catalogo { padding-top: clamp(26px, 5svh, 56px); }
+.svc-catalogo a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-top: 2px dotted currentColor;
+  border-bottom: 2px dotted currentColor;
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  font-weight: 500;
+  transition: opacity 0.35s var(--ease);
+}
+.svc-catalogo a:hover { opacity: 0.55; }
+.svc-catalogo a span { opacity: 0.55; }
 
 /* ---------- chiusura + altri servizi ---------- */
 .svc-cta {

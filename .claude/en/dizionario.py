@@ -33,6 +33,12 @@ INVARIANTI = [
 COPPIE = [
 # ============================================================ navigazione
 (">catalogo<", ">catalogue<"),
+("Consulta il nostro catalogo lavori", "Browse our catalogue of work"),
+("Audio in presa diretta", "Location sound recording"),
+("Editing dialoghi", "Dialogue editing"),
+("Mix &amp; master audio", "Audio mixing &amp; mastering"),
+("Ci occupiamo di Documentari, Cortometraggi, Video Musicali, Live Session, Pubblicità.",
+ "We work on Documentaries, Short Films, Music Videos, Live Sessions and Commercials."),
 (">servizi<", ">services<"),
 (">contatti<", ">contact<"),
 ("Navigazione principale", "Main navigation"),
@@ -341,6 +347,8 @@ COPPIE = [
  "Mercato Arabo was born in Naples in the 1980s. It is also a meeting place between the Arab and Italian communities, and between generations — those born and raised here and the older ones. It is a place that holds together the love for one’s country of origin and for the one you live in."),
 ("Video pubblicitario per il campionatore Roland SP-404, strumento iconico del brand giapponese.",
  "Commercial for the Roland SP-404 sampler, an iconic instrument from the Japanese brand."),
+("Trailer di “Thanks, Putin”, documentario sulla crisi abitativa in Europa. Dal 15 novembre su YouTube.",
+ "Trailer for “Thanks, Putin”, a documentary on the housing crisis in Europe. On YouTube from 15 November."),
 ("Video pubblicitario per lo strumento musicale Syntakt del brand svedese Elektron. Una performance dal vivo suonata e ripresa in più momenti della giornata.",
  "Commercial for the Syntakt, a musical instrument by the Swedish brand Elektron. A live performance played and filmed at different moments of the day."),
 ("Adv Social Walk & Talk per il servizio espresso di delivery “Halal Express”.",

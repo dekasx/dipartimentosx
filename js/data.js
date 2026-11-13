@@ -49,13 +49,14 @@ const PROJECTS = [
     description: ""
   },
   {
-    slug: "documentario",
-    title: "Documentario",
-    hidden: true,
-    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/documentario.mp4", poster: "/assets/projects/documentario-poster.jpg" },
-    date: "",
+    // È il trailer. Il documentario esce il 15 novembre 2026 su YouTube:
+    // quando c'è il link, va aggiunto alla descrizione.
+    slug: "thanks-putin",
+    title: "Thanks, Putin",
+    media: { type: "video", src: "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/thanks-putin-trailer.mp4", poster: "/assets/projects/thanks-putin-poster.jpg" },
+    date: "2026",
     clients: [],
-    description: ""
+    description: "Trailer di “Thanks, Putin”, documentario sulla crisi abitativa in Europa.\nDal 15 novembre su YouTube."
   },
   {
     slug: "botteghe-storiche",

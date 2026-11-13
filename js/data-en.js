@@ -25,6 +25,9 @@
         { description: "Mercato Arabo was born in Naples in the 1980s.\nIt is also a meeting place between the Arab and Italian communities, and between generations — those born and raised here and the older ones.\nIt is a place that holds together the love for one’s country of origin and for the one you live in." }
       ]
     },
+    "thanks-putin": {
+      description: "Trailer for “Thanks, Putin”, a documentary on the housing crisis in Europe.\nOn YouTube from 15 November."
+    },
     "roland": {
       description: "Commercial for the Roland SP-404 sampler, an iconic instrument from the Japanese brand."
     },

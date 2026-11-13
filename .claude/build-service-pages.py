@@ -276,6 +276,9 @@ f'''
 {hero}
 
 {body}
+    <section class="svc-catalogo svc-wrap">
+      <a href="catalogue.html" data-anim="copy">Consulta il nostro catalogo lavori<span aria-hidden="true">&#8594;</span></a>
+    </section>
     <section class="svc-cta svc-wrap">
       <div class="rule" aria-hidden="true" style="width:100%"></div>
       <p data-anim="title">Hai un progetto in mente?</p>

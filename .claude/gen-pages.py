@@ -64,6 +64,7 @@ write("directing-video-production", tpl.page(
   blocks_html=(
     figure("assets/img/sec-directing.jpg", "Estratto da “Thanks, Putin” — auto su un telo rosso in un parcheggio sotterraneo addobbato con luci", "Estratto da “Thanks, Putin”", cls="svc-figure", par="0.18", w=2400, h=1350) +
     tpl.pair([
+      "Ci occupiamo di Documentari, Cortometraggi, Video Musicali, Live Session, Pubblicità.",
       "Dopo aver elaborato una direzione artistica precisa, lavoriamo anche sul set e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.",
       "A seconda del tipo di lavoro estendiamo il nostro team in modo dinamico e ci appoggiamo ad altri professionisti del settore."
     ], "Il nostro processo", [
@@ -312,7 +313,7 @@ write("photography", tpl.page(
   lead="",
   desc="Studio podcast e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per video-podcast, shooting, riprese e sperimentazioni visive.",
   seo_title="Studio podcast e post-produzione a Roma | Dipartimento SX",
-  bg="#8e948b", fg="#0f120e",
+  bg="#e0a677", fg="#2b1a0f",
   hero_extra="",
   corridor=True,
   blocks_html=(
@@ -322,6 +323,9 @@ write("photography", tpl.page(
       "Il nostro set è modulare e adattabile, con attrezzatura e strumentazione analogica e digitale."
     ], "I nostri servizi", [
       "Video-Podcast",
+      "Audio in presa diretta",
+      "Editing dialoghi",
+      "Mix &amp; master audio",
       "Still life e foto di prodotto",
       "Ritratto",
       "Foto di scena durante le riprese video",

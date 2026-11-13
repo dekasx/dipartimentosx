@@ -89,6 +89,7 @@
   const pairs = [...document.querySelectorAll(".svc-pair--rev")];
   if (!pairs.length) return;
   const MIN = 12;
+  const EXTRA = 14;   // stacco massimo in più fra un paragrafo e il successivo
 
   function fit(pair) {
     const list = pair.querySelector(".svc-facts");
@@ -106,9 +107,16 @@
     // negativo sotto l'ultimo paragrafo e sbaglia di un terzo di riga
     const alto = (px) => { intro.style.fontSize = px + "px"; return intro.getBoundingClientRect().height; };
 
+    /* L'altezza è quella dell'elenco, ma non oltre: il testo è distribuito
+       con `space-between`, e su elenchi lunghi i paragrafi finivano lontani
+       uno dall'altro. Lo stacco in più rispetto al testo naturale è limitato
+       a EXTRA per ogni spazio. */
+    const spazi = Math.max(1, intro.querySelectorAll("p").length - 1);
+    const altezza = (nat) => Math.min(H, nat + EXTRA * spazi) + "px";
+
     if (alto(MAX) <= H) {                     // ci sta già alla grandezza dell'elenco
       intro.style.fontSize = MAX + "px";
-      intro.style.height = H + "px";
+      intro.style.height = altezza(alto(MAX));
       return;
     }
     let lo = MIN, hi = MAX;
@@ -123,7 +131,7 @@
     let px = Math.floor(lo * 100) / 100 - 0.25;
     while (px > MIN && alto(px) > H) px -= 0.5;
     intro.style.fontSize = px.toFixed(2) + "px";
-    intro.style.height = H + "px";
+    intro.style.height = altezza(alto(px));
   }
 
   const all = () => pairs.forEach(fit);

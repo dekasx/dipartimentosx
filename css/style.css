@@ -36,6 +36,7 @@
 
 :root {
   --green: #b8f04a;
+  --logo: 72px;      /* misura del logo: la usano anche le regole qui sotto */
   --ink: #101010;
   --white: #ffffff;
   --grey: #8f8f8f;
@@ -136,18 +137,34 @@ img { max-width: 100%; display: block; }
   pointer-events: auto;
   display: block;
   mix-blend-mode: difference;
-  /* --lx/--ly/--ls sono scritte da js/home.js: in cima alla pagina portano il
-     logo accanto alla scritta, appena si scorre lo riportano nell'angolo */
+  /* --lx/--ly/--ls le scrive js/home.js: in cima alla home portano il logo
+     accanto alla scritta (sotto, da telefono), e appena si scorre tornano a
+     zero, cioè nell'angolo, dove fa da tasto home. */
   transform: translate(var(--lx, 0px), var(--ly, 0px)) scale(var(--ls, 1));
   transition: opacity var(--dur) var(--ease), transform 0.75s var(--ease);
 }
-.logo img { width: 96px; height: auto; }
+.logo img { width: var(--logo); height: auto; }
+
+/* Anche in home il logo ha il suo angolo in alto a sinistra, come nelle altre
+   pagine: è lo stesso tasto per tornare indietro. Nella schermata di apertura
+   non si vede lì perché il codice lo porta sulla scritta. */
+/* centrato sulla riga del menu: il menu parte a 34 px ed è alto 26, quindi
+   il logo si alza di metà della differenza. Così i due stanno sulla stessa
+   linea qualunque sia la misura del logo. */
+body[data-view="home"] .logo {
+  top: calc(34px + (26px - var(--logo)) / 2);
+  bottom: auto;
+  left: clamp(24px, 5.6vw, 108px);
+}
+/* mentre si misura: niente trasformazione e niente animazione */
+.logo.is-misura { transform: none !important; transition: none !important; }
 
 .main-nav {
   position: fixed;
   top: 34px; right: 46px;
   z-index: 60;
   display: flex;
+  align-items: center;   /* il tasto della lingua è più alto del testo */
   gap: 2.2rem;
   pointer-events: auto;
   mix-blend-mode: difference;
@@ -164,9 +181,34 @@ img { max-width: 100%; display: block; }
 .main-nav a:hover { opacity: 0.55; }
 .main-nav a.is-active { text-decoration: underline; text-underline-offset: 6px; }
 
+/* Tasto della lingua. Nel documento sta dentro al menu, così da telefono
+   cade sulla sua stessa riga. Da computer invece esce dal flusso e va in alto
+   a sinistra, dove il logo non c'è (lì sta in basso). */
+.lang-btn {
+  display: inline-block;
+  padding: 4px 11px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: #fff;
+  mix-blend-mode: difference;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: opacity 0.4s var(--ease);
+}
+.main-nav .lang-btn { font-size: 0.78rem; padding: 2px 9px; }
+.lang-btn:hover { opacity: 0.55; }
+body[data-view="project"] .lang-btn { opacity: 0; pointer-events: none; }
+
 /* dentro gli overlay la nav sparisce (hanno la loro UI) */
-/* sopra il footer il logo darebbe fastidio al testo legale */
-body.at-footer:not(.page-doc) .logo { opacity: 0; pointer-events: none; }
+/* Il logo NON si nasconde più sul footer. Serviva quando in home stava in
+   basso a sinistra, dove finiva addosso al testo legale; ora sta in alto ed è
+   il tasto per tornare in cima, quindi deve restare. Da telefono, poi, la home
+   è corta: si era "sul footer" quasi subito e il logo spariva. */
 
 body[data-view="project"] .main-nav,
 body[data-view="project"] .logo { opacity: 0; pointer-events: none; }
@@ -384,15 +426,34 @@ body.no-video .showreel-fallback { display: block; }
 }
 .reel-slide .slide-missing svg { width: 108px; height: 108px; }
 
+/* Il nome del progetto non resta fisso: compare a fuoco, poi si vela e
+   sparisce. Da computer sta in alto a sinistra e torna al passaggio del
+   mouse, con la stessa messa a fuoco; da telefono (più sotto) sta sopra ai
+   pallini, dove non può finire sotto al menu in alto a destra. */
 .reel-name {
   position: absolute;
   top: 40px; left: 46px;
   z-index: 4;
   font-size: clamp(1.1rem, 1.6vw, 1.5rem);
   font-weight: 500;
+  line-height: 1.25;
   color: #fff;
   mix-blend-mode: difference;
   pointer-events: none;
+  opacity: 0;
+  filter: blur(14px);
+  /* Uscita: dissolvenza e basta. La velatura torna solo a scritta già
+     sparita (ritardo pari alla dissolvenza), così andandosene non si
+     sgrana — resta per l'entrata, dove serve la messa a fuoco. */
+  transition: opacity 0.75s var(--ease), filter 0s linear 0.75s;
+}
+.reel-name.is-on {
+  opacity: 1;
+  filter: blur(0);
+  transition: opacity 0.6s var(--ease), filter 0.6s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel-name { filter: none; transition-duration: 0.01s; }
 }
 
 .reel-ui {
@@ -539,6 +600,45 @@ body.no-video .showreel-fallback { display: block; }
 .col-item--b { left: 20%; top: 10%;  width: 34.2%; aspect-ratio: 0.8; max-height: 80svh; }
 .col-item--c { left: 61.5%; top: 48%; width: 33.4%; aspect-ratio: 1.145; }
 .col-item--d { left: 0;   top: 26.7%; width: 23.9%; aspect-ratio: 1.23; }
+
+/* ===================== SEZIONE 3b — ABOUT =====================
+   Stessa impaginazione della pagina about: titolo a sinistra, la colonna di
+   puntini che lampeggiano e si suonano, il testo a destra. I puntini portano
+   la classe .ab-dot, quindi li muove js/about-dots.js, lo stesso di là. */
+.sec--intro {
+  display: grid;
+  /* le stesse proporzioni del disegno: la colonna dei puntini cade a poco
+     più di un terzo, non a metà */
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.7fr);
+  align-items: center;
+  column-gap: clamp(20px, 3.4vw, 72px);
+  padding: clamp(36px, 5svh, 72px) clamp(24px, 5.6vw, 108px);
+}
+.intro-title {
+  font-size: clamp(2.6rem, 6.6vw, 7.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.intro-title a { color: inherit; text-decoration: none; }
+/* centrati ciascuno nella propria colonna: allineati a sinistra la pagina
+   restava tutta sbilanciata verso il bordo */
+.intro-title, .intro-copy { justify-self: center; }
+.intro-dots {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.intro-copy {
+  max-width: 38ch;
+  font-size: clamp(1.05rem, 1.55vw, 1.9rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.intro-copy > p + p { margin-top: 0.75em; }
 
 /* ===================== SEZIONE 7 — SOUND DESIGN ===================== */
 .sec--sound { height: 100svh; overflow: hidden; }
@@ -704,7 +804,8 @@ body.no-video .showreel-fallback { display: block; }
 /* ---------- catalogue (ruota) ---------- */
 /* la scena occupa una schermata; sotto ci sono l'elenco completo e il footer */
 .cat-stage { position: relative; height: 100svh; }
-.wheel-line { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--green); z-index: 2; pointer-events: none; }
+/* la velatura la scrive js/catalogue.js, tanta quanta è la velocità della ruota */
+.wheel-line { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--green); z-index: 2; pointer-events: none; transition: filter 0.85s var(--ease); }
 .wheel {
   position: absolute;
   inset: 0;
@@ -1380,8 +1481,11 @@ body.page-light .sec { color: var(--fg); }
 body.page-light .sec--contact { min-height: 100svh; }
 
 /* sulle pagine di testo il logo va in alto: in basso passerebbe sopra ai paragrafi */
-body.page-doc .logo { top: 26px; bottom: auto; left: clamp(24px, 5.6vw, 108px); }
-body.page-doc .logo img { width: 46px; }
+body.page-doc .logo {
+  top: calc(34px + (26px - var(--logo)) / 2);
+  bottom: auto;
+  left: clamp(24px, 5.6vw, 108px);
+}
 
 
 /* ============================================================
@@ -1403,6 +1507,36 @@ body.page-service {
   background-size: 8px 5px;
   background-repeat: repeat-x;
   opacity: 0.9;
+}
+
+/* La stessa riga, ma viva: i pallini li costruisce js/eq-rule.js, uno per
+   uno, e ognuno sale e scende per conto suo come le barre di un
+   equalizzatore. Il riquadro resta alto 5 px, così non sposta niente: il
+   movimento esce dai bordi. */
+.rule--eq {
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: visible;
+}
+.rule--eq i {
+  display: block;
+  width: 5px; height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  animation: eqDot var(--t, 1s) cubic-bezier(0.24, 0.9, 0.32, 1) var(--d, 0s) infinite;
+  will-change: transform;
+}
+/* salita svelta, discesa lenta: è quello che fa sembrare un equalizzatore
+   invece di un'onda */
+@keyframes eqDot {
+  0%, 100% { transform: translateY(var(--a, 4px)); }
+  24%      { transform: translateY(calc(var(--a, 4px) * -1)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rule--eq i { animation: none; }
 }
 
 /* ---------- testata ---------- */
@@ -1889,10 +2023,16 @@ body.page-service {
      Qui l'accostamento alla scritta non si fa: non c'è larghezza. */
   /* logo e menu attaccati alla barra del browser: 10 px dal bordo, anche
      nelle pagine interne (che da computer lo tengono più in basso) */
+  /* la home va nominata: la sua regola più su ha la stessa forza e, senza,
+     vincerebbe lei tenendo il logo nella posizione da computer */
   .logo,
-  body.page-doc .logo { left: 18px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; transform: none !important; }
+  body.page-doc .logo,
+  body[data-view="home"] .logo { left: 18px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; }
+  /* fuori dalla home nessuno scrive le variabili: la trasformazione resta
+     quella identica, ma così è esplicito */
+  body:not([data-view="home"]) .logo { transform: none; }
   .hero-mark { width: 82vw; left: 50%; transform: translate(-50%, -50%); }
-  .logo img { width: 52px; }
+  :root { --logo: 76px; }
 
   /* le linee tratteggiate sono disegnate su una scena 16:9:
      su mobile le sezioni si impilano e non avrebbero senso */
@@ -1908,20 +2048,48 @@ body.page-service {
   /* sezioni con un disegno apposta per il telefono */
   body.page-service .conn.conn--solo-desktop { display: none; }
 
+  /* Pagina del suono: la testata non tiene tutta la schermata, così la riga
+     di pallini che si muove entra subito in campo sotto al titolo invece di
+     restare nascosta una schermata più giù. */
+  body.page-sound .svc-hero {
+    min-height: 0;
+    padding-block: clamp(108px, 17svh, 170px) clamp(16px, 3.5svh, 34px);
+  }
+
   /* il menu in alto a destra, centrato in altezza sul logo: in home il logo
      è 52 px a 10 px dal bordo (centro a 36), nelle altre pagine 46 px (centro
      a 33). Prima stava in fondo allo schermo. */
   .main-nav {
-    top: calc(36px + env(safe-area-inset-top)); bottom: auto;
+    /* centrato sul logo: lì il logo è troppo alto per stare centrato sulla
+       riga del menu senza uscire dal bordo, quindi è il menu che scende a
+       incontrarlo */
+    top: calc(10px + env(safe-area-inset-top) + var(--logo) / 2); bottom: auto;
     left: auto; right: 18px;
     transform: translateY(-50%);
     justify-content: flex-end;
+    align-items: center;      /* il tasto lingua è più alto del testo */
     gap: 1rem;
   }
-  body.page-doc .main-nav { top: calc(33px + env(safe-area-inset-top)); }
+  /* il logo ora è uguale in tutte le pagine: una regola sola */
+
+  /* da telefono il menu è più fitto: il tasto si stringe di conseguenza */
+  .main-nav .lang-btn {
+    font-size: 0.64rem;
+    padding: 2px 6px;
+    letter-spacing: 0.08em;
+  }
   .main-nav a { font-size: 1rem; }
 
-  .reel-name { top: 26px; left: 22px; }
+  /* il titolo del video sta sopra ai pallini (.reel-ui: 34 px dal fondo,
+     alta 38), non più in alto dove incrociava il menu */
+  .reel-name {
+    top: auto; bottom: 86px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(88vw, 520px);
+    text-align: center;
+    font-size: 1.15rem;
+  }
 
 
   /* ---------- servizi a fisarmonica (solo mobile) ----------
@@ -2063,6 +2231,9 @@ body.page-service {
   .col-item--d { display: none; }
 
   /* --- statement --- */
+  /* da telefono l'about resta solo nella sua pagina: qui la home finisce con
+     i servizi e all'about ci si va dal menu */
+  .sec--intro { display: none; }
   .sec--statement { padding: 16svh 22px; }
   .sec--statement-alt { justify-items: start; text-align: left; }
   .sec--statement-alt .statement-copy { text-align: justify; }
@@ -2362,4 +2533,21 @@ body.page-contact .sec--contact {
 @media (max-width: 380px) {
   .main-nav { gap: 0.7rem; }
   .main-nav a { font-size: 0.9rem; }
+}
+
+/* Telefoni stretti (iPhone SE e simili): col tasto della lingua le voci del
+   menu diventano cinque, e a 320 px finivano sotto al logo. Qui il menu si
+   stringe quel tanto che basta. Sta in fondo al foglio apposta: più su
+   verrebbe sovrascritto dal blocco mobile. */
+@media (max-width: 400px) {
+  .main-nav { gap: 0.5rem; right: 14px; }
+  .main-nav a { font-size: 0.8rem; }
+  .main-nav .lang-btn { font-size: 0.58rem; padding: 1px 5px; letter-spacing: 0.06em; }
+}
+@media (max-width: 340px) {
+  .main-nav { gap: 0.38rem; }
+  .main-nav a { font-size: 0.74rem; }
+  /* solo qui il logo si tiene più basso: a 320 px, grande come sugli altri
+     telefoni, arriverebbe a sfiorare il menu */
+  :root { --logo: 64px; }
 }

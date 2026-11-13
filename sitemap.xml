@@ -9,6 +9,15 @@
   <url><loc>https://dipartimentosx.netlify.app/catalogue.html</loc><lastmod>2026-09-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dipartimentosx.netlify.app/about.html</loc><lastmod>2026-09-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dipartimentosx.netlify.app/contact.html</loc><lastmod>2026-09-22</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://dipartimentosx.netlify.app/privacy.html</loc><lastmod>2026-09-22</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
-  <url><loc>https://dipartimentosx.netlify.app/cookie-policy.html</loc><lastmod>2026-09-22</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/privacy.html</loc><lastmod>2026-09-28</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/catalogue.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/about.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/contact.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/privacy.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/creative-direction.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/directing-video-production.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/sound-design.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/web-development.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://dipartimentosx.netlify.app/en/photography.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

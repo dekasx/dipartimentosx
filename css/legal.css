@@ -16,3 +16,17 @@ h2 { font-size: 1.15rem; font-weight: 600; margin: 2.2rem 0 0.6rem; }
 p, li { font-size: 0.95rem; }
 ul { margin: 0.4rem 0 0 1.2rem; }
 .todo { background: #fff6cc; padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.9em; }
+
+/* tasto della lingua: questa pagina non ha il menu del sito, quindi va in
+   linea col link di ritorno, all'altro capo della riga */
+.lang-btn {
+  float: right;
+  padding: 3px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  text-decoration: none;
+}

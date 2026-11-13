@@ -36,7 +36,7 @@
       node.classList.add("is-missing");
       if (time) time.textContent = "—";
       btn.disabled = true;
-      btn.setAttribute("aria-label", "Estratto non ancora disponibile");
+      btn.setAttribute("aria-label", (document.documentElement.lang === "en" ? "Excerpt not available yet" : "Estratto non ancora disponibile"));
     });
     audio.addEventListener("loadedmetadata", () => {
       loaded = true;

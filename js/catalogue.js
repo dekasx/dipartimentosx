@@ -16,6 +16,12 @@
   const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- lingua ----------
+     Le pagine di en/ portano lang="en": le etichette scritte da qui dentro
+     cambiano di conseguenza. Il testo dei progetti arriva invece da
+     js/data-en.js. */
+  const T = (it, en) => (document.documentElement.lang === "en" ? en : it);
+
   const wheel = el("wheel");
   if (!wheel) return;
 
@@ -58,13 +64,28 @@
   const blockH = () => itemH() * N;
 
   /* riporta lo scroll nella fascia centrale: il salto è di un numero intero
-     di blocchi, quindi né l'occhio né lo snap se ne accorgono */
+     di blocchi, quindi né l'occhio né lo snap se ne accorgono.
+
+     Le soglie vanno misurate su quanto si può scorrere DAVVERO
+     (scrollHeight − clientHeight), non contando le copie. Con 8 progetti un
+     blocco è alto 608 px: da computer la finestra ne misura 998, il fondo
+     raggiungibile è 4474 px e la vecchia soglia di discesa — 7,5 blocchi,
+     cioè 4560 px — cadeva oltre il fondo, quindi non scattava mai. Verso
+     l'alto l'elenco girava all'infinito, verso il basso si piantava sul
+     fondo. Da telefono la finestra è più bassa e la soglia ci rientrava per
+     un soffio: per questo lì funzionava. */
   function recentre() {
     const b = blockH();
+    const max = wheel.scrollHeight - wheel.clientHeight;
+    const lo = b * 0.5;
+    const hi = max - b * 0.5;
+    if (hi - lo < b) return 0;                          // troppo corto per saltare
+    // il salto più lungo che riporta comunque dentro la fascia, in blocchi interi
+    const salto = (Math.ceil((hi - lo) / b) - 1) * b;
     const st = wheel.scrollTop;
     let d = 0;
-    if (st < b * 1.5) d = b * (COPIES - 3);
-    else if (st > b * (COPIES - 1.5)) d = -b * (COPIES - 3);
+    if (st < lo) d = salto;
+    else if (st > hi) d = -salto;
     if (d) wheel.scrollTop = st + d;
     return d;      // chi sta animando la ruota sposta il suo traguardo di tanto
   }
@@ -262,6 +283,30 @@
     }, true);
   }
 
+  /* La linea verde si vela mentre la ruota gira, tanta velatura quanta è la
+     velocità. Due tempi diversi: si vela in un soffio, così segue il gesto,
+     e torna a fuoco con calma quando la ruota si posa. */
+  const linea = document.querySelector(".wheel-line");
+  let ultimaPos = wheel.scrollTop;
+  let nitidaT = null;
+
+  function velaLinea() {
+    if (!linea) return;
+    const pos = wheel.scrollTop;
+    const v = Math.abs(pos - ultimaPos);
+    ultimaPos = pos;
+    const b = Math.min(4, v * 0.2);
+    if (b > 0.04) {
+      linea.style.transitionDuration = "0.09s";
+      linea.style.filter = "blur(" + b.toFixed(2) + "px)";
+    }
+    clearTimeout(nitidaT);
+    nitidaT = setTimeout(() => {
+      linea.style.transitionDuration = "";     // torna al tempo lungo del CSS
+      linea.style.filter = "";
+    }, 130);
+  }
+
   let wheelRaf = null;
   wheel.addEventListener("scroll", () => {
     // da telefono la posizione la scrive solo il codice qui sopra
@@ -271,7 +316,7 @@
       posaT = setTimeout(posaSullaRiga, 140);
     }
     if (wheelRaf) return;
-    wheelRaf = requestAnimationFrame(() => { wheelRaf = null; updateWheel(); });
+    wheelRaf = requestAnimationFrame(() => { wheelRaf = null; updateWheel(); velaLinea(); });
   }, { passive: true });
 
   /* ==================== SCHEDA PROGETTO ====================
@@ -457,7 +502,7 @@
       } else {
         const img = document.createElement("img");
         img.src = m.src;
-        img.alt = "Anteprima — " + p.title;
+        img.alt = T("Anteprima — ", "Preview — ") + p.title;
         img.loading = "lazy";
         img.addEventListener("error", () => {
           slide.innerHTML = '<div class="media-missing">media in arrivo — ' + m.src + "</div>";
@@ -522,7 +567,7 @@
         const c = document.createElement("button");
         c.type = "button";
         c.className = "deck-nav deck-nav--" + dir;
-        c.setAttribute("aria-label", dir === "prev" ? "Episodio precedente" : "Episodio successivo");
+        c.setAttribute("aria-label", dir === "prev" ? T("Episodio precedente", "Previous episode") : T("Episodio successivo", "Next episode"));
         c.innerHTML =
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" ' +
           'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
@@ -538,7 +583,7 @@
 
       track = document.createElement("div");
       track.className = "project-track";
-      track.setAttribute("aria-label", "Scorri tra gli episodi");
+      track.setAttribute("aria-label", T("Scorri tra gli episodi", "Scroll through the episodes"));
       for (let c = 0; c < NCOPIE * items.length; c++) {
         const cell = document.createElement("div");
         cell.className = "track-cell";
@@ -797,12 +842,12 @@
       ui = document.createElement("div");
       ui.className = "vplayer";
       ui.innerHTML =
-        '<button class="vbtn vbtn--play" type="button" aria-label="Pausa">' +
+        '<button class="vbtn vbtn--play" type="button" aria-label="' + T("Pausa", "Pause") + '">' +
           '<svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>' +
           '<svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4v15h-4zM13.5 4.5h4v15h-4z"/></svg>' +
         '</button>' +
         '<div class="vbar"><span class="vbar-fill"></span></div>' +
-        '<button class="vbtn vbtn--sound" type="button" aria-label="Disattiva l\'audio">' +
+        '<button class="vbtn vbtn--sound" type="button" aria-label="' + T("Disattiva l\'audio", "Turn the sound off") + '">' +
           '<svg class="ico-on" viewBox="0 0 24 24" aria-hidden="true">' +
             '<path d="M11 5 6 9H3v6h3l5 4z"/>' +
             '<path d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
@@ -813,7 +858,7 @@
             '<path d="M22 9.5 17.5 14M17.5 9.5 22 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
           '</svg>' +
         '</button>' +
-        '<button class="vbtn vbtn--full" type="button" aria-label="Schermo intero">' +
+        '<button class="vbtn vbtn--full" type="button" aria-label="' + T("Schermo intero", "Full screen") + '">' +
           '<svg class="ico-full" viewBox="0 0 24 24" aria-hidden="true">' +
             '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
           '</svg>' +
@@ -868,7 +913,7 @@
         v.muted = !v.muted;
         soundOn = !v.muted;
         block.classList.toggle("is-live", !v.muted);
-        bSound.setAttribute("aria-label", v.muted ? "Attiva l'audio" : "Disattiva l'audio");
+        bSound.setAttribute("aria-label", v.muted ? T("Attiva l'audio", "Turn the sound on") : T("Disattiva l'audio", "Turn the sound off"));
         if (v.paused) v.play().catch(() => {});
       });
       /* Schermo intero sul video che si sta guardando. In questo modo se ne
@@ -967,7 +1012,7 @@
       if (!v.src && v.dataset.src) v.src = v.dataset.src;
       if (sound) v.muted = false;
       block.classList.toggle("is-live", !v.muted);
-      if (bSound) bSound.setAttribute("aria-label", v.muted ? "Attiva l'audio" : "Disattiva l'audio");
+      if (bSound) bSound.setAttribute("aria-label", v.muted ? T("Attiva l'audio", "Turn the sound on") : T("Disattiva l'audio", "Turn the sound off"));
       v.play().catch(() => {
         // se il browser rifiuta l'audio, si riparte in muto
         v.muted = true;
@@ -1036,22 +1081,22 @@
       info.appendChild(c);
       return c;
     };
-    const cData = nuovaCella("Data"), cCliente = nuovaCella("Cliente"), cDescr = nuovaCella("Descrizione", true);
+    const cData = nuovaCella(T("Data", "Date")), cCliente = nuovaCella(T("Cliente", "Client")), cDescr = nuovaCella(T("Descrizione", "Description"), true);
     /* Tutti i testi della scheda stanno su due righe esatte (CSS): la scheda
        ha la stessa altezza per ogni episodio, quindi il video non cambia
        misura passando da uno all'altro. Un testo più lungo si taglia e
-       compare "leggi tutto": aprendolo si allunga verso il basso, ma il video
+       compare T("leggi tutto", "read more"): aprendolo si allunga verso il basso, ma il video
        resta com'è (l'altezza la misura adattaAltezza sempre a due righe). */
     [cData, cCliente, cDescr].forEach((c) => c.querySelector(".info-val").classList.add("info-val--due"));
     const altro = document.createElement("button");
     altro.type = "button";
     altro.className = "info-altro";
-    altro.textContent = "leggi tutto";
+    altro.textContent = T("leggi tutto", "read more");
     cDescr.appendChild(altro);
     altro.addEventListener("click", (e) => {
       e.stopPropagation();
       const aperta = cDescr.classList.toggle("is-aperta");
-      altro.textContent = aperta ? "chiudi" : "leggi tutto";
+      altro.textContent = aperta ? "chiudi" : T("leggi tutto", "read more");
     });
     // la riga della descrizione sparisce solo se nel progetto non ce n'è nessuna
     const qualcheDescr = items.some((m, k) => campo(k, "description"));
@@ -1063,7 +1108,7 @@
 
       cData.querySelector(".info-val").textContent = data || "—";
       // "Cliente" o "Clienti" secondo quanti sono
-      cCliente.querySelector("h3").textContent = clienti.length > 1 ? "Clienti" : "Cliente";
+      cCliente.querySelector("h3").textContent = clienti.length > 1 ? T("Clienti", "Clients") : T("Cliente", "Client");
 
       const vc = cCliente.querySelector(".info-val");
       vc.textContent = "";
@@ -1090,7 +1135,7 @@
       cDescr.hidden = !qualcheDescr;
       cDescr.classList.toggle("is-vuota", !descr);
       cDescr.classList.remove("is-aperta");
-      altro.textContent = "leggi tutto";
+      altro.textContent = T("leggi tutto", "read more");
       // lo spazio del pulsante c'è sempre (altezza costante), si vede solo se serve
       altro.classList.toggle("is-inutile", !(vd.scrollHeight > vd.clientHeight + 1));
     }

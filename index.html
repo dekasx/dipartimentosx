@@ -6,8 +6,11 @@
 
   <!-- ===================== SEO ===================== -->
   <title>Casa di produzione video e audio a Roma | Dipartimento SX</title>
-  <meta name="description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web e studio fotografico. Dall’idea alla consegna, tutto in casa.">
-  <meta name="keywords" content="dipartimento sx, reparto creativo roma, produzione video roma, regia, sound design, musiche originali, direzione creativa, color grading, web development, studio fotografico, showreel">
+  <meta name="description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, podcast e studio fotografico. Dall’idea alla consegna, tutto in casa.">
+  <meta name="keywords" content="dipartimento sx, reparto creativo roma, produzione video roma, regia, sound design, musiche originali, direzione creativa, color grading, web development, studio podcast, studio fotografico, showreel">
+  <link rel="alternate" hreflang="it" href="https://dipartimentosx.netlify.app/">
+  <link rel="alternate" hreflang="en" href="https://dipartimentosx.netlify.app/en/">
+  <link rel="alternate" hreflang="x-default" href="https://dipartimentosx.netlify.app/">
   <link rel="canonical" href="https://dipartimentosx.netlify.app/">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#000000">
@@ -16,7 +19,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Dipartimento SX">
   <meta property="og:title" content="Casa di produzione video e audio a Roma | Dipartimento SX">
-  <meta property="og:description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web e studio fotografico. Dall’idea alla consegna, tutto in casa.">
+  <meta property="og:description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, podcast e studio fotografico. Dall’idea alla consegna, tutto in casa.">
   <meta property="og:url" content="https://dipartimentosx.netlify.app/">
   <meta property="og:image" content="https://dipartimentosx.netlify.app/assets/img/og-logo.jpg">
   <meta property="og:image:width" content="1200">
@@ -26,7 +29,7 @@
   <meta property="og:locale" content="it_IT">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Casa di produzione video e audio a Roma | Dipartimento SX">
-  <meta name="twitter:description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web e studio fotografico. Dall’idea alla consegna, tutto in casa.">
+  <meta name="twitter:description" content="Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, podcast e studio fotografico. Dall’idea alla consegna, tutto in casa.">
   <meta name="twitter:image" content="https://dipartimentosx.netlify.app/assets/img/og-logo.jpg">
 
   <!-- Twitter -->
@@ -44,7 +47,7 @@
       "logo": "https://dipartimentosx.netlify.app/assets/img/logo-sx.svg",
       "image": "https://dipartimentosx.netlify.app/assets/img/og-logo.jpg",
       "email": "info@dipartimentosx.com",
-      "description": "Casa di produzione creativa con base a Roma: consulenza e direzione creativa, regia, documentari e video, musica, sound design e foley, sviluppo siti web e studio fotografico.",
+      "description": "Casa di produzione creativa con base a Roma: consulenza e direzione creativa, regia, documentari e video, musica, sound design e foley, sviluppo siti web, studio podcast e fotografico.",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Roma",
@@ -75,6 +78,7 @@
         "sviluppo siti web",
         "UX e UI",
         "fotografia",
+        "podcast",
         "post-produzione",
         "direzione creativa"
       ],
@@ -121,7 +125,7 @@
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service",
-              "name": "Studio Fotografico & Post-Produzione",
+              "name": "Studio Podcast & Post-Produzione",
               "url": "https://dipartimentosx.netlify.app/photography.html"
             }
           }
@@ -146,9 +150,9 @@
   <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
 
   <link rel="preload" as="image" href="assets/img/showreel-poster.jpg">
-  <link rel="stylesheet" href="css/style.css?v=202609221624">
-  <link rel="stylesheet" href="css/pellicola.css?v=202609221624">
-  <script src="js/pellicola.js?v=202609221624"></script>
+  <link rel="stylesheet" href="css/style.css?v=202611131305">
+  <link rel="stylesheet" href="css/pellicola.css?v=202611131305">
+  <script src="js/pellicola.js?v=202611131305"></script>
 </head>
 <body data-view="home">
 
@@ -167,6 +171,7 @@
       <a href="#services"  data-scroll="services">servizi</a>
       <a href="about.html">about</a>
       <a href="contact.html">contatti</a>
+      <a class="lang-btn" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English">EN</a>
     </nav>
   </header>
 
@@ -188,32 +193,9 @@
         <img src="assets/img/wordmark.png" alt="" width="1456" height="144" decoding="async">
       </p>
 
-      <h1 class="visually-hidden">Dipartimento SX — reparto creativo audio/video a Roma: consulenza e direzione creativa, regia e video, musica e sound design, web development e studio fotografico</h1>
+      <h1 class="visually-hidden">Dipartimento SX — reparto creativo audio/video a Roma: consulenza e direzione creativa, regia e video, musica e sound design, web development e studio podcast</h1>
 
       <span class="scroll-hint" aria-hidden="true"><i></i></span>
-    </section>
-
-    <!-- ============ 2 — SELECTED WORK (carousel) ============ -->
-    <section class="sec sec--reel" id="work" data-bg="#000000" data-fg="#ffffff" aria-label="Lavori selezionati">
-      <h2 class="visually-hidden">Lavori selezionati</h2>
-
-      <div class="reel">
-        <div class="reel-track" id="reelTrack"><!-- slides built by JS --></div>
-
-        <p class="reel-name" id="reelName" aria-live="polite"></p>
-
-        <div class="reel-ui">
-          <div class="reel-dots" id="reelDots" role="tablist" aria-label="Scegli il progetto"></div>
-          <button class="reel-sound" id="reelSound" type="button" aria-pressed="false" aria-label="Attiva l'audio">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M11 5 6 9H3v6h3l5 4z"/>
-              <path class="wave wave-1" d="M15.5 8.5a5 5 0 0 1 0 7"/>
-              <path class="wave wave-2" d="M18.5 5.5a9 9 0 0 1 0 13"/>
-              <path class="mute" d="M22 9l-5 6M17 9l5 6"/>
-            </svg>
-          </button>
-        </div>
-      </div>
     </section>
 
     <!-- ============ 3 — SERVICES (dot animation) ============ -->
@@ -221,6 +203,33 @@
       <div class="services-stage">
         <h2 class="visually-hidden">Cosa facciamo</h2>
         <div class="services-grid" id="servicesGrid"><!-- lines and items built by JS --></div>
+      </div>
+    </section>
+
+    <!-- ============ 3b — ABOUT ============ -->
+    <!-- stessa impaginazione della pagina about: titolo, colonna di puntini,
+         testo. I puntini sono gli stessi, classe compresa, quindi li accende
+         e li suona js/about-dots.js senza sapere in che pagina si trova. -->
+    <section class="sec sec--intro" id="about-home" data-bg="#ffffff" data-fg="#0a0a0a">
+      <h2 class="intro-title" data-anim="title"><a href="about.html">About</a></h2>
+
+      <div class="intro-dots" aria-hidden="true">
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+        <span class="ab-dot"></span>
+      </div>
+
+      <div class="intro-copy" data-anim="copy">
+        <p>Dipartimento SX è un reparto creativo audio/video con base a Roma, Italia, che opera in ogni luogo e situazione.</p>
+        <p>Filmiamo documentari, pubblicità, cortometraggi e qualunque cosa si possa raccontare con le immagini.</p>
+        <p>Lavoriamo con aziende, brand, istituzioni e professionisti. Aiutiamo a sviluppare un racconto e un posizionamento visivo che abbia longevità.</p>
       </div>
     </section>
 
@@ -242,7 +251,7 @@
       <div class="split-col split-col--text">
         <h2 class="sec-title" data-anim="title"><a href="creative-direction.html">Consulenza e<br>Direzione<br>Creativa</a></h2>
         <p class="sec-copy" data-anim="copy">
-          Il nostro lavoro nasce da una fase conoscitiva con il cliente e si sviluppa con la creazione di un’intenzione comunicativa definita. Ci approcciamo con aziende, brand, istituzioni e professionisti in modo personale.
+          Il nostro lavoro nasce da una prima fase conoscitiva con il cliente e si sviluppa con la creazione di un’intenzione comunicativa definita. Ci approcciamo con aziende, brand, istituzioni e professionisti in modo personale.
         </p>
       </div>
       <div class="split-col split-col--media">
@@ -273,7 +282,7 @@
 
       <h2 class="sec-title sec-title--right" data-anim="title"><a href="directing-video-production.html">Regia, Documentari<br>&amp; Video</a></h2>
       <p class="sec-copy sec-copy--wide" data-anim="copy">
-        Ogni lavoro è concepito, ripreso, editato e post prodotto da noi. Le persone che scrivono la creatività sono le stesse che stanno sul set, e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.
+        Il nostro team video è composto da professionisti con esperienza nel settore del cinema e dei documentari. Dopo aver elaborato una direzione artistica precisa, lavoriamo anche sul set e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.
       </p>
     </section>
 
@@ -317,7 +326,7 @@
       </figure>
 
       <p class="sec-copy sound-copy" data-anim="copy">
-        Componiamo musiche originali, effetti sonori, sound design per transizioni e prese audio dirette. Ogni parte del sonoro è studiata in correlazione al materiale video specifico, garantendo un approccio che arricchisce le immagini.
+        Il nostro team di musicisti è specializzato nella composizione di musiche originali e sound design, oltre che nella registrazione audio in presa diretta. Ogni fase della sonorizzazione è finalizzata a esaltare il materiale visivo di riferimento, mantenendo sempre un approccio innovativo.
       </p>
       <h2 class="sec-title sound-title" data-anim="title"><a href="sound-design.html">Musica,<br>Sound Design<br>&amp; Foley</a></h2>
     </section>
@@ -340,22 +349,6 @@
 
   </main>
 
-  <!-- anteprima a tutto schermo dei video del carosello: stesso player del catalogue,
-       solo riproduzione e barra -->
-  <div class="lightbox" id="reelLightbox" role="dialog" aria-modal="true" aria-label="Anteprima video">
-    <button class="back-btn lightbox-close" type="button" aria-label="Chiudi il video">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-    </button>
-    <video class="lightbox-video" playsinline preload="auto"></video>
-    <div class="vplayer lightbox-player">
-      <button class="vbtn vbtn--play" type="button" aria-label="Pausa">
-        <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
-        <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4v15h-4zM13.5 4.5h4v15h-4z"/></svg>
-      </button>
-      <div class="vbar"><span class="vbar-fill"></span></div>
-    </div>
-  </div>
-
   <!-- ===================== FOOTER ===================== -->
   <footer class="site-footer">
     <div class="foot-grid">
@@ -367,12 +360,11 @@
       <nav class="foot-nav" aria-label="Mappa del sito">
         <h3>Sito</h3>
         <a href="#home" data-scroll="home">Home</a>
-        <a href="#work" data-scroll="work">Lavori</a>
         <a href="#services" data-scroll="services">Servizi</a>
         <a href="catalogue.html">Catalogo</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contatti</a>
-      </nav>
+    </nav>
 
       <nav class="foot-nav" aria-label="Servizi">
         <h3>Servizi</h3>
@@ -380,7 +372,7 @@
         <a href="directing-video-production.html">Regia, Documentari &amp; Video</a>
         <a href="sound-design.html">Musica, Sound Design &amp; Foley</a>
         <a href="web-development.html">Web Development, UX &amp; UI</a>
-        <a href="photography.html">Studio Fotografico &amp; Post-Produzione</a>
+        <a href="photography.html">Studio Podcast &amp; Post-Produzione</a>
       </nav>
 
       <div class="foot-nav">
@@ -396,15 +388,14 @@
       </p>
       <p class="foot-links">
         <a href="privacy.html">Privacy Policy</a>
-        <a href="cookie-policy.html">Cookie Policy</a>
-        <span>P. IVA [DA COMPLETARE]</span>
       </p>
     </div>
   </footer>
 
-  <script src="js/data.js?v=202609221624" defer blocking="render"></script>
-  <script src="js/scroll-fx.js?v=202609221624" defer></script>
-  <script src="js/site.js?v=202609221624" defer></script>
-  <script src="js/home.js?v=202609221624" defer blocking="render"></script>
+  <script src="js/data.js?v=202611131305" defer blocking="render"></script>
+  <script src="js/scroll-fx.js?v=202611131305" defer></script>
+  <script src="js/site.js?v=202611131305" defer></script>
+  <script src="js/home.js?v=202611131305" defer blocking="render"></script>
+  <script src="js/about-dots.js?v=202611131305" defer></script>
 </body>
 </html>

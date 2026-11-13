@@ -32,11 +32,11 @@ write("creative-direction", tpl.page(
   blocks_html=(
     figure("assets/img/sec-creative-direction.jpg", "File di rocchetti di filo colorati sulla parete di una merceria", "Botteghe Storiche — direzione artistica e foto di scena", w=1600, h=1095) +
     tpl.pair([
-      "Il nostro lavoro nasce da una fase conoscitiva con il cliente e si sviluppa con la creazione di un’intenzione comunicativa definita.",
+      "Il nostro lavoro nasce da una prima fase conoscitiva con il cliente e si sviluppa con la creazione di un’intenzione comunicativa definita.",
       "Ci approcciamo con aziende, brand, istituzioni e professionisti in modo personale.",
       "Aiutiamo a sviluppare un racconto e un posizionamento visivo che abbia longevità."
-    ], "Il nostro output", [
-      "Concetto e Narrazione",
+    ], "Il nostro processo", [
+      "Direzione Creativa e Concept Creation",
       "Linguaggio visivo: palette, stile, inquadrature",
       "Direzione sonora",
       "Direzione artistica sul set",
@@ -53,7 +53,7 @@ write("directing-video-production", tpl.page(
   slug="directing-video-production",
   title="Regia, Documentari<br>&amp; Video",
   kicker="",
-  lead="Ogni lavoro è concepito, ripreso, editato e post prodotto da noi.",
+  lead="Il nostro team video è composto da professionisti con esperienza nel settore del cinema e dei documentari.",
   desc="Regia e produzione video a Roma: documentari, spot pubblicitari, cortometraggi e contenuti social ideati, girati, montati e post-prodotti in casa.",
   seo_title="Regia, documentari e produzione video a Roma | Dipartimento SX",
   bg="#000000", fg="#ffffff",
@@ -64,9 +64,9 @@ write("directing-video-production", tpl.page(
   blocks_html=(
     figure("assets/img/sec-directing.jpg", "Estratto da “Thanks, Putin” — auto su un telo rosso in un parcheggio sotterraneo addobbato con luci", "Estratto da “Thanks, Putin”", cls="svc-figure", par="0.18", w=2400, h=1350) +
     tpl.pair([
-      "Le persone che scrivono la creatività sono le stesse che stanno sul set, e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.",
-      "A seconda del tipo di lavoro estendiamo il nostro team in modo dinamico e ci appoggiamo ad altri professionisti che lavorano nell’ambito cinematografico."
-    ], "Il nostro output", [
+      "Dopo aver elaborato una direzione artistica precisa, lavoriamo anche sul set e questo ci permette di rimuovere i passaggi intermedi che possono creare lacune tra l’idea e il risultato.",
+      "A seconda del tipo di lavoro estendiamo il nostro team in modo dinamico e ci appoggiamo ad altri professionisti del settore."
+    ], "Il nostro processo", [
       "Script e Storyboard",
       "Scouting, casting e permessi",
       "Piano di Produzione e Budget",
@@ -80,30 +80,32 @@ write("directing-video-production", tpl.page(
 ))
 
 # ============================================================ 3
+# I quattro estratti veri. Il sottotitolo (ruolo e anno) è vuoto finché non
+# me lo dite: meglio niente che un anno inventato.
 SAMPLES = [
-    ("Botteghe Storiche — tema principale", "Colonna sonora originale · 2024", "assets/audio/sample-01.mp3"),
-    ("Cacao Crudo — film di Natale", "Sound design · 2023", "assets/audio/sample-02.mp3"),
-    ("Beat Skatepark — aftermovie", "Musica &amp; mix · 2023", "assets/audio/sample-03.mp3"),
-    ("Villa Ada — registrazione ambientale", "Registrazione ambientale · 2025", "assets/audio/sample-04.mp3"),
+    ("RCE × Beat Skatepark", "", "assets/audio/rce-beat-skatepark.mp3"),
+    ("Botteghe Storiche di Quartiere — Di Biagio", "", "assets/audio/botteghe-di-biagio.mp3"),
+    ("Red Bull 64 Bars Live Taranto — Intro", "", "assets/audio/redbull-64-bars-taranto.mp3"),
+    ("Thanks, Putin — Ending Soundtrack", "", "assets/audio/thanks-putin-ending.mp3"),
 ]
 
 def players():
     rows = []
     for title, sub, src in SAMPLES:
+        subline = f'\n            <p class="player-sub">{sub}</p>' if sub else ""
         rows.append(f'''        <article class="player" data-src="{src}">
           <button class="player-btn" type="button" aria-pressed="false" aria-label="Riproduci {title.replace('&amp;','e')}">
             <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
             <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
           </button>
           <div class="player-main">
-            <p class="player-title">{title}</p>
-            <p class="player-sub">{sub}</p>
+            <p class="player-title">{title}</p>{subline}
             <div class="player-bar"><span class="player-fill"></span></div>
           </div>
           <time class="player-time">0:00</time>
         </article>''')
     return ('''    <section class="svc-block svc-wrap" aria-labelledby="samples">
-      <div class="rule" aria-hidden="true"></div>
+      <div class="rule rule--eq" data-eq aria-hidden="true"></div>
       <div class="svc-grid">
         <h2 class="svc-h2" id="samples" data-anim="title">Ascolta</h2>
         <div class="svc-prose" data-anim="copy">
@@ -129,17 +131,19 @@ write("sound-design", tpl.page(
   slug="sound-design",
   title="Musica, Sound<br>Design &amp; Foley",
   kicker="",
-  lead="Componiamo musiche originali, effetti sonori, sound design per transizioni e prese audio dirette.",
+  lead="Il nostro team di musicisti è specializzato nella composizione di musiche originali e sound design, oltre che nella registrazione audio in presa diretta.",
   desc="Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.",
   seo_title="Musica, sound design e foley a Roma | Dipartimento SX",
   bg="#38211b", fg="#ffffff",
   hero_extra=tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
                              ("M300 860 H1100 V960", "1.1")], draw_load=True),
+  body_class="page-doc page-service page-sound",
   extras_first=True,
   extras=players(),
   blocks_html=(
     tpl.pair([
-      "Ogni parte del sonoro è studiata in correlazione al materiale video specifico, garantendo un approccio che arricchisce le immagini."
+      "Ogni fase della sonorizzazione è finalizzata a esaltare il materiale visivo di riferimento, mantenendo sempre un approccio innovativo.",
+      "Con l’utilizzo di strumenti a corda, a fiato e percussivi, e della nostra attrezzatura software e hardware, partiamo dalla concezione di un tema sonoro e lo amplifichiamo per dare energia alle immagini."
     ], "I nostri servizi", [
       "Produzione Musicale",
       "Sound Design, Foley",
@@ -153,10 +157,13 @@ write("sound-design", tpl.page(
                  # libera accanto alla foto, fermandosi prima di "I nostri servizi".
                  # Tutta disegnata già con la sezione a un terzo di schermo (to=0.35)
                  tpl.conn("sd2m", [("M1920 190 H1575 V555", None, 0.35)], solo="telefono"),
-       rule=False,          # niente striscia tratteggiata sopra "I nostri servizi"
-       aside=aside("assets/img/zoom.jpg", "Registrazione ambientale con un registratore Zoom H6 tra gli alberi", "", w=479, h=864))
+       # niente foto accanto a "I nostri servizi": quella dello Zoom H6 è
+       # verticale e spezzava l'impaginazione, e di orizzontali sul suono non
+       # ne abbiamo (le due in assets sono stock Getty con la filigrana)
+       rule=False)          # niente striscia tratteggiata sopra "I nostri servizi"
   ),
   scripts='\n  <script src="js/players.js" defer></script>'
+          '\n  <script src="js/eq-rule.js" defer></script>'
 ))
 
 # ============================================================ 4
@@ -300,27 +307,28 @@ write("web-development", tpl.page(
 # ============================================================ 5
 write("photography", tpl.page(
   slug="photography",
-  title="Studio Fotografico<br>&amp; Post-Produzione",
+  title="Studio Podcast<br>&amp; Post-Produzione",
   kicker="",
   lead="",
-  desc="Studio fotografico e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per shooting, riprese video e sperimentazioni visive.",
-  seo_title="Studio fotografico e post-produzione a Roma | Dipartimento SX",
+  desc="Studio podcast e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per video-podcast, shooting, riprese e sperimentazioni visive.",
+  seo_title="Studio podcast e post-produzione a Roma | Dipartimento SX",
   bg="#8e948b", fg="#0f120e",
   hero_extra="",
   corridor=True,
   blocks_html=(
     tpl.pair([
-      "Mettiamo a disposizione il nostro studio fotografico e le nostre competenze per riprese, fotografia e sperimentazioni visive.",
+      "Mettiamo a disposizione il nostro studio e le nostre competenze per riprese, podcast, fotografia e sperimentazioni visive.",
       "Lo stesso luogo dove vengono realizzate le idee è anche il posto dove le post produciamo e facciamo ricerca.",
       "Il nostro set è modulare e adattabile, con attrezzatura e strumentazione analogica e digitale."
     ], "I nostri servizi", [
+      "Video-Podcast",
       "Still life e foto di prodotto",
       "Ritratto",
       "Foto di scena durante le riprese video",
       "In studio o in esterna, con set costruito quando serve",
       "Post-produzione e ritagli in più formati"
     ], conn_svg=tpl.conn("ph2", [("M240 300 C 620 420, 1080 200, 1700 380", None)]), reverse=True) +
-    figure("assets/img/still-4.jpg", "Passanti che attraversano la Grand-Place di Bruxelles controluce", "Bruxelles — Grand-Place", cls="svc-figure", par="0.14", w=1600, h=890) +
+    # la foto sotto "I nostri servizi" è tolta per ora
     tpl.block("Il portfolio completo è disponibile su richiesta", [
       '<a class="big" href="mailto:info@dipartimentosx.com?subject=Richiesta%20portfolio">Richiedi il portfolio completo &rarr;</a>'
     ])

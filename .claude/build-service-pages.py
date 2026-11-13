@@ -9,7 +9,7 @@ SERVICES = [
     ("directing-video-production", "Regia, Documentari &amp; Video"),
     ("sound-design", "Musica, Sound Design &amp; Foley"),
     ("web-development", "Web Development, UX &amp; UI"),
-    ("photography", "Studio Fotografico &amp; Post-Produzione"),
+    ("photography", "Studio Podcast &amp; Post-Produzione"),
 ]
 
 def head(slug, title, desc, bg, extra_ld="", seo_title=None):
@@ -94,6 +94,7 @@ NAV = '''
       <a href="index.html#services">servizi</a>
       <a href="about.html">about</a>
       <a href="contact.html">contatti</a>
+      <a class="lang-btn" href="en/__SLUG__.html" hreflang="en" lang="en" aria-label="Switch to English">EN</a>
     </nav>
   </header>
 '''
@@ -125,7 +126,6 @@ FOOTER = '''
       <nav class="foot-nav" aria-label="Mappa del sito">
         <h3>Sito</h3>
         <a href="index.html">Home</a>
-        <a href="index.html#work">Lavori</a>
         <a href="index.html#services">Servizi</a>
         <a href="catalogue.html">Catalogo</a>
         <a href="about.html">About</a>
@@ -137,7 +137,7 @@ FOOTER = '''
         <a href="directing-video-production.html">Regia, Documentari &amp; Video</a>
         <a href="sound-design.html">Musica, Sound Design &amp; Foley</a>
         <a href="web-development.html">Web Development, UX &amp; UI</a>
-        <a href="photography.html">Studio Fotografico &amp; Post-Produzione</a>
+        <a href="photography.html">Studio Podcast &amp; Post-Produzione</a>
       </nav>
       <div class="foot-nav">
         <h3>Contatti</h3>
@@ -152,8 +152,6 @@ FOOTER = '''
       </p>
       <p class="foot-links">
         <a href="privacy.html">Privacy Policy</a>
-        <a href="cookie-policy.html">Cookie Policy</a>
-        <span>P. IVA [DA COMPLETARE]</span>
       </p>
     </div>
   </footer>
@@ -273,7 +271,7 @@ def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extra
     return (head(slug, title.replace('<br>', ' ').replace('&amp;', '&'), desc, bg, extra_ld, seo_title) +
 f'''
 <body class="{body_class}" style="--bg: {bg}; --fg: {fg};">
-{body_extra}{NAV}
+{body_extra}{NAV.replace("__SLUG__", slug)}
   <main>
 {hero}
 

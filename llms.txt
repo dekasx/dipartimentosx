@@ -1,0 +1,57 @@
+# Dipartimento SX
+
+> Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, studio podcast e post-produzione. Tutto in casa.
+
+Dipartimento SX è un reparto creativo audio/video con base a Roma, Italia, che opera in ogni luogo e situazione.
+Filmiamo documentari, pubblicità, cortometraggi e qualunque cosa si possa raccontare con le immagini.
+Lavoriamo con aziende, brand, istituzioni e professionisti. Aiutiamo a sviluppare un racconto e un posizionamento visivo che abbia longevità.
+
+Sito in italiano; versione inglese completa su https://dipartimentosx.com/en/
+
+## Servizi
+
+- [Consulenza e Direzione Creativa](https://dipartimentosx.com/creative-direction.html): Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica sul set.
+- [Regia, Documentari & Video](https://dipartimentosx.com/directing-video-production.html): Regia e produzione video a Roma: documentari, spot pubblicitari, cortometraggi e contenuti social ideati, girati, montati e post-prodotti in casa.
+- [Musica, Sound Design & Foley](https://dipartimentosx.com/sound-design.html): Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.
+- [Web Development, UX & UI](https://dipartimentosx.com/web-development.html): Siti web su misura a Roma, dal back al front end: estetica, UX e UI in HTML, CSS, JavaScript, React e WebGL, con foto e video realizzati da noi.
+- [Studio Podcast & Post-Produzione](https://dipartimentosx.com/photography.html): Studio podcast e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per video-podcast, shooting, riprese e sperimentazioni visive.
+
+## Catalogo dei lavori
+
+Ogni progetto ha un indirizzo diretto che apre la sua scheda con il video.
+
+- [Beat Skatepark](https://dipartimentosx.com/catalogue.html#beat-skatepark): 2026 · Beat Skatepark, RCE Foto — Il Beat è lo skatepark indoor di riferimento del quadrante Est di Roma. Un posto dove sia i più piccoli che i grandi sanno di poter andare anche quando fuori piove.
+- [Botteghe Storiche di Quartiere](https://dipartimentosx.com/catalogue.html#botteghe-storiche)
+  - Ep. 1 — Merceria Frustaci · 2025 · Merceria Frustaci — La merceria Frustaci fa parte della storia di Centocelle da più di sessant’anni. Con il riconoscimento come attività storica del V Municipio di Roma, le dedichiamo questo ritratto.
+  - Ep. 2 — Fratelli Tocci · 2025 · Fratelli Tocci — Punto di riferimento dal 1975 per riparazioni di cuoio e pellame, i fratelli Tocci ci portano nel loro mondo dell’artigianato italiano.
+  - Ep. 3 — Studio d’Arte Candeloro · 2026 · Studio d'Arte Candeloro — Dal 1968 lo Studio d’Arte Candeloro è il luogo dove l’arte ha la sua cornice. Oggi lo studio è il risultato di un dialogo continuo tra generazioni, ricerca e artigianato.
+  - Ep. 4 — Il Dono degli Gnomi · 2026 · Il Dono degli Gnomi — Il 7 aprile 1984 apre “Il Dono degli Gnomi”. Una bottega accogliente che è soprattutto un laboratorio di manifattura della pelle. Questa è la nostra visione del suo lavoro.
+  - Ep. 5 — Di Biagio · 2026 · Di Biagio — Dal 1979 Di Biagio è la torrefazione artigianale del quartiere, dove trovano spazio anche dolciumi, distillati e vini selezionati. Le loro miscele provengono da filiere garantite da certificazioni etiche e sostenibili.
+  - Ep. 6 — Bar Orazio · 2026 · Bar Orazio — Orazio ha aperto uno dei bar più storici del quartiere nel 1954, quando Centocelle era ancora considerata solo una borgata. Negli anni il bar è diventato il punto di ritrovo di personalità che hanno contribuito alla visione del cinema neorealista, come Pasolini, e della musica leggera, come Claudio Baglioni.
+  - Ep. 7 — Mercato Arabo · 2026 · Mercato Arabo — Mercato Arabo nasce a Napoli negli anni ’80. È anche il luogo d’incontro tra la comunità araba e quella italiana, tra le nuove generazioni, sia quelle nate e cresciute qui sia quelle più anziane. È un posto che racchiude l’amore per il proprio paese di origine e per quello attuale.
+- [Cacao Crudo](https://dipartimentosx.com/catalogue.html#cacao-crudo)
+  - Modern Pleasure — 01 · 2026 · Cacao Crudo S.r.l. — Estratto mai pubblicato della campagna “gorpcore”, in cui si promuovono le tavolette di cioccolato dell’azienda.
+  - Modern Pleasure — 02 · 2026 · Cacao Crudo S.r.l. — Estratto mai pubblicato della campagna “gorpcore”, in cui si promuovono le tavolette di cioccolato dell’azienda.
+  - Modern Pleasure — 03 · 2026 · Cacao Crudo S.r.l. — Estratto mai pubblicato della campagna “gorpcore”, in cui si promuovono le tavolette di cioccolato dell’azienda.
+  - Modern Pleasure — 04 · 2026 · Cacao Crudo S.r.l. — Estratto mai pubblicato della campagna “gorpcore”, in cui si promuovono le tavolette di cioccolato dell’azienda.
+  - Il Natale ha bisogno di un eroe · 2026 · Cacao Crudo S.r.l. — Estratto mai pubblicato della campagna di Natale, in cui si promuove il torrone artigianale dell’azienda.
+- [Elektron](https://dipartimentosx.com/catalogue.html#elektron): 2025 · Elektron — Video pubblicitario per lo strumento musicale Syntakt del brand svedese Elektron. Una performance dal vivo suonata e ripresa in più momenti della giornata.
+- [Halal Express](https://dipartimentosx.com/catalogue.html#halal-express)
+  - Mamma ho fatto la spesa · 2026 · Halal Express — Adv Social per il servizio espresso di delivery “Halal Express”.
+  - Teletrasporto · 2026 · Halal Express — Adv Social per il servizio espresso di delivery “Halal Express”.
+  - Walk & Talk · 2026 · Halal Express — Adv Social Walk & Talk per il servizio espresso di delivery “Halal Express”.
+- [Roland](https://dipartimentosx.com/catalogue.html#roland): 2025 · Roland Corporation — Video pubblicitario per il campionatore Roland SP-404, strumento iconico del brand giapponese.
+- [Thanks, Putin](https://dipartimentosx.com/catalogue.html#thanks-putin): 2026 — Trailer di “Thanks, Putin”, documentario sulla crisi abitativa in Europa. Dal 15 novembre su YouTube.
+- [Umbro × Lodigiani](https://dipartimentosx.com/catalogue.html#umbro)
+  - Kit Reveal — Lodigiani · 2024 · Umbro, Lodigiani — Umbro è stato lo sponsor tecnico dell’Associazione Sportiva Lodigiani per l’anno 2023/2024. Il Parco degli Acquedotti fa da sfondo alla presentazione, e il dualismo fra Casa e Trasferta identifica in modo netto la forza del brand, omaggiandolo con lo storicismo di Roma.
+  - Fasce da capitano — reveal kit · 2024 · Umbro, Lodigiani — Lotto. Soffro. Vinco. È questo il motto inciso sulle fasce da capitano della Lodigiani. Una passione che nasce nel 1972 e che continua ancora oggi, da padre in figlio.
+  - Video Stefano Gallo · 2024 · Umbro, Lodigiani — Presentazione per l’approdo in Prima Squadra della Lodigiani di Stefano Gallo, classe 1996.
+- [Zoom](https://dipartimentosx.com/catalogue.html#zoom): 2025 · Zoom — Video pubblicitario per il registratore portatile Zoom H6, con suoni registrati in presa diretta.
+
+## Contatti
+
+- Email: info@dipartimentosx.com
+- Instagram: https://www.instagram.com/dipartimento.sx
+- [Pagina contatti](https://dipartimentosx.com/contact.html)
+- [Chi siamo](https://dipartimentosx.com/about.html)
+- [Privacy](https://dipartimentosx.com/privacy.html)

@@ -57,7 +57,10 @@ python3 .claude/traduci.py
 ```
 
 1. `gen-pages.py` riscrive le cinque pagine servizio.
-2. `seo-catalogo.py` rifà i dati strutturati del catalogo partendo da `js/data.js`.
+2. `seo-catalogo.py` parte da `js/data.js` e rifà tre cose: i dati strutturati
+   del catalogo, l'elenco semplice dei progetti dentro `<ul id="wheelList">`
+   (per chi non esegue JavaScript; `js/catalogue.js` lo sostituisce con la
+   ruota) e `llms.txt`.
 3. `stamp-assets.py` aggiorna il `?v=AAAAMMGGhhmm` di css e js in tutte le pagine
    (css e js sono in cache per un anno: senza versione nuova i visitatori
    vedrebbero quelli vecchi).
@@ -106,9 +109,10 @@ stringhe rimaste in italiano.
    Netlify riscrive l'HTML (apici singoli, indirizzi senza `.html`): cercando
    nel sorgente online un attributo copiato dal file locale si può non trovarlo.
 
-Errori già presenti e noti, da non scambiare per regressioni: cinque font
-dichiarati nel CSS ma mai esistiti (`NeueHaasUnicaPro-*`, `GT-Zirkon-Regular`,
-`mono`) danno 404; il sito ripiega su Helvetica e Inter.
+In console non deve comparire nessun errore. L'unico font ospitato è Inter;
+Neue Haas Unica Pro, GT-Zirkon, "mono" e "bmon" sono nominati nelle liste dei
+caratteri ma non ci sono (si vedono Helvetica Neue, Arial e il monospazio di
+sistema). Per usarli servono i file con licenza web in `assets/fonts/`.
 
 ## Video nuovi nel catalogo
 
@@ -143,6 +147,18 @@ I video non stanno nel repository ma su R2. Per aggiungerne uno:
 stanno nella sua configurazione: non stamparle, non copiarle in nessun file,
 non chiederle in chat. `rclone lsd r2:` dà "Access Denied" ed è normale (il
 token vede un solo bucket): si elenca con `rclone lsf r2:dipartimentosx-video/projects/`.
+
+## Leggibile da motori, assistenti AI e browser guidati da agenti
+
+- Tutto il testo che conta deve stare nell'HTML, non solo in JavaScript: chi
+  scarica la pagina senza eseguirla (crawler, assistenti AI) vede solo quello.
+  Il catalogo per questo ha l'elenco scritto da `seo-catalogo.py`.
+- Ciò che si clicca è un `<a>` o un `<button>` con un nome leggibile, mai un
+  `div` o un `li` con un gestore di click: un agente legge l'albero di
+  accessibilità e non riconosce come cliccabile ciò che non lo dichiara.
+- Ogni progetto ha un indirizzo diretto: `catalogue.html#slug` apre la scheda.
+- `llms.txt` nella radice riassume il sito; lo genera `seo-catalogo.py`, non
+  va scritto a mano.
 
 ## Cose da sapere prima di toccare
 

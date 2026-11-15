@@ -46,13 +46,30 @@
   const wheelList = el("wheelList");
   const N = CATALOGO.length;
 
+  /* Nell'HTML c'è già un elenco semplice dei progetti, con anno, clienti e
+     descrizione, scritto da .claude/seo-catalogo.py: è quello che legge chi
+     non esegue JavaScript (motori di ricerca, assistenti AI che leggono le
+     pagine). Qui lo si sostituisce con la ruota. */
+  wheelList.textContent = "";
+
+  /* Ogni voce è un link vero all'indirizzo del progetto (#slug): per i browser
+     guidati da un agente, per la tastiera e per chi apre in una nuova scheda.
+     Delle COPIES ripetizioni solo quella centrale si annuncia: alle altre
+     (che servono solo all'effetto infinito) aria-hidden e niente tabulazione,
+     altrimenti un lettore di schermo o un agente vedrebbero 9 volte lo stesso
+     elenco. Il click resta quello di prima: centra la voce e apre la scheda. */
+  const CENTRALE = Math.floor(COPIES / 2);
   for (let c = 0; c < COPIES; c++) {
     CATALOGO.forEach((p, i) => {
       const li = document.createElement("li");
       li.className = "wheel-item";
-      li.textContent = p.title;
       li.dataset.project = i;
-      li.addEventListener("click", () => selectItem(li, i));
+      const a = document.createElement("a");
+      a.href = "#" + p.slug;
+      a.textContent = p.title;
+      if (c !== CENTRALE) { li.setAttribute("aria-hidden", "true"); a.tabIndex = -1; }
+      li.appendChild(a);
+      li.addEventListener("click", (e) => { e.preventDefault(); selectItem(li, i); });
       wheelList.appendChild(li);
     });
   }

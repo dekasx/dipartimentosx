@@ -28,6 +28,15 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+# llms.txt: il sito in breve per gli assistenti AI (lo scrive
+# .claude/seo-catalogo.py). Con il charset, se no le lettere accentate
+# arrivano storpiate.
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
 # L'indirizzo di prova manda al dominio vero: un solo sito per i motori di
 # ricerca e per chi ha ancora il vecchio link.
 [[redirects]]

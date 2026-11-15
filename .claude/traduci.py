@@ -141,7 +141,8 @@ def sospette(html, ammesse):
 
 # ---------------------------------------------------------------------- via
 def main():
-    base = diz.BASE
+    # l'indirizzo del sito è uno solo, quello scritto da sito-base.py
+    base = io.open(os.path.join(ROOT, ".claude", "sito-base.txt"), encoding="utf-8").read().strip().rstrip("/")
     os.makedirs(OUT, exist_ok=True)
     usate = set()
     import html as _h
@@ -206,12 +207,16 @@ def main():
     if os.path.exists(sm):
         x = io.open(sm, encoding="utf-8").read()
         x = "".join(r for r in x.splitlines(True) if "/en/" not in r)
+        oggi = __import__("datetime").date.today().isoformat()
         voci = []
         for slug in PAGINE:
             if not os.path.exists(os.path.join(ROOT, slug + ".html")): continue
             loc = base + "/en/" if slug == "index" else base + "/en/" + slug + ".html"
-            voci.append('  <url><loc>%s</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>\n' % loc)
+            voci.append('  <url><loc>%s</loc><lastmod>%s</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n' % (loc, oggi))
         x = x.replace("</urlset>", "".join(voci) + "</urlset>")
+        # ogni costruzione riscrive tutte le pagine (almeno la versione di css
+        # e js), quindi la data di ultima modifica è quella di oggi per tutte
+        x = re.sub(r"<lastmod>[^<]*</lastmod>", "<lastmod>%s</lastmod>" % oggi, x)
         io.open(sm, "w", encoding="utf-8").write(x)
         print("\n   sitemap: %d pagine inglesi" % len(voci))
 

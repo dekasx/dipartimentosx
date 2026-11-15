@@ -6,8 +6,6 @@ i <br> e gli apostrofi tipografici (’). Se una chiave non viene trovata,
 traduci.py lo segnala: vuol dire che il sito è cambiato sotto.
 """
 
-BASE = "https://dipartimentosx.netlify.app"
-
 # stringhe che restano uguali in inglese e non vanno segnalate come "da tradurre"
 INVARIANTI = [
     "Dipartimento SX", "Fill your entire field of vision with us",

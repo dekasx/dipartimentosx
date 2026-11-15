@@ -21,7 +21,7 @@ Preparare, costruire e fare commit in locale va bene; il push no.
 | Cosa | Dove |
 |---|---|
 | Repository | `github.com/dekasx/dipartimentosx`, ramo `main` |
-| Sito online | `https://dipartimentosx.netlify.app` (di prova: tutte le pagine sono `noindex, nofollow`) |
+| Sito online | `https://dipartimentosx.com`, pubblico e indicizzabile. `www.` e `dipartimentosx.netlify.app` rimandano lì |
 | Server locale | configurazione `diparti-sito` in `.claude/launch.json`, porta 4173 |
 | Video | bucket Cloudflare R2 `dipartimentosx-video`, pubblico su `https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev` |
 | Contenuti (progetti, servizi) | `js/data.js`; l'inglese sopra, in `js/data-en.js` |
@@ -96,7 +96,8 @@ stringhe rimaste in italiano.
    ```
    I messaggi di commit sono in italiano, titolo breve e corpo che spiega cosa
    è cambiato. La riga `Co-Authored-By` è quella indicata dalla chat in corso.
-6. Netlify pubblica in 20–30 secondi. Verificare **online**, non a memoria:
+6. Netlify pubblica in 20–30 secondi. Verificare **online** su
+   `https://dipartimentosx.com`, non a memoria:
    - tutte le pagine italiane e inglesi rispondono 200
      (`/`, `/en/`, e per ogni pagina `/nome.html` e `/en/nome.html`);
    - la modifica appena fatta si vede davvero;
@@ -163,17 +164,20 @@ token vede un solo bucket): si elenca con `rclone lsf r2:dipartimentosx-video/pr
   `requestAnimationFrame` e lo scorrimento animato: per misurare animazioni la
   scheda va portata in primo piano.
 
-## Quando arriverà il dominio
+## Dominio
 
-Il sito è ancora sull'indirizzo di prova. Collegato `www.dipartimentosx.com`
-a Netlify (DNS su Hostinger: A `@` → `75.2.60.5`, CNAME `www` →
-`dipartimentosx.netlify.app`, senza toccare MX e nameserver):
+Online dal 15 novembre 2026 su `https://dipartimentosx.com`, senza `www`: è il
+dominio principale scelto su Netlify, `www` e l'indirizzo `netlify.app`
+rimandano lì (il secondo con la regola in `netlify.toml`). DNS su Hostinger:
+A `@` → `75.2.60.5`, CNAME `www` → `dipartimentosx.netlify.app`; MX e SPF
+sono quelli della posta Hostinger, da non toccare.
 
-```bash
-python3 .claude/sito-base.py https://www.dipartimentosx.com
-```
-
-e poi la costruzione completa. Lo stesso comando toglie `noindex, nofollow`.
+L'indirizzo del sito sta in `.claude/sito-base.txt` e lo usano tutti gli
+script (canonical, `hreflang`, sitemap, anteprime dei link, dati strutturati).
+Si cambia solo con `sito-base.py`, seguito dalla costruzione completa; con un
+indirizzo `*.netlify.app` lo stesso comando rimette il sito in prova
+(`noindex, nofollow`). Le date `<lastmod>` della sitemap le scrive
+`traduci.py` a ogni costruzione.
 
 ## In sospeso
 

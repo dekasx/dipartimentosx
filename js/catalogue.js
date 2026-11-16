@@ -373,6 +373,72 @@
     }));
   }
 
+  /* ---------- foto a schermo intero ----------
+     Un <dialog> nativo: copre tutto, Esc lo chiude da solo, il resto della
+     pagina diventa inerte e il fuoco torna dove stava. Niente Fullscreen API:
+     da iPhone non vale per le immagini. Si scorre fra le foto dello stesso
+     progetto con frecce, tastiera o dito. */
+  let fb = null;
+  let fbFoto = [], fbI = 0;
+  const ICO_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const ICO_FRECCIA = (d) => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' +
+    (d < 0 ? "M15 4 7 12l8 8" : "M9 4l8 8-8 8") +
+    '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* il cursore del sito è un elemento fisso sotto al <dialog>, che sta sopra
+     a tutto: finché le foto sono aperte lo porto dentro, se no sparirebbe */
+  const cursore = document.getElementById("cursor");
+  const casaCursore = cursore && cursore.parentNode;
+
+  function fotobox() {
+    if (fb) return fb;
+    fb = document.createElement("dialog");
+    fb.className = "fotobox";
+    fb.setAttribute("aria-label", T("Foto a schermo intero", "Full-screen photo"));
+    fb.innerHTML =
+      '<img class="fotobox-img" alt="">' +
+      '<p class="fotobox-conto" aria-live="polite"></p>' +
+      '<button class="fotobox-btn fotobox-chiudi" type="button" aria-label="' + T("Chiudi", "Close") + '">' + ICO_X + '</button>' +
+      '<button class="fotobox-btn fotobox-prev" type="button" aria-label="' + T("Foto precedente", "Previous photo") + '">' + ICO_FRECCIA(-1) + '</button>' +
+      '<button class="fotobox-btn fotobox-next" type="button" aria-label="' + T("Foto successiva", "Next photo") + '">' + ICO_FRECCIA(1) + '</button>';
+    document.body.appendChild(fb);
+    fb.querySelector(".fotobox-chiudi").addEventListener("click", () => fb.close());
+    fb.querySelector(".fotobox-prev").addEventListener("click", (e) => { e.stopPropagation(); fotoVai(-1); });
+    fb.querySelector(".fotobox-next").addEventListener("click", (e) => { e.stopPropagation(); fotoVai(1); });
+    // un clic sullo sfondo o sulla foto chiude, come in ogni visore
+    fb.addEventListener("click", (e) => { if (!e.target.closest(".fotobox-btn")) fb.close(); });
+    fb.addEventListener("close", () => {
+      document.documentElement.classList.remove("is-lightbox");
+      if (cursore && casaCursore) casaCursore.appendChild(cursore);
+    });
+    let tx = 0, ty = 0;
+    fb.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    fb.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) fotoVai(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    return fb;
+  }
+  function fotoMostra(i) {
+    fbI = (i + fbFoto.length) % fbFoto.length;
+    const f = fbFoto[fbI], img = fb.querySelector(".fotobox-img");
+    img.src = f.src;
+    img.alt = f.alt;
+    const piu = fbFoto.length > 1;
+    fb.querySelector(".fotobox-conto").textContent = piu ? (fbI + 1) + " / " + fbFoto.length : "";
+    fb.classList.toggle("fotobox--una", !piu);
+  }
+  function fotoVai(d) { if (fbFoto.length > 1) fotoMostra(fbI + d); }
+  function apriFoto(foto, i) {
+    const d = fotobox();
+    fbFoto = foto;
+    fotoMostra(i);
+    if (typeof d.showModal !== "function") { location.href = foto[i].src; return; }
+    document.documentElement.classList.add("is-lightbox");
+    if (cursore) d.appendChild(cursore);
+    d.showModal();
+  }
+
   function buildBlock(p) {
     const block = document.createElement("article");
     block.className = "project-block";
@@ -405,6 +471,12 @@
     const items = Array.isArray(p.media) ? p.media : [p.media];
     const multi = items.length > 1;
     if (multi) card.classList.add("project-card--multi");
+    // le foto del progetto, per vederle a schermo intero
+    const fotoK = items.map((m, k) => (m.type === "video" ? -1 : k)).filter((k) => k >= 0);
+    const ingrandisci = (k) => apriFoto(fotoK.map((n) => ({
+      src: items[n].src,
+      alt: p.title + (items[n].label ? " — " + items[n].label : ""),
+    })), Math.max(0, fotoK.indexOf(k)));
 
     const stage = document.createElement("div");
     stage.className = "project-stage" + (multi ? " project-stage--multi" : "");
@@ -529,6 +601,7 @@
           formati[k] = img.naturalWidth / img.naturalHeight;
           adattaFormato();
         });
+        if (!multi) img.addEventListener("click", () => ingrandisci(k));
         slide.appendChild(img);
         videos.push(null);
       }
@@ -843,6 +916,7 @@
         if (Math.abs(rel) < 0.5 - SLOT_X) {
           const v = current();
           if (v) { if (v.paused) v.play().catch(() => {}); else v.pause(); }
+          else if (fotoK.includes(block._active)) ingrandisci(block._active);
         } else {
           nudge(rel > 0 ? 1 : -1);
         }
@@ -1003,11 +1077,27 @@
       });
     }
 
+    /* pulsante "schermo intero" sulle foto: si vede solo quando davanti c'è
+       una foto, nello stesso angolo di quello dei video */
+    if (fotoK.length) {
+      const bFoto = document.createElement("button");
+      bFoto.className = "vbtn vbtn--foto";
+      bFoto.type = "button";
+      bFoto.setAttribute("aria-label", T("Guarda la foto a schermo intero", "View the photo full screen"));
+      bFoto.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      bFoto.addEventListener("click", (e) => { e.stopPropagation(); ingrandisci(block._active); });
+      box.appendChild(bFoto);
+    }
+    const segnaFoto = (k) => block.classList.toggle("is-foto", fotoK.includes(k));
+    segnaFoto(0);
+
     /* ---------- stato del blocco ---------- */
     block._active = 0;
 
     block._show = (k, sound) => {
       block._active = k;
+      segnaFoto(k);
       if (block._scheda) block._scheda(k);
       adattaFormato();
       if (epLabel) epLabel.textContent = items[k].label || "";
@@ -1327,6 +1417,13 @@
     b.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); closePanel(); })
   );
   addEventListener("keydown", (e) => {
+    if (fb && fb.open) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        fotoVai(e.key === "ArrowRight" ? 1 : -1);
+      }
+      return;                     // Esc chiude solo le foto, non la scheda
+    }
     if (e.key === "Escape") {
       // se si sta guardando a tutto schermo, il primo Esc esce solo da lì
       const cine = document.querySelector(".project-card.is-cinema");

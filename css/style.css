@@ -2438,6 +2438,85 @@ body.page-service {
 .lightbox.is-playing .vbtn--play .ico-pause { display: block; }
 html.is-lightbox, html.is-lightbox body { overflow: hidden; }
 
+/* ===================== CATALOGO — FOTO A SCHERMO INTERO ===================== */
+/* pulsante sulla foto: in alto a destra, perché in basso le foto di Cacao
+   Crudo hanno la scritta della campagna */
+.vbtn--foto {
+  position: absolute;
+  right: clamp(10px, 2.4%, 22px);
+  top: clamp(10px, 2.4%, 22px);
+  z-index: 1100;
+  width: 24px; height: 24px;
+  opacity: 0.8;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+  display: none;
+}
+.vbtn--foto:hover, .vbtn--foto:focus-visible { opacity: 1; }
+.vbtn--foto:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+.project-block.is-foto .vbtn--foto { display: grid; }
+.project-block.is-foto .project-track { cursor: zoom-in; }
+.project-slide img { cursor: zoom-in; }
+
+.fotobox {
+  position: fixed;
+  inset: 0;
+  width: 100%; height: 100%;
+  max-width: none; max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: #000;
+  color: #fff;
+  overscroll-behavior: contain;
+}
+.fotobox[open] { display: block; }
+.fotobox::backdrop { background: #000; }
+/* la foto riempie lo schermo e ci sta dentro intera: object-fit sul riquadro
+   tolto il margine (con max-height in una griglia usciva dal fondo) */
+.fotobox-img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  padding: clamp(12px, 3vw, 48px) clamp(12px, 6vw, 96px);
+  box-sizing: border-box;
+  cursor: zoom-out;
+}
+.fotobox-btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  padding: 12px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  opacity: 0.75;
+  cursor: pointer;
+  transition: opacity 0.25s var(--ease), background-color 0.25s var(--ease);
+}
+.fotobox-btn svg { width: 100%; height: 100%; }
+.fotobox-btn:hover, .fotobox-btn:focus-visible { opacity: 1; background: rgba(255, 255, 255, 0.12); }
+.fotobox-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.fotobox-chiudi { top: clamp(8px, 2vw, 24px); right: clamp(8px, 2vw, 24px); }
+.fotobox-prev, .fotobox-next { top: 50%; transform: translateY(-50%); }
+.fotobox-prev { left: clamp(4px, 1.5vw, 24px); }
+.fotobox-next { right: clamp(4px, 1.5vw, 24px); }
+/* il cursore del sito sta sotto il <dialog>: js lo sposta qui dentro */
+@media (pointer: fine) { .fotobox, .fotobox-img, .fotobox-btn { cursor: none; } }
+.fotobox--una .fotobox-prev, .fotobox--una .fotobox-next { display: none; }
+.fotobox-conto {
+  position: absolute;
+  left: 50%; bottom: clamp(10px, 2.4vw, 28px);
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ===================== ABOUT — UNA SCHERMATA SOLA ===================== */
 /* about e contatti: il titolo cade alla stessa altezza nelle due pagine */
 :root { --titolo-pagina: clamp(150px, 24svh, 260px); }

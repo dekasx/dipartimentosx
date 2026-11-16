@@ -1,6 +1,6 @@
 # Dipartimento SX
 
-> Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, studio podcast e post-produzione. Tutto in casa.
+> Casa di produzione creativa a Roma: regia, documentari e video, musica e sound design, siti web, studio podcast e post-produzione.
 
 Dipartimento SX è un reparto creativo audio/video con base a Roma, Italia, che opera in ogni luogo e situazione.
 Filmiamo documentari, pubblicità, cortometraggi e qualunque cosa si possa raccontare con le immagini.
@@ -10,8 +10,8 @@ Sito in italiano; versione inglese completa su https://dipartimentosx.com/en/
 
 ## Servizi
 
-- [Consulenza e Direzione Creativa](https://dipartimentosx.com/creative-direction.html): Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica sul set.
-- [Regia, Documentari & Video](https://dipartimentosx.com/directing-video-production.html): Regia e produzione video a Roma: documentari, spot pubblicitari, cortometraggi e contenuti social ideati, girati, montati e post-prodotti in casa.
+- [Consulenza e Direzione Creativa](https://dipartimentosx.com/creative-direction.html): Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica.
+- [Regia, Documentari & Video](https://dipartimentosx.com/directing-video-production.html): Regia e documentari a Roma. Il nostro team video è composto da professionisti con esperienza nel settore del cinema e dei documentari.
 - [Musica, Sound Design & Foley](https://dipartimentosx.com/sound-design.html): Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.
 - [Web Development, UX & UI](https://dipartimentosx.com/web-development.html): Siti web su misura a Roma, dal back al front end: estetica, UX e UI in HTML, CSS, JavaScript, React e WebGL, con foto e video realizzati da noi.
 - [Studio Podcast & Post-Produzione](https://dipartimentosx.com/photography.html): Studio podcast e post-produzione a Roma: set modulare con attrezzatura analogica e digitale per video-podcast, shooting, riprese e sperimentazioni visive.

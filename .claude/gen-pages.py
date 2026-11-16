@@ -23,7 +23,7 @@ write("creative-direction", tpl.page(
   kicker="",
   # la frase resta in inglese: lang="en" perché la leggano bene anche gli screen reader
   lead='<span lang="en">Images are the only property that our eyes are allowed to own</span>',
-  desc="Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica sul set.",
+  desc="Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica.",
   seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
   hero_class=" svc-hero--split",
@@ -54,7 +54,7 @@ write("directing-video-production", tpl.page(
   title="Regia, Documentari<br>&amp; Video",
   kicker="",
   lead="Il nostro team video è composto da professionisti con esperienza nel settore del cinema e dei documentari.",
-  desc="Regia e produzione video a Roma: documentari, spot pubblicitari, cortometraggi e contenuti social ideati, girati, montati e post-prodotti in casa.",
+  desc="Regia e documentari a Roma. Il nostro team video è composto da professionisti con esperienza nel settore del cinema e dei documentari.",
   seo_title="Regia, documentari e produzione video a Roma | Dipartimento SX",
   bg="#000000", fg="#ffffff",
   body_class="page-doc page-service has-trail",

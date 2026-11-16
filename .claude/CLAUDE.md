@@ -108,6 +108,20 @@ stringhe rimaste in italiano.
    - in console non ci sono errori nuovi.
    Netlify riscrive l'HTML (apici singoli, indirizzi senza `.html`): cercando
    nel sorgente online un attributo copiato dal file locale si può non trovarlo.
+7. Solo quando il controllo online è a posto, avvisare Bing con IndexNow
+   (Bing poi lo passa a Yandex, Seznam, Naver e agli altri; Google non lo usa):
+   ```bash
+   python3 .claude/indexnow.py
+   ```
+   mostra le pagine cambiate con l'ultimo push (ignora quelle cambiate solo nel
+   `?v=`); se l'elenco torna:
+   ```bash
+   python3 .claude/indexnow.py --invia
+   ```
+   Deve rispondere 200 o 202. La chiave è il file `<32 esadecimali>.txt` nella
+   radice: è pubblica per forza, non va cancellata né rinominata (con 403 la
+   chiave non si trova online). Il push l'ha già autorizzato l'utente, questo
+   avviso fa parte della pubblicazione.
 
 In console non deve comparire nessun errore. L'unico font ospitato è Inter;
 Neue Haas Unica Pro, GT-Zirkon, "mono" e "bmon" sono nominati nelle liste dei

@@ -75,8 +75,9 @@ def head(slug, title, desc, bg, extra_ld="", seo_title=None):
   }}
   </script>{extra_ld}
 
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicon-192.png">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-  <link rel="apple-touch-icon" href="assets/img/logo-sx.svg">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/pellicola.css">
   <script src="js/pellicola.js"></script>

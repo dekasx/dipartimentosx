@@ -57,7 +57,9 @@ def elementi():
                 "name": nome,
                 "description": descr,
                 "url": SITO + "catalogue.html#" + p["slug"],
-                "creator": {"@id": SITO + "#organizzazione"},
+                # Google vuole qui l'oggetto completo, non un rimando con @id
+                "creator": {"@type": "Organization", "name": "Dipartimento SX",
+                            "url": SITO, "@id": SITO + "#organizzazione"},
                 "inLanguage": "it-IT",
             }
             if anno: base["dateCreated"] = anno
@@ -65,7 +67,9 @@ def elementi():
                 v = dict(base, **{"@type": "VideoObject",
                                   "thumbnailUrl": assoluto(m.get("poster", "")),
                                   "contentUrl": m["src"]})
-                if anno: v["uploadDate"] = anno
+                # Google chiede data e ora con fuso orario; dei lavori si sa
+                # solo l'anno, quindi si usa il primo gennaio di quell'anno
+                if anno: v["uploadDate"] = anno + "-01-01T00:00:00+01:00"
                 d = durata(m["src"])
                 if d: v["duration"] = d
                 lista.append(v)

@@ -26,8 +26,12 @@ write("creative-direction", tpl.page(
   desc="Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica.",
   seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
-  hero_class=" svc-hero--split",
-  hero_extra=tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
+  hero_class=" svc-hero--split svc-hero--quadrati",
+  # video di sfondo a quadrati (js/quadrati.js); da telefono la versione leggera
+  hero_extra='      <video class="sq-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" '
+             'data-src="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg.mp4" '
+             'data-src-piccolo="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg-small.mp4"></video>\n' +
+             tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
                              ("M1180 250 C 1400 330, 1560 320, 1740 250", "1.15")], draw_load=True),
   blocks_html=(
     figure("assets/img/sec-creative-direction.jpg", "File di rocchetti di filo colorati sulla parete di una merceria", "Botteghe Storiche — direzione artistica e foto di scena", w=1600, h=1095) +
@@ -43,7 +47,8 @@ write("creative-direction", tpl.page(
       "Linee guida per l’utilizzo dei contenuti"
     ], conn_svg=tpl.conn("cd2", [("M320 240 H1120 V620 H1660", None)]))
   ),
-  extras=""
+  extras="",
+  scripts='\n  <script src="js/quadrati.js" defer></script>'
 ))
 
 # ============================================================ 2

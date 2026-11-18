@@ -26,9 +26,9 @@ write("creative-direction", tpl.page(
   desc="Consulenza e direzione creativa a Roma per brand, aziende e istituzioni: concept, narrazione, linguaggio visivo, direzione sonora e artistica.",
   seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
-  hero_class=" svc-hero--split svc-hero--quadrati",
-  # video di sfondo a quadrati (js/quadrati.js); da telefono la versione leggera
-  hero_extra='      <video class="sq-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" '
+  hero_class=" svc-hero--split svc-hero--pallini",
+  # video di sfondo a pallini (js/pallini.js); da telefono la versione leggera
+  hero_extra='      <video class="pallini-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" '
              'data-src="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg.mp4" '
              'data-src-piccolo="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg-small.mp4"></video>\n' +
              tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
@@ -48,7 +48,7 @@ write("creative-direction", tpl.page(
     ], conn_svg=tpl.conn("cd2", [("M320 240 H1120 V620 H1660", None)]))
   ),
   extras="",
-  scripts='\n  <script src="js/quadrati.js" defer></script>'
+  scripts='\n  <script src="js/pallini.js" defer></script>'
 ))
 
 # ============================================================ 2

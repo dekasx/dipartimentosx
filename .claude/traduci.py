@@ -46,6 +46,7 @@ def percorsi(testo):
     for a in ("assets/", "css/", "js/"):
         testo = testo.replace('href="' + a, 'href="../' + a)
         testo = testo.replace('src="' + a, 'src="../' + a)
+        testo = testo.replace('poster="' + a, 'poster="../' + a)
         testo = testo.replace('url("' + a, 'url("../' + a)
     return testo
 

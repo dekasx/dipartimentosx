@@ -117,15 +117,18 @@ def players():
           </div>
           <time class="player-time">0:00</time>
         </article>''')
+    # fra una traccia e l'altra la riga di pallini che saltellano (js/eq-rule.js)
+    riga = '            <div class="rule rule--eq" data-eq aria-hidden="true"></div>\n'
     return ('''    <section class="svc-block svc-wrap" aria-labelledby="samples">
-      <div class="rule rule--eq" data-eq aria-hidden="true"></div>
+      <div class="pallini-fila" aria-hidden="true">
+''' + pallini("equalizzatore").replace("      <video", "        <video") + '''        <div class="rule rule--eq" data-eq></div>
+      </div>
       <div class="svc-grid">
         <h2 class="svc-h2" id="samples" data-anim="title">Ascolta</h2>
         <div class="svc-prose" data-anim="copy">
           <p>Quattro estratti da lavori recenti. Tutto quello che senti è stato scritto, registrato e mixato qui.</p>
           <div class="players">
-''' + "\n".join(rows) + '''
-          </div>
+''' + riga + ("\n" + riga).join(rows) + "\n" + riga + '''          </div>
         </div>
       </div>
     </section>
@@ -148,8 +151,7 @@ write("sound-design", tpl.page(
   desc="Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.",
   seo_title="Musica, sound design e foley a Roma | Dipartimento SX",
   bg="#38211b", fg="#ffffff",
-  hero_class=" svc-hero--pallini",
-  hero_extra=pallini("equalizzatore") + tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
+  hero_extra=tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
                              ("M300 860 H1100 V960", "1.1")], draw_load=True),
   body_class="page-doc page-service page-sound",
   extras_first=True,

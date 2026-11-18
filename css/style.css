@@ -586,8 +586,19 @@ body.no-video .showreel-fallback { display: block; }
 /* nelle pagine con il testo bianco il video, che è chiaro, si scurisce:
    se no dove un pallino passa sotto al testo non si legge più */
 .pallini-video[data-effetto="diaframma"],
-.pallini-video[data-effetto="equalizzatore"],
 .pallini-video[data-effetto="puntatore"] { filter: brightness(0.5) saturate(1.15); }
+/* Sound Design, sopra a "Ascolta": la fila di cerchi col video che segue gli
+   estratti audio. Da telefono il video non c'è e resta la riga che saltella. */
+.pallini-fila {
+  position: relative;
+  isolation: isolate;
+  height: clamp(56px, 4.6vw, 96px);
+}
+.pallini-fila .rule--eq { display: none; }
+@media (max-width: 820px) {
+  .pallini-fila { height: auto; }
+  .pallini-fila .rule--eq { display: flex; }
+}
 /* il video sta sotto ai testi ma sopra allo sfondo della pagina */
 .svc-hero--pallini, .corridor:has(> .pallini-video) { isolation: isolate; }
 
@@ -1857,10 +1868,10 @@ body.page-service {
   grid-template-columns: 44px minmax(0, 1fr) 3.4rem;
   gap: clamp(12px, 1.6vw, 22px);
   align-items: center;
-  border-top: 2px dotted currentColor;
   padding: clamp(12px, 1.8svh, 20px) 0;
 }
-.player:last-child { border-bottom: 2px dotted currentColor; }
+/* fra una traccia e l'altra non una linea ferma ma la riga di pallini che
+   saltellano (js/eq-rule.js) */
 .player-btn {
   width: 44px; height: 44px;
   display: grid; place-items: center;

@@ -10,10 +10,10 @@
                    si richiudono
    - diaframma     Regia: un pallino solo, grande, che si apre come l'iride
                    di una cinepresa, scivola piano e si richiude
-   - equalizzatore Sound Design: una fila dietro al titolo che sale e scende
-                   come un equalizzatore; con un estratto audio in
+   - equalizzatore Sound Design, sopra a "Ascolta": una fila che sale e
+                   scende come un equalizzatore; con un estratto audio in
                    riproduzione segue il suono vero (evento "campione" da
-                   js/players.js)
+                   js/players.js). Quanti sono: data-n (24)
    - puntatore     Web: una griglia di pallini minuscoli che si accendono
                    dove passa il mouse e si spengono piano
    - dialogo       Studio Podcast: due pallini che si gonfiano a turno,
@@ -140,7 +140,7 @@
   const analisiDi = new WeakMap();
 
   function equalizzatore(v, box) {
-    const N = 14;
+    const N = parseInt(v.dataset.n, 10) || 24;
     const onde = Array.from({ length: N }, () =>
       [caso(0, 6.28), caso(0.7, 1.7), caso(0, 6.28), caso(1.9, 3.4)]);
     const livelli = new Array(N).fill(0.3);
@@ -176,29 +176,31 @@
       } catch (_) { analisi = null; }
     });
 
-    // frequenze in scala logaritmica: i bassi non si prendono tutta la fila
+    /* Frequenze in scala logaritmica, così i bassi non si prendono tutta la
+       fila. Il livello è relativo al picco recente (che cala piano): la fila
+       si muove allo stesso modo a volume alto e basso, perché l'analizzatore
+       sente il suono dopo il volume. */
+    let picco = 40;
     function bande() {
       analisi.getByteFrequencyData(dati);
-      const n = dati.length, out = [];
+      const n = dati.length, grezzi = [];
       for (let i = 0; i < N; i++) {
         const a = Math.floor(Math.pow(n * 0.8, i / N)), b = Math.max(a + 1, Math.floor(Math.pow(n * 0.8, (i + 1) / N)));
         let s = 0;
         for (let j = a; j < b; j++) s += dati[j];
         // la musica ha meno energia sugli acuti: a destra si alza un po'
-        out.push(Math.min(1, Math.pow(s / (b - a) / 255, 1.2) * (0.85 + 1.3 * i / N)));
+        grezzi.push(s / (b - a) * (0.85 + 1.3 * i / N));
       }
-      return out;
+      picco = Math.max(8, picco * 0.995, ...grezzi);
+      return grezzi.map((g) => Math.pow(g / picco, 1.4));
     }
 
+    // la fila occupa tutta la larghezza del riquadro, a metà altezza
     function fila(livello) {
-      const W = box.clientWidth;
-      const rb = box.getBoundingClientRect();
-      const titolo = box.querySelector(".svc-title");
-      const rt = titolo ? titolo.getBoundingClientRect() : rb;
-      const y = rt.top - rb.top + rt.height / 2;      // all'altezza del titolo
-      const x0 = W * 0.06, dx = (W * 0.88) / (N - 1);
-      const rMax = dx * 0.46;
-      return livelli.map((_, i) => [x0 + i * dx, y, rMax * Math.max(0.08, livello(i))]);
+      const W = box.clientWidth, H = box.clientHeight;
+      const rMax = Math.min(W / N * 0.46, H / 2);
+      const dx = (W - 2 * rMax) / (N - 1);
+      return livelli.map((_, i) => [rMax + i * dx, H / 2, rMax * Math.max(0.08, livello(i))]);
     }
 
     return {

@@ -188,6 +188,12 @@ token vede un solo bucket): si elenca con `rclone lsf r2:dipartimentosx-video/pr
 - **Da telefono la home è corta**: apertura, elenco servizi a fisarmonica,
   footer. Le sezioni a tutto schermo dei singoli servizi e l'about si vedono
   solo da desktop.
+- **Pallini col video** (`js/pallini.js`): in apertura delle pagine servizio e,
+  in Sound Design, nella fila sopra "Ascolta" che segue gli estratti audio.
+  Video `creative-bg.mp4` su R2, effetto scelto con `data-effetto`, markup
+  dalla funzione `pallini()` in `.claude/gen-pages.py`. Da telefono solo
+  Consulenza (`creative-bg-small.mp4`). Chrome mette in pausa da solo un video
+  muto che gli sembra invisibile: lo script lo fa ripartire.
 - `getBoundingClientRect()` restituisce il rettangolo già trasformato: il logo
   si misura con la classe `is-misura`, che spegne trasformazioni e transizioni.
 - Le pagine in secondo piano nel browser di anteprima sospendono

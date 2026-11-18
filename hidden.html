@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Pagina nascosta: ci si arriva solo cliccando dieci pallini in cima a
+       creative-direction.html (js/pallini.js). Fuori da sitemap, llms.txt,
+       traduzione e motori di ricerca. -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>…</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; color: #e9e4da; overflow: hidden; }
+    body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; cursor: crosshair; }
+
+    /* le immagini del sito, in negativo, sparse: le mette al loro posto js/hidden.js */
+    .muro { position: fixed; inset: 0; }
+    .muro img {
+      position: absolute;
+      display: block;
+      width: var(--w, 22vw);
+      height: auto;
+      filter: invert(1) grayscale(0.55) contrast(1.35) brightness(0.85);
+      mix-blend-mode: screen;
+      opacity: 0.55;
+      transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(var(--s, 1));
+      animation: respira var(--t, 30s) ease-in-out var(--d, 0s) infinite alternate;
+      transition: opacity 0.06s linear;
+    }
+    .muro img.sfarfalla { opacity: 0.08; }
+    .muro img.acceso { opacity: 0.95; filter: invert(1) contrast(1.6); }
+    @keyframes respira {
+      from { transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(var(--s, 1)); }
+      to   { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)))
+                        rotate(calc(var(--r, 0deg) * -1)) scale(calc(var(--s, 1) * 1.12)); }
+    }
+
+    /* grana e vignetta sopra a tutto */
+    .grana, .vignetta { position: fixed; inset: -50%; pointer-events: none; }
+    .grana {
+      opacity: 0.16;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grana 0.5s steps(4) infinite;
+    }
+    @keyframes grana {
+      0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); }
+      50% { transform: translate(2%, -4%); } 75% { transform: translate(-1%, 3%); }
+    }
+    .vignetta { inset: 0; background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.88) 100%); }
+
+    .voce {
+      position: fixed; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+      letter-spacing: 0.4em;
+      text-transform: lowercase;
+      white-space: nowrap;
+      mix-blend-mode: difference;
+      animation: voce 7s steps(1) infinite;
+    }
+    @keyframes voce {
+      0%, 61%, 63%, 88%, 100% { opacity: 0.85; }
+      62%, 89%, 90% { opacity: 0; }
+      91% { opacity: 0.4; }
+    }
+
+    .esci, .muto {
+      position: fixed; bottom: 22px;
+      font: inherit; font-size: 0.72rem; letter-spacing: 0.3em;
+      color: inherit; background: none; border: none; padding: 6px 0;
+      opacity: 0.45; text-decoration: none; cursor: pointer;
+    }
+    .esci { left: 24px; }
+    .muto { right: 24px; }
+    .esci:hover, .muto:hover, .esci:focus-visible, .muto:focus-visible { opacity: 1; outline: none; }
+
+    /* se il browser non lascia partire l'audio da solo serve un clic */
+    .entra {
+      position: fixed; inset: 0;
+      display: none; place-items: center;
+      background: rgba(0, 0, 0, 0.72);
+      color: inherit; font: inherit; letter-spacing: 0.5em; font-size: 0.9rem;
+      border: none; cursor: pointer;
+    }
+    .entra.serve { display: grid; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .muro img, .grana, .voce { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="muro" aria-hidden="true">
+    <img src="assets/img/still-1.jpg" alt="">
+    <img src="assets/img/photo-pic-1.jpg" alt="">
+    <img src="assets/projects/thanks-putin-poster.jpg" alt="">
+    <img src="assets/img/babbo.jpg" alt="">
+    <img src="assets/img/merceria.jpg" alt="">
+    <img src="assets/img/still-3.jpg" alt="">
+    <img src="assets/projects/botteghe-ep1-poster.jpg" alt="">
+    <img src="assets/img/photo-pic-2.jpg" alt="">
+    <img src="assets/img/gorp.jpg" alt="">
+    <img src="assets/projects/mercato-arabo-1-poster.jpg" alt="">
+    <img src="assets/img/still-2.jpg" alt="">
+    <img src="assets/img/studio.jpg" alt="">
+    <img src="assets/projects/elektron-poster.jpg" alt="">
+    <img src="assets/img/photo-pic-3.jpg" alt="">
+    <img src="assets/img/babbo-2.jpg" alt="">
+    <img src="assets/projects/botteghe-ep6-poster.jpg" alt="">
+    <img src="assets/img/still-4.jpg" alt="">
+    <img src="assets/img/photo-cacao-7.jpg" alt="">
+    <img src="assets/projects/roland-poster.jpg" alt="">
+    <img src="assets/img/photo-pic-4.jpg" alt="">
+  </div>
+  <div class="grana" aria-hidden="true"></div>
+  <div class="vignetta" aria-hidden="true"></div>
+
+  <p class="voce">non dovresti essere qui</p>
+
+  <a class="esci" href="creative-direction.html">esci</a>
+  <button class="muto" type="button">silenzio</button>
+  <button class="entra" type="button">entra</button>
+
+  <script src="js/hidden.js?v=202611181336" defer></script>
+</body>
+</html>

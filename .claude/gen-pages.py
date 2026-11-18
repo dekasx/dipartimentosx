@@ -20,10 +20,13 @@ def figure(src, alt, cap, cls="svc-figure", par="0.14", w=1050, h=788):
 # Stesso video ovunque, cambia l'effetto. La versione leggera da telefono c'è
 # solo per Consulenza: senza, da telefono non si scarica niente.
 R2 = "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/"
-def pallini(effetto, telefono=False):
+def pallini(effetto, telefono=False, segreto=""):
     piccolo = f' data-src-piccolo="{R2}creative-bg-small.mp4"' if telefono else ""
+    # segreto: dieci pallini presi con un clic portano lì (indirizzo dalla
+    # radice, così vale uguale anche dalle pagine di en/)
+    segreto = f' data-segreto="{segreto}"' if segreto else ""
     return (f'      <video class="pallini-video" data-effetto="{effetto}" muted loop playsinline '
-            f'preload="none" aria-hidden="true" tabindex="-1" data-src="{R2}creative-bg.mp4"{piccolo}></video>\n')
+            f'preload="none" aria-hidden="true" tabindex="-1" data-src="{R2}creative-bg.mp4"{piccolo}{segreto}></video>\n')
 
 # ============================================================ 1
 write("creative-direction", tpl.page(
@@ -36,7 +39,7 @@ write("creative-direction", tpl.page(
   seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
   hero_class=" svc-hero--split svc-hero--pallini",
-  hero_extra=pallini("sparsi", telefono=True) +
+  hero_extra=pallini("sparsi", telefono=True, segreto="/hidden.html") +
              tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
                              ("M1180 250 C 1400 330, 1560 320, 1740 250", "1.15")], draw_load=True),
   blocks_html=(

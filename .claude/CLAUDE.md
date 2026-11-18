@@ -28,7 +28,10 @@ Preparare, costruire e fare commit in locale va bene; il push no.
 | Stile | `css/style.css` (sito), `css/legal.css` (solo privacy) |
 
 Pagine scritte a mano: `index.html`, `about.html`, `catalogue.html`,
-`contact.html`, `privacy.html`.
+`contact.html`, `privacy.html`. In più `hidden.html`, la pagina nascosta: ci si
+arriva solo prendendo dieci pallini col video in cima a Consulenza
+(`data-segreto` in `js/pallini.js`). Ha `noindex`, non è nella sitemap né in
+`llms.txt` né in `en/`, e va lasciata fuori da `PAGINE` di `traduci.py`.
 Pagine **generate**, da non modificare a mano perché vengono riscritte:
 - le cinque pagine servizio (`creative-direction`, `directing-video-production`,
   `sound-design`, `web-development`, `photography`): i testi stanno in

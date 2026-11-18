@@ -26,7 +26,9 @@
    - data-src: il video; data-src-piccolo, da telefono. Senza
      data-src-piccolo da telefono non c'è niente e non si scarica niente
      (oggi i pallini da telefono ci sono solo in Consulenza);
-   - data-evita: un elemento dietro cui non aprire pallini (solo "sparsi").
+   - data-evita: un elemento dietro cui non aprire pallini (solo "sparsi");
+   - data-segreto: dieci pallini presi con un clic portano a quella pagina
+     (solo "sparsi": Consulenza → /hidden.html).
    Sta sotto ai testi (z-index -1). Si scarica quando il contenitore arriva
    sullo schermo e si ferma quando ne esce.
    ============================================================ */
@@ -98,9 +100,20 @@
       fermo() {
         pallini = [];
         for (let i = 0; i < 5; i++) nuovo(0);
+        pallini.forEach((p) => { p.vita = Infinity; });
         return pallini.map((p) => [p.x, p.y, p.s / 2]);
       },
       via() { pallini = []; },
+      // un clic su un pallino aperto: si richiude subito, e conta
+      colpisci(x, y) {
+        const ora = performance.now();
+        const p = pallini.find((q) => !q.preso &&
+          Math.hypot(x - q.x, y - q.y) < q.s / 2 * apertura(ora - q.t0, q.vita));
+        if (!p) return false;
+        p.preso = true;
+        if (ora - p.t0 < p.vita - CHIUDI) p.vita = ora - p.t0 + CHIUDI;
+        return true;
+      },
     };
   }
 
@@ -341,6 +354,28 @@
 
     const box = v.parentElement;
     const fx = (EFFETTI[v.dataset.effetto] || sparsi)(v, box);
+
+    /* data-segreto: dieci pallini presi con un clic portano a quella pagina
+       (in Consulenza, /hidden.html). I pallini stanno sotto ai testi, quindi
+       il clic si ascolta sul contenitore e si controlla dove è caduto. */
+    if (v.dataset.segreto && fx.colpisci) {
+      let presi = 0;
+      box.addEventListener("click", (e) => {
+        const r = box.getBoundingClientRect();
+        if (!fx.colpisci(e.clientX - r.left, e.clientY - r.top)) return;
+        if (++presi < 10) return;
+        /* niente pellicola verso la pagina nascosta: un taglio netto. Lei
+           il passaggio non lo dichiara, quindi il browser lo interrompe e
+           lo segnala in console: lo saltiamo noi, senza errori. */
+        addEventListener("pageswap", (ev) => {
+          const vt = ev.viewTransition;
+          if (!vt) return;
+          [vt.ready, vt.finished, vt.updateCallbackDone].forEach((p) => p && p.catch(() => {}));
+          vt.skipTransition();
+        }, { once: true });
+        location.href = v.dataset.segreto;
+      });
+    }
     let raf = null, voglio = false, riprova = 0;
 
     const disegna = (cerchi) => {

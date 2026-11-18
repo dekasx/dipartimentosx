@@ -220,8 +220,16 @@
     };
   }
 
-  /* ---------- Web: il puntatore ---------- */
+  /* ---------- Web: il puntatore ----------
+     Pallini minuscoli che si accendono da soli in punti a caso e si
+     spengono piano. Vicino al mouse, se c'è il campo di puntini bianchi
+     della pagina (js/webdev-fx.js), i pallini col video si mettono
+     esattamente sopra ai puntini bianchi, che si scansano e si gonfiano:
+     sotto al mouse i puntini diventano il video. Senza il campo, si
+     accendono quelli di una griglia. */
   function puntatore(v, box) {
+    const fx = box.closest(".fx-hero");
+    const campo = fx && fx.querySelector("[data-dotfield]");
     const G = 26;            // passo della griglia
     const RAGGIO = 130;      // quanto lontano dal mouse si accendono
     const energia = new Map();
@@ -260,7 +268,14 @@
         const cala = Math.exp(-dt / 650);
         energia.forEach((e, k) => { const n = e * cala; if (n < 0.05) energia.delete(k); else energia.set(k, n); });
 
-        if (px > -RAGGIO && py > -RAGGIO && px < W + RAGGIO && py < H + RAGGIO) {
+        let sopra = [];
+        if (campo) {
+          // stessi punti del campo, nelle coordinate del riquadro del video
+          const rc = campo.getBoundingClientRect(), rb = box.getBoundingClientRect();
+          const sx = rc.left - rb.left, sy = rc.top - rb.top;
+          sopra = (campo.vicini || []).map(([x, y, r, f]) =>
+            [x + sx, y + sy, r * (1.25 + f * 0.9)]);
+        } else if (px > -RAGGIO && py > -RAGGIO && px < W + RAGGIO && py < H + RAGGIO) {
           const c0 = Math.max(0, Math.floor((px - RAGGIO) / G)), c1 = Math.min(cols - 1, Math.floor((px + RAGGIO) / G));
           const r0 = Math.max(0, Math.floor((py - RAGGIO) / G)), r1 = Math.min(righe - 1, Math.floor((py + RAGGIO) / G));
           for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) {
@@ -273,7 +288,7 @@
           lucciola = ora + caso(50, 160);
           accendi(Math.floor(caso(0, cols)), Math.floor(caso(0, righe)), caso(0.6, 1));
         }
-        return cerchi(W, H);
+        return cerchi(W, H).concat(sopra);
       },
       fermo() {
         const W = box.clientWidth, H = box.clientHeight;

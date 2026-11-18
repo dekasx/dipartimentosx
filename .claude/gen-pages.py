@@ -330,7 +330,7 @@ write("photography", tpl.page(
   bg="#e0a677", fg="#2b1a0f",
   hero_extra="",
   corridor=True,
-  corridor_extra=pallini("dialogo"),
+  corridor_extra=pallini("voce"),
   blocks_html=(
     tpl.pair([
       "Mettiamo a disposizione il nostro studio e le nostre competenze per riprese, podcast, fotografia e sperimentazioni visive.",

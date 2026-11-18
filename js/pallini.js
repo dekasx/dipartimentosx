@@ -16,8 +16,8 @@
                    js/players.js). Quanti sono: data-n (24)
    - puntatore     Web: una griglia di pallini minuscoli che si accendono
                    dove passa il mouse e si spengono piano
-   - dialogo       Studio Podcast: due pallini che si gonfiano a turno,
-                   come due voci che si rispondono
+   - voce          Studio Podcast: un pallino solo, sempre aperto, nel
+                   punto da cui partono le foto del corridoio
 
    Ogni <video class="pallini-video"> copre il suo contenitore (il genitore)
    ed è ritagliato con `clip-path: path(...)`, riscritto a ogni fotogramma.
@@ -311,45 +311,29 @@
     };
   }
 
-  /* ---------- Studio Podcast: il dialogo ---------- */
-  function dialogo(v, box) {
-    /* uno esattamente nel punto da cui partono le foto del corridoio
-       (js/corridor.js: centro orizzontale, data-axis % in altezza, 55 se
-       non è scritto), l'altro più a destra */
+  /* ---------- Studio Podcast: la voce ----------
+     Un pallino solo, sempre aperto, esattamente nel punto da cui partono le
+     foto del corridoio (js/corridor.js: centro orizzontale, data-axis % in
+     altezza, 55 se non è scritto). Respira appena, come chi parla. */
+  function voce(v, box) {
     const asse = (parseFloat(box.dataset.axis) || 55) / 100;
-    const posti = [[0.5, asse], [0.85, 0.62]];
-    const r = [0, 0];
-    let chi = 0, insieme = false, cambio = 0;
-
+    const misura = () => {
+      const W = box.clientWidth, H = box.clientHeight;
+      return [W * 0.5, H * asse, Math.min(W, H) * 0.2];
+    };
     return {
       passo(ora) {
-        const W = box.clientWidth, H = box.clientHeight;
-        const R = Math.min(W, H) * 0.2;
-        if (ora > cambio) {
-          insieme = Math.random() < 0.18;          // ogni tanto parlano insieme
-          if (!insieme) chi = 1 - chi;
-          cambio = ora + caso(1400, 3000);
-        }
-        const t = ora / 1000;
-        return posti.map(([fx, fy], i) => {
-          const parla = insieme || i === chi;
-          // la voce: sillabe, cioè due oscillazioni veloci sommate
-          const voce = 0.72 + 0.16 * Math.abs(Math.sin(t * (7 + i * 1.3))) +
-                       0.12 * Math.abs(Math.sin(t * (3.1 + i * 0.7) + i));
-          const meta = parla ? voce : 0;
-          r[i] += (meta - r[i]) * (meta > r[i] ? 0.16 : 0.09);
-          return [W * fx, H * fy, R * r[i]];
-        });
+        const [x, y, R] = misura(), t = ora / 1000;
+        // sillabe: due oscillazioni sommate, piccole
+        const k = 0.9 + 0.06 * Math.abs(Math.sin(t * 3.4)) + 0.04 * Math.abs(Math.sin(t * 7.1 + 1));
+        return [[x, y, R * k]];
       },
-      fermo() {
-        const W = box.clientWidth, H = box.clientHeight, R = Math.min(W, H) * 0.2;
-        return posti.map(([fx, fy]) => [W * fx, H * fy, R * 0.85]);
-      },
-      via() { r[0] = r[1] = 0; },
+      fermo() { const [x, y, R] = misura(); return [[x, y, R]]; },
+      via() {},
     };
   }
 
-  const EFFETTI = { sparsi, diaframma, equalizzatore, puntatore, dialogo };
+  const EFFETTI = { sparsi, diaframma, equalizzatore, puntatore, voce };
 
   video.forEach((v) => {
     // da telefono solo dove c'è la versione leggera

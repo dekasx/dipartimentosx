@@ -54,6 +54,9 @@ def cambiate(da, a):
             dopo = git("show", "%s:%s" % (a, f))
         except subprocess.CalledProcessError:
             continue                         # pagina tolta
+        # le pagine con noindex (hidden.html) non si annunciano a nessuno
+        if re.search(r'<meta name="robots" content="[^"]*noindex', dopo):
+            continue
         if pulita(prima) != pulita(dopo):
             out.append(indirizzo(f))
     return out

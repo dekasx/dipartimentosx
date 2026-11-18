@@ -194,8 +194,8 @@ token vede un solo bucket): si elenca con `rclone lsf r2:dipartimentosx-video/pr
 - **Pallini col video** (`js/pallini.js`): in apertura delle pagine servizio e,
   in Sound Design, nella fila sopra "Ascolta" che segue gli estratti audio.
   Video `creative-bg.mp4` su R2, effetto scelto con `data-effetto`, markup
-  dalla funzione `pallini()` in `.claude/gen-pages.py`. Da telefono solo
-  Consulenza (`creative-bg-small.mp4`). Chrome mette in pausa da solo un video
+  dalla funzione `pallini()` in `.claude/gen-pages.py`. Da telefono ci sono
+  ovunque, con la versione leggera `creative-bg-small.mp4`. Chrome mette in pausa da solo un video
   muto che gli sembra invisibile: lo script lo fa ripartire.
 - `getBoundingClientRect()` restituisce il rettangolo già trasformato: il logo
   si misura con la classe `is-misura`, che spegne trasformazioni e transizioni.

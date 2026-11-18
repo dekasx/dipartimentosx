@@ -23,9 +23,8 @@
    ed è ritagliato con `clip-path: path(...)`, riscritto a ogni fotogramma.
    Un video solo per pagina, decodificato dal browser, senza canvas.
 
-   - data-src: il video; data-src-piccolo, da telefono. Senza
-     data-src-piccolo da telefono non c'è niente e non si scarica niente
-     (oggi i pallini da telefono ci sono solo in Consulenza);
+   - data-src: il video; data-src-piccolo, la versione leggera da telefono
+     (senza, da telefono non c'è niente e non si scarica niente);
    - data-evita: un elemento dietro cui non aprire pallini (solo "sparsi");
    - data-segreto: dieci pallini presi con un clic portano a quella pagina
      (solo "sparsi": Consulenza → /hidden.html).
@@ -284,7 +283,8 @@
         energia.forEach((e, k) => { const n = e * cala; if (n < 0.05) energia.delete(k); else energia.set(k, n); });
 
         let sopra = [];
-        if (campo) {
+        // da telefono il campo di puntini non c'è: si accendono dove si tocca
+        if (campo && campo.punti) {
           /* i puntini vicini al mouse si accendono; spenti piano lasciano la
              scia. Ogni pallino sta sopra al suo puntino bianco, dove il
              puntino è in questo fotogramma (scansato o tornato a posto). */

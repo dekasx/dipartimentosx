@@ -570,6 +570,19 @@ body.no-video .showreel-fallback { display: block; }
   max-height: 76svh;
 }
 .sec--split .media { width: 100%; height: 100%; }
+/* il video di sfondo a quadrati (js/quadrati.js): steso su tutta la sezione,
+   se ne vedono solo i quadrati che js scrive nel clip-path. Sotto a testi,
+   foto e linee tratteggiate. */
+.sq-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+  clip-path: path("M0 0Z");
+}
 
 /* ===================== SEZIONE 5 — BANNER (Regia) ===================== */
 .sec--banner { height: 100svh; overflow: hidden; }

@@ -121,7 +121,7 @@ def players():
       <div class="pallini-fila" aria-hidden="true">
 ''' + pallini("equalizzatore").replace("      <video", "        <video") + '''        <div class="rule rule--eq" data-eq></div>
       </div>
-      <div class="svc-grid">
+      <div class="svc-grid svc-grid--colonna">
         <h2 class="svc-h2" id="samples" data-anim="title">Ascolta</h2>
         <div class="svc-prose" data-anim="copy">
           <p>Quattro estratti da lavori recenti. Tutto quello che senti è stato scritto, registrato e mixato qui.</p>

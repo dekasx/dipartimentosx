@@ -1670,6 +1670,8 @@ body.page-service {
   gap: clamp(20px, 4vw, 76px);
   align-items: start;
 }
+/* Sound Design, "Ascolta": testo ed estratti sotto al titolo, non accanto */
+.svc-grid--colonna { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2svh, 26px); }
 .svc-h2 {
   font-size: clamp(1.35rem, 2.6vw, 2.3rem);
   font-weight: 600;

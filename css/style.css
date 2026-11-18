@@ -157,6 +157,12 @@ body[data-view="home"] .logo {
 }
 /* mentre si misura: niente trasformazione e niente animazione */
 .logo.is-misura { transform: none !important; transition: none !important; }
+/* quando a cambiare è la pagina il logo va al posto nuovo senza viaggio */
+.logo.is-fermo { transition: none !important; }
+/* in home il logo si vede solo quando js/home.js l'ha messo al suo posto
+   (se no compariva nell'angolo e poi saltava sulla scritta). La classe la
+   mette lo script stesso: senza script il logo si vede e basta. */
+.logo.is-attesa { opacity: 0; }
 
 .main-nav {
   position: fixed;

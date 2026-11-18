@@ -282,6 +282,11 @@
   const logo = document.querySelector(".logo");
   const marchio = document.querySelector(".hero-mark img") || document.querySelector(".hero-mark");
   let postoLogo = null;      // {dx, dy, s} oppure null se non calcolabile
+  if (logo) {
+    logo.classList.add("is-attesa");
+    // comunque vada, entro due secondi il logo si vede
+    setTimeout(() => logo.classList.remove("is-attesa"), 2000);
+  }
 
   function misuraLogo() {
     postoLogo = null;
@@ -309,23 +314,40 @@
     postoLogo = { dx: cx - (l.left + l.width / 2), dy: cy - (l.top + l.height / 2), s: scala };
   }
 
-  function posaLogo(y) {
-    if (!logo || !postoLogo) return;
+  /* `subito`: quando a cambiare è la pagina (apertura, immagine caricata,
+     finestra ridimensionata) il logo va al suo posto senza viaggio. Prima
+     ogni nuova misura faceva ripartire la transizione di 0.75s verso un
+     punto un po' diverso, e il logo tremolava prima di fermarsi. Il viaggio
+     resta solo quando si scorre (dalla scritta all'angolo e ritorno). */
+  function posaLogo(y, subito) {
+    if (!logo) return;
+    if (!postoLogo) {
+      // la scritta è un'immagine ancora in arrivo: si aspetta lei, non si
+      // mostra il logo nell'angolo per farlo saltare dopo
+      const attendo = marchio && marchio.tagName === "IMG" && !marchio.complete;
+      if (subito && !attendo) logo.classList.remove("is-attesa");
+      return;
+    }
     // attaccato alla scritta solo in cima: al primo movimento vola nell'angolo
     const sopra = y < 8;
+    if (subito) logo.classList.add("is-fermo");
     logo.style.setProperty("--lx", (sopra ? postoLogo.dx : 0).toFixed(1) + "px");
     logo.style.setProperty("--ly", (sopra ? postoLogo.dy : 0).toFixed(1) + "px");
     logo.style.setProperty("--ls", sopra ? postoLogo.s.toFixed(3) : "1");
+    if (subito) {
+      logo.getBoundingClientRect();          // il posto nuovo vale da adesso
+      logo.classList.remove("is-fermo", "is-attesa");
+    }
   }
 
   /* ==================== AGGANCIO AL MOTORE CONDIVISO ==================== */
   SXFX.add(
     (y) => { paintBackground(y); paintServices(y); paintNav(y); posaLogo(y); },
-    () => { measure(); measureRows(); misuraLogo(); posaLogo(window.scrollY); }
+    () => { measure(); measureRows(); misuraLogo(); posaLogo(window.scrollY, true); }
   );
   // la scritta è un'immagine: finché non è caricata non si sa quanto è alta
   if (marchio && marchio.tagName === "IMG" && !marchio.complete) {
-    marchio.addEventListener("load", () => { misuraLogo(); posaLogo(window.scrollY); }, { once: true });
+    marchio.addEventListener("load", () => { misuraLogo(); posaLogo(window.scrollY, true); }, { once: true });
   }
 
   /* ==================== PASSAGGIO DALLO SHOWREEL ====================

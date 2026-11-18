@@ -1,12 +1,11 @@
 /* ============================================================
-   Le righe tratteggiate fra le tracce della pagina del suono non stanno
-   ferme: ogni pallino sale e scende per conto suo, come le barre di un
+   La riga tratteggiata sopra a "Ascolta" (da telefono, dove la fila di
+   cerchi col video non c'è) non sta ferma: ogni pallino sale e scende per conto suo, come le barre di un
    equalizzatore. I pallini della riga normale sono un motivo di sfondo,
    che non si può animare pezzo per pezzo: qui diventano elementi veri.
    Quanti sono lo decide la larghezza, così la grana resta quella (8 px).
    ============================================================ */
 (() => {
-  /* la riga sopra a "Ascolta" (da telefono) e quelle fra una traccia e l'altra */
   document.querySelectorAll("[data-eq]").forEach((riga) => {
     const PASSO = 8;               // stessa grana della riga ferma
     let quanti = 0;

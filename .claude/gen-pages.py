@@ -117,8 +117,6 @@ def players():
           </div>
           <time class="player-time">0:00</time>
         </article>''')
-    # fra una traccia e l'altra la riga di pallini che saltellano (js/eq-rule.js)
-    riga = '            <div class="rule rule--eq" data-eq aria-hidden="true"></div>\n'
     return ('''    <section class="svc-block svc-wrap" aria-labelledby="samples">
       <div class="pallini-fila" aria-hidden="true">
 ''' + pallini("equalizzatore").replace("      <video", "        <video") + '''        <div class="rule rule--eq" data-eq></div>
@@ -128,7 +126,8 @@ def players():
         <div class="svc-prose" data-anim="copy">
           <p>Quattro estratti da lavori recenti. Tutto quello che senti è stato scritto, registrato e mixato qui.</p>
           <div class="players">
-''' + riga + ("\n" + riga).join(rows) + "\n" + riga + '''          </div>
+''' + "\n".join(rows) + '''
+          </div>
         </div>
       </div>
     </section>

@@ -1868,10 +1868,10 @@ body.page-service {
   grid-template-columns: 44px minmax(0, 1fr) 3.4rem;
   gap: clamp(12px, 1.6vw, 22px);
   align-items: center;
+  border-top: 2px dotted currentColor;
   padding: clamp(12px, 1.8svh, 20px) 0;
 }
-/* fra una traccia e l'altra non una linea ferma ma la riga di pallini che
-   saltellano (js/eq-rule.js) */
+.player:last-child { border-bottom: 2px dotted currentColor; }
 .player-btn {
   width: 44px; height: 44px;
   display: grid; place-items: center;

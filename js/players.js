@@ -63,6 +63,9 @@
             o.node.querySelector(".player-btn").setAttribute("aria-pressed", "false");
           }
         });
+        // per i pallini in cima alla pagina (js/pallini.js), che pulsano con
+        // il suono: va detto dentro al clic, l'audio del browser lo richiede
+        document.dispatchEvent(new CustomEvent("campione", { detail: audio }));
         audio.play().then(() => {
           node.classList.add("is-playing");
           btn.setAttribute("aria-pressed", "true");

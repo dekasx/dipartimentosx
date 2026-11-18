@@ -257,7 +257,7 @@ def pair(left, right_h2, facts, after=None, conn_svg="", aside="", reverse=False
 
 def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extras, seo_title=None,
          scripts="", extra_ld="", corridor=False, extras_first=False, hero_html=None,
-         body_class="page-doc page-service", hero_class="", body_extra=""):
+         body_class="page-doc page-service", hero_class="", body_extra="", corridor_extra=""):
     # senza frase sotto il titolo non resta un paragrafo vuoto
     lead_html = f'      <p class="svc-lead" data-anim="copy">{lead}</p>\n' if lead else ""
     hero = f'''    <section class="svc-hero svc-wrap{hero_class}">
@@ -267,7 +267,8 @@ def page(slug, title, kicker, lead, desc, bg, fg, hero_extra, blocks_html, extra
     if hero_html is not None:
         hero = hero_html
     if corridor:
-        hero = '    <div class="corridor" data-corridor data-cards="9" data-speed="20">\n' + hero + '    </div>\n'
+        hero = ('    <div class="corridor" data-corridor data-cards="9" data-speed="20">\n' +
+                corridor_extra + hero + '    </div>\n')
     body = (extras + blocks_html) if extras_first else (blocks_html + extras)
     return (head(slug, title.replace('<br>', ' ').replace('&amp;', '&'), desc, bg, extra_ld, seo_title) +
 f'''

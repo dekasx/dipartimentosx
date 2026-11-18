@@ -16,6 +16,15 @@ def figure(src, alt, cap, cls="svc-figure", par="0.14", w=1050, h=788):
     <p class="svc-caption svc-wrap">{cap}</p>
 ''')
 
+# Video di sfondo a pallini in apertura delle pagine servizio (js/pallini.js).
+# Stesso video ovunque, cambia l'effetto. La versione leggera da telefono c'è
+# solo per Consulenza: senza, da telefono non si scarica niente.
+R2 = "https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/"
+def pallini(effetto, telefono=False):
+    piccolo = f' data-src-piccolo="{R2}creative-bg-small.mp4"' if telefono else ""
+    return (f'      <video class="pallini-video" data-effetto="{effetto}" muted loop playsinline '
+            f'preload="none" aria-hidden="true" tabindex="-1" data-src="{R2}creative-bg.mp4"{piccolo}></video>\n')
+
 # ============================================================ 1
 write("creative-direction", tpl.page(
   slug="creative-direction",
@@ -27,10 +36,7 @@ write("creative-direction", tpl.page(
   seo_title="Consulenza e direzione creativa a Roma | Dipartimento SX",
   bg="#d6d6d6", fg="#0a0a0a",
   hero_class=" svc-hero--split svc-hero--pallini",
-  # video di sfondo a pallini (js/pallini.js); da telefono la versione leggera
-  hero_extra='      <video class="pallini-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" '
-             'data-src="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg.mp4" '
-             'data-src-piccolo="https://pub-57989fc69eda4fc1a74ded76122845fd.r2.dev/projects/creative-bg-small.mp4"></video>\n' +
+  hero_extra=pallini("sparsi", telefono=True) +
              tpl.conn("cd", [("M240 690 C 420 780, 720 760, 980 690", None),
                              ("M1180 250 C 1400 330, 1560 320, 1740 250", "1.15")], draw_load=True),
   blocks_html=(
@@ -64,7 +70,8 @@ write("directing-video-production", tpl.page(
   bg="#000000", fg="#ffffff",
   body_class="page-doc page-service has-trail",
   body_extra=TRAIL,
-  hero_extra=tpl.conn("dv", [("M1420 300 H1660 V620 H1810", None),
+  hero_class=" svc-hero--pallini",
+  hero_extra=pallini("diaframma") + tpl.conn("dv", [("M1420 300 H1660 V620 H1810", None),
                              ("M180 820 C 420 900, 700 880, 900 800", "1.15")]),
   blocks_html=(
     figure("assets/img/sec-directing.jpg", "Estratto da “Thanks, Putin” — auto su un telo rosso in un parcheggio sotterraneo addobbato con luci", "Estratto da “Thanks, Putin”", cls="svc-figure", par="0.18", w=2400, h=1350) +
@@ -82,7 +89,7 @@ write("directing-video-production", tpl.page(
     ], conn_svg=tpl.conn("dv2", [("M1700 250 H1000 V600 H420", None)]))
   ),
   extras="",
-  scripts='\n  <script src="js/trail-lines.js" defer></script>'
+  scripts='\n  <script src="js/trail-lines.js" defer></script>\n  <script src="js/pallini.js" defer></script>'
 ))
 
 # ============================================================ 3
@@ -141,7 +148,8 @@ write("sound-design", tpl.page(
   desc="Musiche originali, sound design e foley a Roma: audio in presa diretta, audio branding, pulizia dialoghi, mixing e mastering per video, cinema e teatri.",
   seo_title="Musica, sound design e foley a Roma | Dipartimento SX",
   bg="#38211b", fg="#ffffff",
-  hero_extra=tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
+  hero_class=" svc-hero--pallini",
+  hero_extra=pallini("equalizzatore") + tpl.conn("sd", [("M150 120 C 420 260, 700 100, 940 190 S 1420 280, 1720 170", "1.35"),
                              ("M300 860 H1100 V960", "1.1")], draw_load=True),
   body_class="page-doc page-service page-sound",
   extras_first=True,
@@ -168,7 +176,7 @@ write("sound-design", tpl.page(
        # ne abbiamo (le due in assets sono stock Getty con la filigrana)
        rule=False)          # niente striscia tratteggiata sopra "I nostri servizi"
   ),
-  scripts='\n  <script src="js/players.js" defer></script>'
+  scripts='\n  <script src="js/players.js" defer></script>\n  <script src="js/pallini.js" defer></script>'
           '\n  <script src="js/eq-rule.js" defer></script>'
 ))
 
@@ -268,8 +276,8 @@ def stats():
 
 WD_HERO = '''    <div class="fx-hero">
       <canvas class="dotfield" data-dotfield aria-hidden="true"></canvas>
-      <section class="svc-hero svc-wrap">
-        <h1 class="svc-title" data-scramble>Web Development,<br>UX &amp; UI</h1>
+      <section class="svc-hero svc-wrap svc-hero--pallini">
+''' + pallini("puntatore").replace("      <video", "        <video") + '''        <h1 class="svc-title" data-scramble>Web Development,<br>UX &amp; UI</h1>
         <p class="svc-lead">Ideiamo e sviluppiamo siti dal back al front end.</p>
       </section>
     </div>
@@ -307,7 +315,7 @@ write("web-development", tpl.page(
     ]) +
     stats()          # "Questa pagina, adesso" sotto "Come li costruiamo"
   ),
-  scripts='\n  <script src="js/webdev-fx.js" defer></script>'
+  scripts='\n  <script src="js/webdev-fx.js" defer></script>\n  <script src="js/pallini.js" defer></script>'
 ))
 
 # ============================================================ 5
@@ -321,6 +329,7 @@ write("photography", tpl.page(
   bg="#e0a677", fg="#2b1a0f",
   hero_extra="",
   corridor=True,
+  corridor_extra=pallini("dialogo"),
   blocks_html=(
     tpl.pair([
       "Mettiamo a disposizione il nostro studio e le nostre competenze per riprese, podcast, fotografia e sperimentazioni visive.",
@@ -343,5 +352,5 @@ write("photography", tpl.page(
     ])
   ),
   extras="",
-  scripts='\n  <script src="js/corridor.js" defer></script>'
+  scripts='\n  <script src="js/corridor.js" defer></script>\n  <script src="js/pallini.js" defer></script>'
 ))

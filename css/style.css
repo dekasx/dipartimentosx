@@ -570,9 +570,9 @@ body.no-video .showreel-fallback { display: block; }
   max-height: 76svh;
 }
 .sec--split .media { width: 100%; height: 100%; }
-/* il video di sfondo a pallini (js/pallini.js), in apertura della pagina
-   Consulenza: steso su tutta la sezione, se ne vedono solo i cerchi che js
-   scrive nel clip-path. Sotto a testi e linee tratteggiate. */
+/* il video di sfondo a pallini (js/pallini.js), in apertura delle pagine
+   servizio: steso su tutto il contenitore, se ne vedono solo i cerchi che
+   js scrive nel clip-path. Sotto a testi e linee tratteggiate. */
 .pallini-video {
   position: absolute;
   inset: 0;
@@ -583,8 +583,13 @@ body.no-video .showreel-fallback { display: block; }
   pointer-events: none;
   clip-path: path("M0 0Z");
 }
+/* nelle pagine con il testo bianco il video, che è chiaro, si scurisce:
+   se no dove un pallino passa sotto al testo non si legge più */
+.pallini-video[data-effetto="diaframma"],
+.pallini-video[data-effetto="equalizzatore"],
+.pallini-video[data-effetto="puntatore"] { filter: brightness(0.5) saturate(1.15); }
 /* il video sta sotto ai testi ma sopra allo sfondo della pagina */
-.svc-hero--pallini { isolation: isolate; }
+.svc-hero--pallini, .corridor:has(> .pallini-video) { isolation: isolate; }
 
 /* ===================== SEZIONE 5 — BANNER (Regia) ===================== */
 .sec--banner { height: 100svh; overflow: hidden; }

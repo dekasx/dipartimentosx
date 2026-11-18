@@ -60,8 +60,9 @@
       const col = getComputedStyle(canvas).color;
       ctx.fillStyle = col;
       ctx.beginPath();
-      /* i puntini vicini al puntatore, con la posizione e la misura di
-         questo fotogramma: js/pallini.js ci mette sopra i pallini col video */
+      /* i puntini vicini al puntatore (indice e vicinanza) e, su ogni
+         puntino, posizione e misura di questo fotogramma (cx, cy, cr):
+         js/pallini.js ci mette sopra i pallini col video */
       const vicini = [];
 
       for (let k = 0; k < dots.length; k++) {
@@ -94,9 +95,11 @@
 
         ctx.moveTo(d.x + ox + r, d.y + oy);
         ctx.arc(d.x + ox, d.y + oy, Math.max(0.2, r), 0, 6.283185);
-        if (dist < REACH) vicini.push([d.x + ox, d.y + oy, r, 1 - dist / REACH]);
+        d.cx = d.x + ox; d.cy = d.y + oy; d.cr = r;
+        if (dist < REACH) vicini.push([k, 1 - dist / REACH]);
       }
       canvas.vicini = vicini;
+      canvas.punti = dots;
       ctx.globalAlpha = 0.62;
       ctx.fill();
       ctx.globalAlpha = 1;

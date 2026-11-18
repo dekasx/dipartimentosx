@@ -225,14 +225,16 @@
      spengono piano. Vicino al mouse, se c'è il campo di puntini bianchi
      della pagina (js/webdev-fx.js), i pallini col video si mettono
      esattamente sopra ai puntini bianchi, che si scansano e si gonfiano:
-     sotto al mouse i puntini diventano il video. Senza il campo, si
-     accendono quelli di una griglia. */
+     sotto al mouse i puntini diventano il video, e restano accesi un po'
+     dopo che il mouse è passato (la scia). Senza il campo, si accendono
+     quelli di una griglia. */
   function puntatore(v, box) {
     const fx = box.closest(".fx-hero");
     const campo = fx && fx.querySelector("[data-dotfield]");
     const G = 26;            // passo della griglia
     const RAGGIO = 130;      // quanto lontano dal mouse si accendono
     const energia = new Map();
+    const scia = new Map();          // puntini del campo accesi dal mouse
     let px = -1e4, py = -1e4, prima = 0, lucciola = 0;
 
     // come il campo di puntini della pagina: si ascolta sulla finestra,
@@ -270,11 +272,21 @@
 
         let sopra = [];
         if (campo) {
-          // stessi punti del campo, nelle coordinate del riquadro del video
+          /* i puntini vicini al mouse si accendono; spenti piano lasciano la
+             scia. Ogni pallino sta sopra al suo puntino bianco, dove il
+             puntino è in questo fotogramma (scansato o tornato a posto). */
+          const punti = campo.punti || [];
+          scia.forEach((e, k) => { const n = e * Math.exp(-dt / 900); if (n < 0.04 || !punti[k]) scia.delete(k); else scia.set(k, n); });
+          (campo.vicini || []).forEach(([k, f]) => {
+            const e = f * (2 - f);
+            if ((scia.get(k) || 0) < e) scia.set(k, e);
+          });
           const rc = campo.getBoundingClientRect(), rb = box.getBoundingClientRect();
           const sx = rc.left - rb.left, sy = rc.top - rb.top;
-          sopra = (campo.vicini || []).map(([x, y, r, f]) =>
-            [x + sx, y + sy, r * (1.25 + f * 0.9)]);
+          scia.forEach((e, k) => {
+            const d = punti[k];
+            sopra.push([d.cx + sx, d.cy + sy, e * d.cr * (1.25 + 0.9 * e)]);
+          });
         } else if (px > -RAGGIO && py > -RAGGIO && px < W + RAGGIO && py < H + RAGGIO) {
           const c0 = Math.max(0, Math.floor((px - RAGGIO) / G)), c1 = Math.min(cols - 1, Math.floor((px + RAGGIO) / G));
           const r0 = Math.max(0, Math.floor((py - RAGGIO) / G)), r1 = Math.min(righe - 1, Math.floor((py + RAGGIO) / G));
@@ -295,14 +307,17 @@
         for (let i = 0; i < 60; i++) accendi(Math.floor(caso(0, W / G)), Math.floor(caso(0, H / G)), caso(0.5, 1));
         return cerchi(W, H);
       },
-      via() { energia.clear(); prima = 0; },
+      via() { energia.clear(); scia.clear(); prima = 0; },
     };
   }
 
   /* ---------- Studio Podcast: il dialogo ---------- */
   function dialogo(v, box) {
-    // a destra del titolo: a sinistra c'è il velo che lo tiene leggibile
-    const posti = [[0.62, 0.42], [0.85, 0.6]];
+    /* uno esattamente nel punto da cui partono le foto del corridoio
+       (js/corridor.js: centro orizzontale, data-axis % in altezza, 55 se
+       non è scritto), l'altro più a destra */
+    const asse = (parseFloat(box.dataset.axis) || 55) / 100;
+    const posti = [[0.5, asse], [0.85, 0.62]];
     const r = [0, 0];
     let chi = 0, insieme = false, cambio = 0;
 
